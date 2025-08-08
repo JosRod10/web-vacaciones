@@ -1,0 +1,59 @@
+.fade-in-slow {
+  opacity: 0;
+  animation: fadeInSlow 1s ease-in-out forwards;
+}
+
+@keyframes fadeInSlow {
+  to {
+    opacity: 1;
+  }
+}
+
+.icon-c{
+    font-size: 2em;
+    color: red;
+    margin-left: 2vh;
+}
+.icon-a{
+    font-size: 2em;
+    color: rgb(3, 126, 46);
+    margin-left: 2vh;
+}
+
+.icon-dias{
+    background-color: greenyellow;
+    border-radius: 10%;
+    font-weight: bold;
+}
+
+.rechazar{
+  background-color: rgb(242, 34, 34);
+  color: #fff;
+  z-index: -10;
+}
+
+.aprobar{
+  background-color: rgb(3, 126, 46);
+  color: #fff;
+  z-index: -10;
+}
+
+div p{
+  font-weight: bold;
+}
+
+.table-title{
+  color: gray;
+  font-weight: bold;
+}
+
+.card-text-subtitle{
+  font-size: medium;
+  color: gray;
+  margin-bottom: 1em;
+}
+
+.punto{
+  font-size: xx-large;
+  color: rgb(18, 225, 18);
+}

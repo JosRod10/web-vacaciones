@@ -1,1 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: #fffbfb;}
+
+.calendario {
+    background-color: rgb(235, 238, 239);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

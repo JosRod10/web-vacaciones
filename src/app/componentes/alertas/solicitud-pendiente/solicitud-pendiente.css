@@ -1,0 +1,45 @@
+.enc-c{
+    /* margin-top: -1em; */
+    display: flex;
+    justify-content: center;
+    font-size: x-large;
+    color: gray;
+}
+.enc{
+    /* margin-top: -1em; */
+    display: flex;
+    justify-content: center;
+}
+.text{
+    color: #000;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+}
+.btn-b{
+    border: none; 
+    font-size: x-large;
+    color: #000;
+}
+.btn-b:hover{
+    color: red;
+}
+.icon{
+    color: #000;
+    font-size: xx-large;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2vh;
+}
+.bt{
+    display: flex;
+    justify-content: center;
+    margin-top: 1vh;
+}
+
+.bt button{
+    /* color: #000; */
+    margin-left: 1vh;
+    /* background-color: #fff;
+    border: none; */
+}

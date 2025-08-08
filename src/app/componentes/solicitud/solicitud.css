@@ -1,0 +1,102 @@
+.contenedor{
+    background-color: #fff;
+    /* background: linear-gradient(to right, #071a3d, #2a5298); */
+    /* background-image: url('/assets/cin_b.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed; */
+    opacity: .9;
+    border-radius: 5px;
+    padding: 1em;
+    min-height: 93vh;
+    /* border: 1px solid #000; */
+}
+label{
+    color: #000;
+    /* font-weight: bold; */
+}
+input.activ{
+  width: 50px;
+  height: 25px;
+}
+
+input.activ:checked {
+  background-color: rgb(4, 114, 26);
+  border-color: rgb(4, 114, 26);
+  opacity: .8;
+}
+
+input.activ:checked::before {
+  background-color: white;
+}
+
+.aut{
+  margin-top: 2px;
+}
+input, select, textarea, span{
+ border: 1px solid #b6b6b6;
+}
+
+.alert-pos{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-left: 1em;
+}
+
+.box{
+  border-bottom: 2px solid #000;
+}
+
+.box-enc{
+  border-left: 2px solid #000;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  background-color: #fefefe
+}
+
+div p{
+  font-weight: bold;
+}
+
+.fade-in-slow {
+  opacity: 0;
+  animation: fadeInSlow 1s ease-in-out forwards;
+}
+
+@keyframes fadeInSlow {
+  to {
+    opacity: 1;
+  }
+}
+
+/* .rebote {
+  width: auto;
+  height: auto;
+  position: relative;
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-20px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+} */
+
+mat-datepicker{
+  color: #000;
+}
+
+

@@ -1,0 +1,199 @@
+<div class="p-4 fade-in-slow">
+    <div class="container-fluid contenedor shadow p-2">
+        <div class="container-fluid box">
+            <div class="row mb-1">
+                <div class="col-lg-3 col-md-4 col-sm-12 d-flex justify-content-start">
+                    <p *ngIf="this.solicitudes[0]">Solicitudes pendientes</p>
+                   <p *ngIf="!this.solicitudes[0]">No hay solicitudes pendientes</p>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-end"></div>
+                <div class="col-lg-3 col-md-5 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
+                   <p>{{this.user[0].Nombre_completo}}</p>&nbsp;&nbsp;
+                   <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="min-height: 82vh;">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                    <!-- <div class="d-flex justify-content-start mb-2">
+                        <h6>Solicitudes pendientes</h6>
+                    </div> -->
+                <div class="overflow-auto" style="max-height: 80vh;">
+                    <div class="list-group" *ngFor="let solicitud of solicitudes">
+                        <a class="list-group-item list-group-item-action" aria-current="true" style="cursor: pointer;" (click)="activarCard(solicitud)">
+                            <div class="d-flex w-100 justify-content-between">
+                            <!-- <small><span class="punto">.</span></small> -->
+                            <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i><h6 class="mb-1 font-weight-bold">{{solicitud.nombre}}</h6>
+                            <small><span class="badge rounded-pill bg-primary">{{solicitud.cuantos_dias}} días</span></small>
+                            <!-- <small><button class="btn btn-light rechazar"><i class="bi bi-x-circle"></i></button><button class="btn btn-light aprobar"><i class="bi bi-check-circle"></i></button></small> -->
+                            </div>
+                            <!-- <p class="mb-1"> {{solicitud.motivo}}</p> -->
+                            <small>Del {{solicitud.fecha_apartir}} al {{solicitud.fecha_hasta}}</small>
+                        </a>
+                        
+                        <!-- <ul class="list-group" *ngFor="let colaborador of colaboradores_faltantes">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span style="font-size: small; font-weight: bold;">{{colaborador.nombreCompleto}}
+                                <p style="color: #376fb2;">{{colaborador.departamento}}</p></span>
+                                <span *ngIf="colaborador.fecha != this.fecha_hoy.substring(0,12)" class="badge rounded-pill bg-primary">
+                                {{ colaborador.fecha }}
+                                </span>
+                                <span *ngIf="colaborador.fecha == this.fecha_hoy.substring(0,12)" class="badge rounded-pill bg-warning">
+                                ¡Felicidades! 🥳
+                                </span>
+                            </li>
+                        </ul> -->
+                    </div>
+                </div>
+                <div class="d-grid gap-2 mt-2">
+                    <button class="btn btn-secondary" type="button" (click)="abrirPanelReportes()">Generar reporte</button>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-12">
+
+                <div class="card mb-4 d-flex align-items-center justify-content-center" style="min-height: 35vh;" *ngIf="!this.solicitudes[0]">
+                    <div class="spinner-grow mb-2" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div>
+                        <h5>Esperando recibir solicitud</h5>
+                    </div>
+                </div>
+
+                <div class="card mb-1" style="min-height: 35vh;" *ngIf="this.solicitudes[0]">
+                    <div class="card-header">
+                        {{this.cardSolicitud.fecha_solicitud}} <span class="badge rounded-pill bg-success">{{this.cardSolicitud.status}}</span>
+                    </div>
+                    <div class="card-body">
+                        
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <h6 class="card-title">{{this.cardSolicitud.nombre}}</h6>
+                                <span class="card-text-subtitle">Departamento: {{this.cardSolicitud.Departamento}}</span><br>
+                                <span class="card-text-subtitle">Puesto: {{this.cardSolicitud.Puesto}}</span>
+                                <div class="row mt-2">
+                                    <div class="col-1"></div>
+                                    <div class="col-3">
+                                        <div class="card" style="width: 10rem;">
+                                            <div class="card-header d-flex justify-content-center" style="background-color: rgb(242, 34, 34); font-size: large; font-weight: bold; color: #fff;">
+                                                {{this.cardSolicitud.fecha_apartir.substring(6,9)}}
+                                            </div>
+                                            <div class="card-body d-flex align-items-center justify-content-center" style="font-size:4em; font-weight: bold;">
+                                                <h2>{{this.cardSolicitud.fecha_apartir.substring(0,2)}}</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 d-flex justify-content-end align-items-center" style="font-size: 2em;">
+                                        <div>
+                                            <i class="bi bi-arrow-right"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="card" style="width: 10rem;">
+                                            <div class="card-header d-flex justify-content-center" style="background-color: rgb(242, 34, 34); font-size: large; font-weight: bold; color: #fff;">
+                                                {{this.cardSolicitud.fecha_hasta.substring(6,9)}}
+                                            </div>
+                                            <div class="card-body d-flex align-items-center justify-content-center" style="font-size:4em; font-weight: bold;">
+                                                <h2>{{this.cardSolicitud.fecha_hasta.substring(0,2)}}</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2"></div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-lg-5 col-md-5 col-sm-12"><span style="font-weight: bold;">Dispone: {{this.cardSolicitud.Dias_disponibles}}/{{this.cardSolicitud.Dias_vacaciones}} días</span></div>
+                                    <div class="col-lg-5 col-md-5 col-sm-12"></div>
+                                    <div class="col-lg-2 col-md-2 col-sm-12"></div>
+                                </div>
+                                
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item" style="font-weight: bold;">Días: <span class="badge rounded-pill bg-primary">{{this.cardSolicitud.cuantos_dias}}</span></li>
+                                        <li class="list-group-item" style="font-weight: bold;">Permiso: <span class="badge rounded-pill bg-primary">{{this.cardSolicitud.tipo_permiso}}</span></li>
+                                        <li class="list-group-item">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" [checked]="this.cardSolicitud.con_sueldo == true" disabled id="flexCheckDefault">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                    Con goce de sueldo
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" [checked]="this.cardSolicitud.sin_sueldo == true" disabled id="flexCheckDefault">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                    Sin goce de sueldo
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" [checked]="this.cardSolicitud.sindicalizado == true" disabled id="flexCheckDefault">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                    Sindicalizado
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" [checked]="this.cardSolicitud.no_sindicalizado == true" disabled id="flexCheckDefault">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                    No sindicalizado
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item" style="font-weight: bold;">Motivo: <span class="badge rounded-pill bg-primary">{{this.cardSolicitud.motivo}}</span></li>
+                                        <!-- <li class="list-group-item">A fourth item</li> -->
+                                    </ul>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-lg-4 col-md-4 col-sm-12"></div>
+                                    <div class="col-lg-1 col-md-4 col-sm-12"></div>
+                                    <div class="col-lg-4 col-md-1 col-sm-12 d-flex justify-content-end"><span style="font-weight: bold;">Contestación:</span></div>
+                                    <div class="col-lg-1 col-md-1 col-sm-12">
+                                        <!-- npm install bootstrap @popperjs/core --force or --legacy-peer-deps -->
+                                        <button (click)="accion(this.cardSolicitud.id, 1)" type="button" class="btn btn-light aprobar" data-bs-toggle="tooltip" data-bs-placement="top" title="Aceptado">
+                                            <i class="bi bi-check-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-12" style="margin-left: 1em;">
+                                        <button (click)="accion(this.cardSolicitud.id, 0)" type="button" class="btn btn-light rechazar" data-bs-toggle="tooltip" data-bs-placement="top" title="Rechazado">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-12"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="container sticky-header"><p class="table-title">Quienes estan ausentes?</p></div> -->
+                
+                    
+                <div class="overflow-auto" style="max-height: 32vh;">      
+                    <table class="table table-light table-hover">
+                        <thead>
+                            <tr class="table-title">
+                            Ausentes:
+                            </tr>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Dias</th>
+                            <th scope="col">Periodo</th>
+                            <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let persona of ausentes; let i = index">
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{persona.nombre}}</td>
+                            <td>{{persona.cuantos_dias}}</td>
+                            <td>{{persona.fecha_apartir}} al {{persona.fecha_hasta}}</td>
+                            <td><span class="badge rounded-pill bg-warning">{{persona.status}}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

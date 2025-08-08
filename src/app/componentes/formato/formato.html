@@ -1,0 +1,266 @@
+<!-- <div class="vacaciones-wrapper">
+  <mat-card> -->
+    <!-- Solicitud de Vacaciones -->
+    <!-- <mat-card-title></mat-card-title>
+
+    <form [formGroup]="solicitudForm" (ngSubmit)="onSubmit()">
+    <mat-grid-list cols="2" rowHeight="200px:40px">
+    <mat-grid-tile>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre completo</mat-label>
+        <input matInput formControlName="nombre" placeholder="Juan Pérez">
+        <mat-error *ngIf="isInvalid('nombre')">Este campo es obligatorio</mat-error>
+      </mat-form-field>
+    </mat-grid-tile> -->
+
+      <!-- <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Departamento</mat-label>
+        <input matInput formControlName="departamento" placeholder="Recursos Humanos">
+        <mat-error *ngIf="isInvalid('departamento')">Este campo es obligatorio</mat-error>
+      </mat-form-field> -->
+    <!-- <mat-grid-tile>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Departamento</mat-label>
+        <mat-select matInput formControlName="departamento" placeholder="Recursos Humanos">
+            @for (food of foods; track food) {
+            <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
+            }
+        </mat-select>
+        <mat-error *ngIf="isInvalid('departamento')">Este campo es obligatorio</mat-error>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Fecha de inicio</mat-label>
+        <input matInput [matDatepicker]="inicioPicker" formControlName="fechaInicio">
+        <mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle>
+        <mat-datepicker #inicioPicker></mat-datepicker>
+        <mat-error *ngIf="isInvalid('fechaInicio')">Seleccione una fecha</mat-error>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Fecha de fin</mat-label>
+        <input matInput [matDatepicker]="finPicker" formControlName="fechaFin">
+        <mat-datepicker-toggle matSuffix [for]="finPicker"></mat-datepicker-toggle>
+        <mat-datepicker #finPicker></mat-datepicker>
+        <mat-error *ngIf="isInvalid('fechaFin')">Seleccione una fecha</mat-error>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Motivo</mat-label>
+            <textarea matInput formControlName="motivo" rows="3" placeholder="Describir el motivo..."></textarea>
+            <mat-error *ngIf="isInvalid('motivo')">Mínimo 10 caracteres</mat-error>
+        </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <div class="enc"><h3 class="firma-title">Firma del Jefe de Área</h3></div>
+
+        <signature-pad [options]="signaturePadOptions"></signature-pad>
+        <div class="firma-botones">
+            <button mat-stroked-button color="warn" (click)="borrarFirma()">Borrar</button>
+            <button mat-stroked-button color="primary" (click)="guardarFirma()">Guardar Firma</button>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="solicitudForm.invalid">
+            Enviar Solicitud
+        </button>
+    </mat-grid-tile>
+      </mat-grid-list>
+    </form>
+  </mat-card>
+</div> -->
+
+<!-- <button matButton="elevated" (click)="isLinear = !isLinear" id="toggle-linear">
+  {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+</button>
+<mat-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Fill out your name</ng-template>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+      </mat-form-field>
+      <div>
+        <button matButton matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
+    <form [formGroup]="secondFormGroup">
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
+               required>
+      </mat-form-field>
+      <div>
+        <button matButton matStepperPrevious>Back</button>
+        <button matButton matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup" label="Fill out your age">
+    <form [formGroup]="secondFormGroup">
+      <mat-form-field>
+        <mat-label>Age</mat-label>
+        <input matInput formControlName="secondCtrl" placeholder="0 años"
+               required>
+      </mat-form-field>
+      <div>
+        <button matButton matStepperPrevious>Back</button>
+        <button matButton matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup" label="Fill out your telefon number">
+    <form [formGroup]="secondFormGroup">
+      <mat-form-field>
+        <mat-label>Telefon number</mat-label>
+        <input matInput formControlName="secondCtrl" placeholder="720-023-1234"
+               required>
+      </mat-form-field>
+      <div>
+        <button matButton matStepperPrevious>Back</button>
+        <button matButton matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup" label="Fill out your email">
+    <form [formGroup]="secondFormGroup">
+      <mat-form-field>
+        <mat-label>email</mat-label>
+        <input matInput formControlName="secondCtrl" placeholder="user@cinasa.com.mx"
+               required>
+      </mat-form-field>
+      <div>
+        <button matButton matStepperPrevious>Back</button>
+        <button matButton matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button matButton matStepperPrevious>Back</button>
+      <button matButton (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-stepper> -->
+
+<div class="vacaciones-wrapper">
+  <mat-card>
+    <!-- Solicitud de Vacaciones -->
+    <mat-card-title></mat-card-title>
+
+    <form [formGroup]="solicitudForm" (ngSubmit)="onSubmit()">
+      <mat-grid-list cols="3" rowHeight="82px" style="margin-bottom: 10px;">
+
+        <!-- Nombre completo -->
+        <mat-grid-tile [colspan]="2">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre completo</mat-label>
+            <input matInput formControlName="nombre" placeholder="Juan Pérez" />
+            <mat-error *ngIf="isInvalid('nombre')">Este campo es obligatorio</mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <!-- Departamento -->
+        <mat-grid-tile>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Departamento</mat-label>
+            <mat-select formControlName="departamento" placeholder="Recursos Humanos">
+              @for (food of foods; track food) {
+                <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+              }
+            </mat-select>
+            <mat-error *ngIf="isInvalid('departamento')">Este campo es obligatorio</mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <!-- Fecha de inicio -->
+        <mat-grid-tile [colspan]="1">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Fecha de inicio</mat-label>
+            <input matInput [matDatepicker]="inicioPicker" formControlName="fechaInicio" />
+            <mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle>
+            <mat-datepicker #inicioPicker></mat-datepicker>
+            <mat-error *ngIf="isInvalid('fechaInicio')">Seleccione una fecha</mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile [colspan]="1"></mat-grid-tile>
+
+        <!-- Fecha de fin -->
+        <mat-grid-tile [colspan]="1">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Fecha de fin</mat-label>
+            <input matInput [matDatepicker]="finPicker" formControlName="fechaFin" />
+            <mat-datepicker-toggle matSuffix [for]="finPicker"></mat-datepicker-toggle>
+            <mat-datepicker #finPicker></mat-datepicker>
+            <mat-error *ngIf="isInvalid('fechaFin')">Seleccione una fecha</mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <!-- Motivo -->
+        <mat-grid-tile [colspan]="3" [rowspan]="2">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Motivo</mat-label>
+            <textarea matInput formControlName="motivo" rows="3" placeholder="Describir el motivo..."></textarea>
+            <mat-error *ngIf="isInvalid('motivo')">Mínimo 10 caracteres</mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile [colspan]="1" [rowspan]="2">
+          <mat-card class="example-card" appearance="outlined" (click)="abrirModal()">
+            <mat-card-content *ngIf="firmaDataUrl">
+              <img [src]="firmaDataUrl" alt="Firma" style="max-width: 100%;" />
+            </mat-card-content>
+          </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="2">
+          <mat-card class="example-card" appearance="outlined">
+            <!-- <img mat-card-image src="" alt="Firma"> -->
+          </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="2">
+          <mat-card class="example-card" appearance="outlined">
+            <!-- <img mat-card-image src="" alt="Firma"> -->
+          </mat-card>
+        </mat-grid-tile>
+
+        <mat-grid-tile [colspan]="1">
+          <p>Firma Dirección</p>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1">
+          <p>Firma Jefe de Área</p>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1">
+          <p>Firma Relaciones Industriales</p>
+        </mat-grid-tile>
+        
+
+        <!-- Botón Enviar -->
+        <mat-grid-tile [colspan]="1"></mat-grid-tile>
+        <mat-grid-tile [colspan]="1">
+          <!-- <button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="solicitudForm.invalid">
+            Enviar Solicitud
+          </button> -->
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1">
+          <div fxLayout="row" style="display: flex; justify-content: end;" class="full-width">
+            <button matFab extended color="primary" type="submit" (click)="addItem()">
+              Enviar Solicitud
+              <mat-icon>arrow_forward_ios</mat-icon>
+            </button>
+          </div>
+        </mat-grid-tile>
+
+      </mat-grid-list>
+    </form>
+  </mat-card>
+</div>
+

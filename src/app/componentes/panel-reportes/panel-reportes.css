@@ -1,0 +1,19 @@
+.fade-in-slow {
+  opacity: 0;
+  animation: fadeInSlow 1s ease-in-out forwards;
+}
+
+@keyframes fadeInSlow {
+  to {
+    opacity: 1;
+  }
+}
+
+div p{
+  font-weight: bold;
+}
+
+.descargar:hover{
+  background-color: rgb(2, 161, 2);
+  color: #fff;
+}

@@ -1,0 +1,87 @@
+<div class="login-container">
+  <div class="row">
+    <div class="card p-4 shadow" style="width: 100%;">
+      <div class="col-12">
+          <img src="assets/cin.png" height="300vh">
+      </div>
+    <div class="col-12">
+        <div class="card-header text-center mb-3">
+          <h5 class="card-title mb-0" style="color: gray;">Login</h5>
+        </div>
+
+        <div class="card-body">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- Usuario -->
+            <div class="mb-3">
+              <label for="user" class="form-label">Usuario</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                <input
+                  type="text"
+                  id="user"
+                  class="form-control"
+                  placeholder="Ejp: JoRtDOM"
+                  formControlName="user"
+                  [ngClass]="{ 'is-invalid': loginForm.get('user')?.invalid && loginForm.get('user')?.touched }"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="loginForm.get('user')?.hasError('required')">
+                El usuario es obligatorio
+              </div>
+            </div>
+
+            <!-- Contraseña -->
+            <div class="mb-3">
+              <label for="pass" class="form-label">Contraseña</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input
+                  [type]="hidePassword ? 'password' : 'text'"
+                  id="pass"
+                  class="form-control"
+                  placeholder="Contraseña"
+                  formControlName="pass"
+                  [ngClass]="{ 'is-invalid': loginForm.get('pass')?.invalid && loginForm.get('pass')?.touched }"
+                />
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  (click)="hidePassword = !hidePassword"
+                  tabindex="-1"
+                >
+                  <i class="bi" [ngClass]="hidePassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback" *ngIf="loginForm.get('pass')?.hasError('required')">
+                La contraseña es obligatoria
+              </div>
+              <div class="invalid-feedback" *ngIf="loginForm.get('pass')?.hasError('minlength')">
+                Mínimo 6 caracteres
+              </div>
+            </div>
+            <div class="mb-3" *ngIf="loginForm.get('pass')?.invalid && loginForm.get('pass')?.touched">
+                <div class="alert-text">
+                  Minimo 6 caracteres en la contraseña
+                </div>
+            </div>
+
+            <!-- Botón -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success">
+                Iniciar sesión
+              </button>
+            </div>
+          </form>
+      </div>
+
+    </div>
+    </div>
+    
+  </div>
+</div>
+
+<div class="alert alert-info d-flex align-items-center alert-pos" role="alert" *ngIf="alerta" #alerToast>
+    <div>
+      <i class="bi bi-check-circle"></i>&nbsp;&nbsp;Tienes una solicitud pendiente.<br> Espera respuesta o comunicate con Relaciones Industriales.
+    </div>
+</div>

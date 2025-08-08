@@ -1,0 +1,55 @@
+<div class="p-4 fade-in-slow">
+    <div class="container-fluid contenedor shadow p-2">
+        <div class="container-fluid box">
+            <div class="row mb-1">
+                <div class="col-lg-3 col-md-4 col-sm-12 d-flex justify-content-start">
+                    <i class="bi bi-arrow-left"  style="font-size: 3.5vh;" (click)="volver()"></i>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-end"></div>
+                <div class="col-lg-3 col-md-5 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
+                   <p>{{this.user[0].Nombre_completo}}</p>&nbsp;&nbsp;
+                   <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i>
+                </div>
+            </div>
+            <div>
+                <div  [formGroup]="consultaForm">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" formControlName="criterio" placeholder="Consultar" aria-label="Username" aria-describedby="basic-addon1">
+                        <button class="btn btn-secondary" (click)="consultar()">Consultar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-auto" style="max-height: 77vh;">      
+                    <table class="table table-light table-hover">
+                        <thead>
+                            <!-- <tr class="table-title">
+                            Ausentes:
+                            </tr> -->
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Fecha Solicitud</th>
+                            <th scope="col">Días</th>
+                            <th scope="col">Periodo</th>
+                            <th scope="col">Motivo</th>
+                            <th scope="col">Descargar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let solicitud of solicitudes; let i = index">
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{solicitud.nombre}}</td>
+                            <td>{{solicitud.fecha_solicitud}}</td>
+                            <td>{{solicitud.cuantos_dias}}</td>
+                            <td>{{solicitud.fecha_apartir}} al {{solicitud.fecha_hasta}}</td>
+                            <td>{{solicitud.motivo}}</td>
+                            <td><button class="btn btn-light descargar"><i class="bi bi-download"></i></button></td>
+                            <!-- <td><span class="badge rounded-pill bg-warning">{{solicitud.status}}</span></td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<mat-dialog-content>
+   <!-- Firma -->
+    <div class="enc">
+        <h3 class="firma-title">Firma Jefe de Área</h3>
+    </div>
+    <signature-pad [options]="signaturePadOptions"></signature-pad>
+        <div class="firma-botones">
+           <button mat-stroked-button color="warn" (click)="borrarFirma()">Borrar</button>
+           <button mat-stroked-button color="primary" (click)="guardarFirma()">Guardar Firma</button>
+        </div>
+        
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="cerrar()">Cerrar</button>
+</mat-dialog-actions>
+

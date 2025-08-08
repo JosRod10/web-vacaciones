@@ -1,0 +1,33 @@
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background: linear-gradient(to right, #071a3d, #2a5298); */
+  background-color: #fffbfb;
+  /* box-shadow: 10px 10px #000; */
+  /* opacity: .9; */
+}
+
+.btn-s{
+  background-color: greenyellow;
+  width: 50px;
+  height: 20px;
+}
+
+.ico {
+  color: #000;
+}
+
+.alert-text{
+  display: flex;
+  justify-content: center;
+  color: red;
+}
+
+.alert-pos{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 1em;
+}

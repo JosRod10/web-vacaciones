@@ -1,0 +1,77 @@
+/* .mat-stepper-horizontal {
+  margin-top: 8px;
+} */
+
+.mat-mdc-form-field {
+  margin-top: 16px;
+}
+
+.vacaciones-wrapper {
+  min-height: 88vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background: linear-gradient(to bottom right, #e0f7fa, #80deea); */
+  /* background-color: #000;
+  opacity: .8; */
+  padding: 1rem;
+}
+
+mat-card {
+  width: 100%;
+  max-width: 90%;
+  padding: 1rem;
+  border-radius: 12px;
+  /* background: #000;
+  opacity: .8; */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+mat-card-title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+/* ///////////////////////////////////////////////////////////////77 */
+
+.firma-title {
+  margin-top: 2rem;
+  font-weight: 500;
+}
+.firma-wrapper {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px dashed #bbb;
+  background: #fff;
+  border-radius: 8px;
+}
+signature-pad {
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.firma-botones {
+  display: flex;
+  justify-content: space-between;
+  /* margin-top: 1rem; */
+  margin-bottom: 1rem;
+}
+/* /////////////////////////////////////////////////////7 */
+
+.example-card {
+  max-width: 400px;
+}
+
+.example-header-image {
+  background-image: url('https://material.angular.dev/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+
+
