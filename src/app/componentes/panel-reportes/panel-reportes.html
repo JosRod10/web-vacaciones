@@ -10,7 +10,7 @@
                     <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-warning">DIAS DE VACACIONES: {{this.solicitudes[0].Dias_vacaciones}}</span></p>&nbsp;&nbsp;
                     <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-danger">DIAS OCUPADOS: {{this.solicitudes[0].Dias_ocupados}}</span></p>&nbsp;&nbsp;
                     <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-primary">DIAS DISPONIBLES: {{this.solicitudes[0].Dias_disponibles}}</span></p>&nbsp;&nbsp;
-                    <p *ngIf="this.nDias != 0"><span style="cursor: pointer;" class="badge rounded-pill bg-success"><i class="bi bi-file-earmark-spreadsheet"></i> DESCARGAR EXCEL</span></p>
+                    <p *ngIf="this.nDias != 0"><span (click)="descargarExcel()" style="cursor: pointer;" class="badge rounded-pill bg-success"><i class="bi bi-file-earmark-spreadsheet"></i> DESCARGAR EXCEL</span></p>
                 </div>
                 <div class="col-lg-3 col-md-5 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
                    <p>{{this.user[0].Nombre_completo}}</p>&nbsp;&nbsp;
@@ -24,15 +24,43 @@
                         <div class="col-lg-3 col-md-3 col-sm-12">
                             <select class="form-select" aria-label="Default select example">
                                 <option selected>Selecciona departamento</option>
-                                <option value="1">Sistemas</option>
-                                <option value="2">Compras</option>
-                                <option value="3">Refractarios</option>
-                                <option value="3">Abrasivos</option>
+                                <option value="1">ALMACEN</option>
+                                <option value="2">CERAMICA</option>
+                                <option value="3">COMPRAS</option>
+                                <option value="4">CONTABILIDAD</option>
+                                <option value="5">CONTROL DE CALIDAD</option>
+                                <option value="6">CONTROL DE PRODUCCION</option>
+                                <option value="7">CREDITO Y COBRANZAS</option>
+                                <option value="8">DESARROLLO DE ABRASIVOS</option>
+                                <option value="9">EMBARQUES Y EMPAQUES</option>
+                                <option value="10">ESPECIALIDADES REFRACTARIAS</option>
+                                <option value="11">GERENCIA EJECUTIVOS</option>
+                                <option value="12">HORNOS</option>
+                                <option value="13">ING.NVO.PROYECTOS</option>
+                                <option value="14">ING.NVO.PROYECTOS REFRACTARIOS</option>
+                                <option value="15">MANTENIMIENTO</option>
+                                <option value="16">OFICINA CDMX</option>
+                                <option value="17">OFICINA GUADALAJARA</option>
+                                <option value="18">OFICINA MONTERREY</option>
+                                <option value="19">OFICINA PUEBLA</option>
+                                <option value="20">OFICINA QUERETARO</option>
+                                <option value="21">PUNTAS MONTADAS</option>
+                                <option value="22">REFRACTARIOS</option>
+                                <option value="23">RELACIONES INDUSTRIALES</option>
+                                <option value="24">SHELLACK</option>
+                                <option value="25">SISTEMAS DE INFORMACION</option>
+                                <option value="26">TECNICO</option>
+                                <option value="27">TERMINADO</option>
+                                <option value="28">VENTAS REFRACTARIOS</option>
+                                <option value="29">VENTAS TOLUCA</option>
                             </select>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-12">
                             <select class="form-select" aria-label="Default select example">
                                 <option selected>Año</option>
+                                <option value="1">2020</option>
+                                <option value="2">2021</option>
+                                <option value="3">2022</option>
                                 <option value="1">2023</option>
                                 <option value="2">2024</option>
                                 <option value="3">2025</option>

@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ApiServicio } from '../../servicios/api-servicio';
-
+import * as XLSX from 'xlsx';
 // import pdfMake from 'pdfmake/build/pdfmake';
 // import pdfFonts from 'pdfmake/build/vfs_fonts';
 // (pdfMake as any).vfs = pdfFonts;
@@ -28,6 +28,7 @@ export class PanelReportes {
   consultaForm: FormGroup
   solicitudes: any;
   nDias: number = 0;
+  reporte_solicitudes: any[] = [];
 
   constructor(private dialog: MatDialog, private router: Router, private fb: FormBuilder, private api: ApiServicio){
 
@@ -39,6 +40,39 @@ export class PanelReportes {
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
+  }
+
+  descargarExcel(){
+
+      this.solicitudes.map((ele: any)=> {
+        const solicitud = {
+          Clave: ele.Clave,
+          Nombre: ele.Nombre_completo,
+          Departamento: ele.Departamento,
+          Puesto: ele.Puesto,
+          Fecha_de_ingreso: ele.Fecha_de_alta,
+          Estatus: ele.Estatus,
+          Fecha_solicitud: ele.fecha_solicitud,
+          Por_cuantos_dias: ele.cuantos_dias,
+          Del: ele.fecha_apartir,
+          Al: ele.fecha_hasta,
+          Motivo: ele.motivo,
+          Estatus_solicitud: ele.status
+        }
+        this.reporte_solicitudes.push(solicitud);
+      })
+
+      // 1. Convierte los datos en un formato de hoja de cálculo
+      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.reporte_solicitudes);
+
+      // 2. Crea un nuevo libro de trabajo y añade la hoja de cálculo
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Datos'); // 'Datos' es el nombre de la hoja
+
+      // 3. Genera y descarga el archivo XLSX
+      const nombreArchivo = 'reporte_solicitudes_vacaciones.xlsx';
+      XLSX.writeFile(wb, nombreArchivo);
+
   }
 
   abrirAlerta() {
