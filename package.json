@@ -22,7 +22,8 @@
     "angular-signature-pad-v2": "^10.0.0",
     "bootstrap": "^5.3.7",
     "bootstrap-icons": "^1.13.1",
-    "or": "^0.2.0",
+    "jszip": "^3.10.1",
+    "pdfmake": "^0.2.20",
     "rxjs": "~7.8.0",
     "signature_pad": "^5.0.10",
     "tslib": "^2.3.0",
@@ -34,12 +35,14 @@
     "@angular/cli": "^20.0.3",
     "@angular/compiler-cli": "^20.0.0",
     "@types/jasmine": "~5.1.0",
+    "@types/pdfmake": "^0.2.11",
     "jasmine-core": "~5.7.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "or": "^0.2.0",
     "typescript": "~5.8.2"
   }
 }

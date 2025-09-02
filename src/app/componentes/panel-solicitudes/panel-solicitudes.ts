@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Cerrarsesion } from '../alertas/cerrarsesion/cerrarsesion';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-panel-solicitudes',
@@ -13,19 +14,24 @@ import { Router } from '@angular/router';
   styleUrl: './panel-solicitudes.css'
 })
 export class PanelSolicitudes {
+  @ViewChild('miCheckboxRI') miCheckboxRI!: ElementRef;
+  @ViewChild('miCheckboxJI') miCheckboxJI!: ElementRef;
+  @ViewChild('miCheckboxG') miCheckboxG!: ElementRef;
 
   solicitudes: any;
   ausentes: any;
   cardSolicitud: any;
   user: any;
+  firmaCheck: boolean =  false;
 
   constructor(private api: ApiServicio, private dialog: MatDialog, private router: Router){
-
+    
   }
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
-    this.cargarSolicitudes();
+    this.cargarSolicitudes(this.user[0].Tipo);
+    console.log(this.user);
   }
 
   activarCard(solicitud: any){
@@ -44,19 +50,55 @@ export class PanelSolicitudes {
     this.router.navigate(['/reportes']);
   }
 
-  cargarSolicitudes(){
-    this.api.getSolicitudes().subscribe(data => {
+  cargarSolicitudes(tipo: string){
+    this.api.getSolicitudes(tipo).subscribe(data => {
         // this.items = data;
         console.log(data);
-        this.solicitudes = data.filter(solicitud => solicitud.status == 'Pendiente');
+        this.solicitudes = data;
         this.ausentes = data.filter(solicitud => solicitud.status == 'Ausente');
         console.log(this.solicitudes, this.ausentes);
-        this.cardSolicitud = this.solicitudes[0].status == 'Pendiente' ? this.solicitudes[0] : {};
+        this.cardSolicitud =  this.solicitudes[0];
     });
   }
 
+  activarFirma(){
+    this.firmaCheck = true;
+  }
+
+  firmaJefe(id: number){
+
+    this.api.firmaJefeInmediato(id).subscribe(
+      (response) => {
+          if(response == true){
+            this.cargarSolicitudes(this.user[0].Tipo);
+            this.miCheckboxJI.nativeElement.checked = false;
+          }
+         },
+         (error) => {
+           console.error('Error al obtener datos:', error);
+         }
+    );
+
+  }
+
+  firmaGerente(id: number){
+
+    this.api.firmaGerente(id).subscribe(
+      (response) => {
+          if(response == true){
+            this.cargarSolicitudes(this.user[0].Tipo);
+            this.miCheckboxG.nativeElement.checked = false;
+          }
+         },
+         (error) => {
+           console.error('Error al obtener datos:', error);
+         }
+    );
+
+  }
+
   accion(id: number, accion: number){
-    const dias_d = this.solicitudes[0].Dias_disponibles - this.solicitudes[0].cuantos_dias;
+    const dias_d = parseInt(this.solicitudes[0].Dias_disponibles) - parseInt(this.solicitudes[0].cuantos_dias);
     const dias_u = parseInt(this.solicitudes[0].Dias_ocupados) + parseInt(this.solicitudes[0].cuantos_dias);
     const clave = this.solicitudes[0].Clave;
     
@@ -64,7 +106,9 @@ export class PanelSolicitudes {
     this.api.aprobar(id, accion, dias_d, dias_u, clave).subscribe(
       (response) => {
           if(response == true){
-            this.cargarSolicitudes();
+            this.cargarSolicitudes(this.user[0].Tipo);
+            this.firmaCheck = false;
+            this.miCheckboxRI.nativeElement.checked = false;
           }
          },
          (error) => {

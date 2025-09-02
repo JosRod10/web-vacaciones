@@ -1,11 +1,22 @@
 <div class="p-4 fade-in-slow">
-    <div class="container-fluid contenedor shadow">
+    <div class="container-fluid contenedor shadow" *ngIf="user[0].Tipo == 'C'">
         <div class="container-fluid box">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-12 d-flex justify-content-start">
-                   <p>Dispones: {{this.user[0].Dias_disponibles}} de {{this.user[0].Dias_vacaciones}} días</p>
+                   <p>Días ocupados: {{this.user[0].Dias_ocupados}} de {{this.user[0].Dias_vacaciones}} días</p>
                 </div>
-                <div class="col-lg-6 col-md-2 col-sm-0"></div>
+                <div class="col-lg-2 col-md-2 col-sm-0"></div>
+                <div class="col-lg-4 col-md-2 col-sm-0">
+                     <select *ngIf="this.user[0].Tipo == 'S'" class="form-select form-select-md" aria-label=".form-select-sm example">
+                            <!-- <option selected>Selecciona colaborador</option>
+                            <option value="1">Vacaciones</option>
+                            <option value="2">Permiso</option>
+                            <option value="3">Pago tiempo por tiempo</option> -->
+                            <div *ngFor="let colaborador of colaboradores">
+                                <option value="1">{{colaborador.Nombre_completo}}</option>
+                            </div>
+                     </select>
+                </div>
                 <div class="col-lg-4 col-md-6 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
                    <p>{{this.user[0].Nombre_completo}}</p>&nbsp;&nbsp;
                    <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i>
@@ -24,62 +35,64 @@
 
         <form [formGroup]="solicitudForm">
             <div class="row">
-                <div class="container d-flex justify-content-center mb-2"><h2 style="color: #fff; font-weight: bold; font-size: 2em;"></h2></div>
+                <div class="container d-flex justify-content-center mb-1"><h2 style="color: #fff; font-weight: bold; font-size: 2em;"></h2></div>
                 <div class="col-lg-2 col-sm-12"></div>
                 <div class="col-lg-8 col-sm-12">
 
-                    <div class="input-group mb-2">
+                    <div class="input-group mb-1">
                         <span class="input-group-text" id="basic-addon1">Fecha</span>
                         <input type="text" class="form-control" [value] ="this.fecha_hoy" disabled aria-label="Username">
                         <span class="input-group-text">del 20</span>
                         <input type="text" class="form-control" [value] ="this.ano_hoy" disabled aria-label="Server">
                     </div>
 
-                    <div class="input-group mb-2">
+                    <div class="input-group mb-1">
                         <span class="input-group-text" id="basic-addon1">Por medio del presente solicitamos se autorice a</span>
                         <input type="text" class="form-control" [value] ="this.user[0].Nombre_completo"  disabled aria-label="Username" aria-describedby="basic-addon1">
                     </div>
 
-                    <div class="input-group mb-2">
+                    <div class="input-group mb-1">
+                        <!-- [value]="this.user[0].Fecha_de_alta" -->
                         <span class="input-group-text" id="basic-addon1">Fecha de ingreso</span>
-                        <input type="text" class="form-control" [value]="this.user[0].Fecha_de_alta" disabled aria-label="Username">
+                        <input type="text" class="form-control" [value]="this.fechaAlta" disabled aria-label="Username">
                         <span class="input-group-text">Años Cumplidos</span>
-                        <input type="text" class="form-control" [value]="this.cumplidos" disabled aria-label="Server">
+                        <!-- [value]="this.cumplidos" -->
+                        <input type="text" class="form-control" value="0" disabled aria-label="Server">
                         <span class="input-group-text">No. Tarjeta</span>
                         <input type="text" class="form-control" [value]="this.user[0].Clave" disabled aria-label="Server">
                     </div>
 
-                    <div class="input-group mb-2">
+                    <div class="input-group mb-1">
                         <span class="input-group-text" id="basic-addon1">Del departamento de</span>
                         <input type="text" class="form-control" [value] ="this.user[0].Departamento" disabled aria-label="Username">
                         <span class="input-group-text">Centro de costos&nbsp;
                             <label *ngIf="isInvalid('cCostos')" style="color: red; font-size: small;">( campo obligatorio* )</label>
                         </span>
-                        <input type="text" class="form-control" [value]="this.user[0].Centro_costos" disabled aria-label="Server">
+                        <input type="text" class="form-control" value="304" disabled aria-label="Server">
                     </div>
 
                     <label for="basic-url" class="form-label d-flex justify-content-center">Permiso para faltar a sus labores</label>
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="input-group mb-2 d-flex justify-content-center">
+                            <div class="input-group mb-1 d-flex justify-content-center">
                                 <input type="checkbox" class="btn-check" id="btn-check-con" autocomplete="off" formControlName="tPermiso1">
                                 <label class="btn btn-outline-success" for="btn-check-con">Con goce de sueldo</label>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="input-group mb-2 d-flex justify-content-center">
+                            <div class="input-group mb-1 d-flex justify-content-center">
                                 <input type="checkbox" class="btn-check" id="btn-check-sin" autocomplete="off" formControlName="tPermiso2">
                                 <label class="btn btn-outline-success" for="btn-check-sin">Sin goce de sueldo</label>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="input-group mb-2 d-flex justify-content-center">
+                            <div class="input-group mb-1 d-flex justify-content-center">
                                 <input type="checkbox" class="btn-check" id="btn-check-sindi" autocomplete="off" formControlName="tPermiso3">
                                 <label class="btn btn-outline-success" for="btn-check-sindi">Sindicalizado</label>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="input-group mb-2 d-flex justify-content-center">
+                            <div class="input-group mb-1 d-flex justify-content-center">
                                 <input type="checkbox" class="btn-check" id="btn-check-no" autocomplete="off" formControlName="tPermiso4">
                                 <label class="btn btn-outline-success" for="btn-check-no">No sindicalizado</label>
                             </div>
@@ -99,7 +112,7 @@
                     <div class="input-group mb-1">
                         <span class="input-group-text" id="basic-addon1">Por&nbsp;
                             <label *ngIf="isInvalid('cDias')" style="color: red; font-size: small;">( Campo obligatorio* )</label>
-                            <label *ngIf="this.solicitudForm.get('cDias')?.value > this.user[0].Dias_Vacaciones_d" style="color: red; font-size: small;">(  Días No disponibles* )</label>
+                            <label *ngIf="this.solicitudForm.get('cDias')?.value > this.dias_diponibles" style="color: red; font-size: small;">(  Días No disponibles* )</label>
                         </span>
                         <input type="text" class="form-control" formControlName="cDias" placeholder="10" aria-label="Username">
                         <span class="input-group-text">días, a partir del&nbsp;
@@ -110,7 +123,7 @@
                             <mat-datepicker #inicioPicker panelClass="calendario"></mat-datepicker>
                     </div>
 
-                    <div class="input-group mb-2">
+                    <div class="input-group mb-1">
                         <span class="input-group-text" id="basic-addon1">al día&nbsp;
                             <label *ngIf="isInvalid('fechaHasta')" style="color: red; font-size: small;">( Campo obligatorio* )</label>
                         </span>
@@ -120,7 +133,16 @@
                             <span class="input-group-text">inclusive</span>
                     </div>
 
-                    <div class="input-group mb-2">
+                    <div class="input-group mb-1">
+                        <select (change)="valorSelect($event)" class="form-select form-select-md" aria-label=".form-select-sm example">
+                            <option selected>Selecciona una opción</option>
+                            <option value="Vacaciones">Vacaciones</option>
+                            <option value="Permiso">Permiso</option>
+                            <option value="Pago tiempo por tiempo">Pago tiempo por tiempo</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-1">
                         <span class="input-group-text">Motivo&nbsp;
                             <label *ngIf="isInvalid('motivo')" style="color: red; font-size: small;">( Campo obligatorio* )</label></span>
                         <textarea class="form-control" aria-label="With textarea" formControlName="motivo"></textarea>
@@ -147,8 +169,187 @@
             <div class="col-lg-5 col-sm-12"></div>
             <div class="col-lg-2 col-sm-12">
                 <div class="container-fluid d-flex justify-content-center" style="margin-top: 3vh;">
-                    <button *ngIf="this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.solicitudForm.get('cDias')?.value <= this.user[0].Dias_disponibles" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
-                    <button *ngIf="this.solicitudForm.value.firma == 0 || this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || this.solicitudForm.get('cDias')?.value > this.user[0].Dias_disponibles" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
+                    <button *ngIf="this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.solicitudForm.get('cDias')?.value <= this.dias_diponibles && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true)" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
+                    <button *ngIf="this.solicitudForm.value.firma == 0 || this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || this.solicitudForm.get('cDias')?.value > this.dias_diponibles || (this.solicitudForm.value.tPermiso1 == false && this.solicitudForm.value.tPermiso2 == false && this.solicitudForm.value.tPermiso3 == false && this.solicitudForm.value.tPermiso4 == false)" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
+                </div>
+            </div>
+            <div class="col-lg-5 col-sm-12"></div>
+        </div>
+        
+    </div>
+
+    <div class="container-fluid contenedor shadow" *ngIf="user[0].Tipo == 'S'">
+        <div class="container-fluid box">
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-12 d-flex justify-content-start">
+                   <p *ngIf="this.colaborador[0] && this.banderaDias == false">Días ocupados: {{this.colaborador[0].Dias_ocupados}} de {{this.colaborador[0].Dias_vacaciones}} días</p>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-0"></div>
+                <div class="col-lg-4 col-md-2 col-sm-0" style="margin-top: -2vh;">
+                     <select (change)="datosCo($event)" class="form-select form-select-md" aria-label=".form-select-sm example">
+                            <!-- <option selected>Selecciona colaborador</option>
+                            <option value="1">Vacaciones</option>
+                            <option value="2">Permiso</option>
+                            <option value="3">Pago tiempo por tiempo</option> -->
+                            <div *ngFor="let colaborador of colaboradores">
+                                <option value="{{colaborador.Nombre_completo}}">{{colaborador.Nombre_completo}}</option>
+                            </div>
+                     </select>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
+                   <p>{{this.user[0].Nombre_completo}}</p>&nbsp;&nbsp;
+                   <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid box-enc">
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-0"></div>
+                <div class="col-lg-8 col-md-8 col-sm-12">
+                    <h2>PARA USO EXCLUSIVO DEL DEPARTAMENTO INTERESADO</h2>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-0"></div>
+            </div>
+        </div>
+
+        <form [formGroup]="solicitudForm">
+            <div class="row">
+                <div class="container d-flex justify-content-center mb-1"><h2 style="color: #fff; font-weight: bold; font-size: 2em;"></h2></div>
+                <div class="col-lg-2 col-sm-12"></div>
+                <div class="col-lg-8 col-sm-12">
+
+                    <div class="input-group mb-1">
+                        <span class="input-group-text" id="basic-addon1">Fecha</span>
+                        <input type="text" class="form-control" [value] ="this.fecha_co_hoy" disabled aria-label="Username">
+                        <span class="input-group-text">del 20</span>
+                        <input type="text" class="form-control" [value] ="this.ano_co_actual" disabled aria-label="Server">
+                    </div>
+
+                    <div class="input-group mb-1">
+                        <span class="input-group-text" id="basic-addon1">Por medio del presente solicitamos se autorice a</span>
+                        <input type="text" class="form-control" [value] ="this.nombre_co"  disabled aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group mb-1">
+                        <!-- [value]="this.user[0].Fecha_de_alta" -->
+                        <span class="input-group-text" id="basic-addon1">Fecha de ingreso</span>
+                        <input type="text" class="form-control" [value]="this.fecha_co_ingreso" disabled aria-label="Username">
+                        <span class="input-group-text">Años Cumplidos</span>
+                        <!-- [value]="this.cumplidos" -->
+                        <input type="text" class="form-control" [value]="this.anos_co_cumplidos" disabled aria-label="Server">
+                        <span class="input-group-text">No. Tarjeta</span>
+                        <input type="text" class="form-control" [value]="this.no_tarjeta_co" disabled aria-label="Server">
+                    </div>
+
+                    <div class="input-group mb-1">
+                        <span class="input-group-text" id="basic-addon1">Del departamento de</span>
+                        <input type="text" class="form-control" [value] ="this.dep_co" disabled aria-label="Username">
+                        <span class="input-group-text">Centro de costos&nbsp;
+                            <label *ngIf="isInvalid('cCostos')" style="color: red; font-size: small;">( campo obligatorio* )</label>
+                        </span>
+                        <input type="text" class="form-control" [value]="this.centro_co" disabled aria-label="Server">
+                    </div>
+
+                    <label for="basic-url" class="form-label d-flex justify-content-center">Permiso para faltar a sus labores</label>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-12">
+                            <div class="input-group mb-1 d-flex justify-content-center">
+                                <input type="checkbox" class="btn-check" id="btn-check-con" autocomplete="off" formControlName="tPermiso1">
+                                <label class="btn btn-outline-success" for="btn-check-con">Con goce de sueldo</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12">
+                            <div class="input-group mb-1 d-flex justify-content-center">
+                                <input type="checkbox" class="btn-check" id="btn-check-sin" autocomplete="off" formControlName="tPermiso2">
+                                <label class="btn btn-outline-success" for="btn-check-sin">Sin goce de sueldo</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12">
+                            <div class="input-group mb-1 d-flex justify-content-center">
+                                <input type="checkbox" class="btn-check" id="btn-check-sindi" autocomplete="off" formControlName="tPermiso3">
+                                <label class="btn btn-outline-success" for="btn-check-sindi">Sindicalizado</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12">
+                            <div class="input-group mb-1 d-flex justify-content-center">
+                                <input type="checkbox" class="btn-check" id="btn-check-no" autocomplete="off" formControlName="tPermiso4">
+                                <label class="btn btn-outline-success" for="btn-check-no">No sindicalizado</label>
+                            </div>
+                        </div>
+                        
+                    
+                              
+                        <!-- <select class="form-select" aria-label="Default select example" formControlName="tPermiso">
+                            <option selected>{{this.selectOption}}</option>
+                            <option value="Con goce de sueldo">Con goce de sueldo</option>
+                            <option value="Sin goce de sueldo">Sin goce de sueldo</option>
+                            <option value="Sindicalizado">Sindicalizado</option>
+                            <option value="No sindicalizado">No sindicalizado</option>
+                        </select> -->
+                    </div>
+
+                    <div class="input-group mb-1">
+                        <span class="input-group-text" id="basic-addon1">Por&nbsp;
+                            <label *ngIf="isInvalid('cDias')" style="color: red; font-size: small;">( Campo obligatorio* )</label>
+                            <label *ngIf="this.solicitudForm.get('cDias')?.value > this.dias_diponibles" style="color: red; font-size: small;">(  Días No disponibles* )</label>
+                        </span>
+                        <input type="text" class="form-control" formControlName="cDias" placeholder="10" aria-label="Username">
+                        <span class="input-group-text">días, a partir del&nbsp;
+                            <label *ngIf="isInvalid('fechaApartir')" style="color: red; font-size: small;">( campo obligatorio* )</label>
+                        </span>
+                            <input class="form-control" matInput [matDatepicker]="inicioPicker" formControlName="fechaApartir"/>
+                            <span><mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle></span>
+                            <mat-datepicker #inicioPicker panelClass="calendario"></mat-datepicker>
+                    </div>
+
+                    <div class="input-group mb-1">
+                        <span class="input-group-text" id="basic-addon1">al día&nbsp;
+                            <label *ngIf="isInvalid('fechaHasta')" style="color: red; font-size: small;">( Campo obligatorio* )</label>
+                        </span>
+                            <input class="form-control" matInput [matDatepicker]="finPicker" formControlName="fechaHasta"/>
+                            <span><mat-datepicker-toggle matSuffix [for]="finPicker"></mat-datepicker-toggle></span>
+                            <mat-datepicker #finPicker panelClass="calendario"></mat-datepicker>                        
+                            <span class="input-group-text">inclusive</span>
+                    </div>
+
+                    <div class="input-group mb-1">
+                        <select (change)="valorSelect($event)" class="form-select form-select-md" aria-label=".form-select-sm example">
+                            <option selected>Selecciona una opción</option>
+                            <option value="Vacaciones">Vacaciones</option>
+                            <option value="Permiso">Permiso</option>
+                            <option value="Pago tiempo por tiempo">Pago tiempo por tiempo</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-1">
+                        <span class="input-group-text">Motivo&nbsp;
+                            <label *ngIf="isInvalid('motivo')" style="color: red; font-size: small;">( Campo obligatorio* )</label></span>
+                        <textarea class="form-control" aria-label="With textarea" formControlName="motivo"></textarea>
+                    </div>
+
+                    <div class="input-group d-flex justify-content-center mt-4">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-lg-12 col-sm-12 d-flex justify-content-center">
+                                <label class="aut">Firmar</label>&nbsp;&nbsp;
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input activ" formControlName="firma" type="checkbox" id="flexSwitchCheckDefault" (click)="cambiarLeyenda($event)">
+                                    &nbsp;&nbsp;<label class="form-check-label aut" for="flexSwitchCheckDefault"></label>
+                                    <!-- {{checkLeyenda}} -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-12"></div>
+            </div>
+        </form>
+
+        <div class="row">
+            <div class="col-lg-5 col-sm-12"></div>
+            <div class="col-lg-2 col-sm-12">
+                <div class="container-fluid d-flex justify-content-center" style="margin-top: 3vh;">
+                    <button *ngIf="this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.solicitudForm.get('cDias')?.value <= this.dias_diponibles && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true)" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
+                    <button *ngIf="this.solicitudForm.value.firma == 0 || this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || this.solicitudForm.get('cDias')?.value > this.dias_diponibles || (this.solicitudForm.value.tPermiso1 == false && this.solicitudForm.value.tPermiso2 == false && this.solicitudForm.value.tPermiso3 == false && this.solicitudForm.value.tPermiso4 == false)" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
                 </div>
             </div>
             <div class="col-lg-5 col-sm-12"></div>

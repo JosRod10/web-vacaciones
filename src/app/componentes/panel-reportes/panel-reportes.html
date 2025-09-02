@@ -2,10 +2,16 @@
     <div class="container-fluid contenedor shadow p-2">
         <div class="container-fluid box">
             <div class="row mb-1">
-                <div class="col-lg-3 col-md-4 col-sm-12 d-flex justify-content-start">
+                <div class="col-lg-1 col-md-1 col-sm-12 d-flex justify-content-start">
                     <i class="bi bi-arrow-left"  style="font-size: 3.5vh;" (click)="volver()"></i>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-end"></div>
+                <div class="col-lg-8 col-md-8 col-sm-12 d-flex justify-content-center">
+                    <p *ngIf="this.nDias != 0">{{this.solicitudes[0].nombre}}:</p>&nbsp;
+                    <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-warning">DIAS DE VACACIONES: {{this.solicitudes[0].Dias_vacaciones}}</span></p>&nbsp;&nbsp;
+                    <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-danger">DIAS OCUPADOS: {{this.solicitudes[0].Dias_ocupados}}</span></p>&nbsp;&nbsp;
+                    <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-primary">DIAS DISPONIBLES: {{this.solicitudes[0].Dias_disponibles}}</span></p>&nbsp;&nbsp;
+                    <p *ngIf="this.nDias != 0"><span style="cursor: pointer;" class="badge rounded-pill bg-success"><i class="bi bi-file-earmark-spreadsheet"></i> DESCARGAR EXCEL</span></p>
+                </div>
                 <div class="col-lg-3 col-md-5 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
                    <p>{{this.user[0].Nombre_completo}}</p>&nbsp;&nbsp;
                    <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i>
@@ -13,11 +19,50 @@
             </div>
             <div>
                 <div  [formGroup]="consultaForm">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" formControlName="criterio" placeholder="Consultar" aria-label="Username" aria-describedby="basic-addon1">
-                        <button class="btn btn-secondary" (click)="consultar()">Consultar</button>
-                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-12">
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected>Selecciona departamento</option>
+                                <option value="1">Sistemas</option>
+                                <option value="2">Compras</option>
+                                <option value="3">Refractarios</option>
+                                <option value="3">Abrasivos</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-12">
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected>Año</option>
+                                <option value="1">2023</option>
+                                <option value="2">2024</option>
+                                <option value="3">2025</option>
+                            </select>
+                        </div>
+                          <div class="col-lg-2 col-md-1 col-sm-12">
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected>Mes</option>
+                                <option value="1">Enero</option>
+                                <option value="2">Febrero</option>
+                                <option value="3">Marzo</option>
+                                <option value="1">Abril</option>
+                                <option value="2">Mayo</option>
+                                <option value="3">Junio</option>
+                                <option value="1">Julio</option>
+                                <option value="2">Agosto</option>
+                                <option value="3">Septiembre</option>
+                                <option value="1">Octubre</option>
+                                <option value="2">Noviembre</option>
+                                <option value="3">Diciembre</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 col-md-8 col-sm-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+                                <input type="text" class="form-control" formControlName="criterio" placeholder="Consultar" aria-label="Username" aria-describedby="basic-addon1">
+                                <button class="btn btn-secondary" (click)="consultar()">Consultar</button>
+                            </div>
+                        </div>
+                    </div>        
                 </div>
             </div>
             <div class="overflow-auto" style="max-height: 77vh;">      
@@ -33,6 +78,7 @@
                             <th scope="col">Días</th>
                             <th scope="col">Periodo</th>
                             <th scope="col">Motivo</th>
+                            <th scope="col">Status</th>
                             <th scope="col">Descargar</th>
                             </tr>
                         </thead>
@@ -44,7 +90,8 @@
                             <td>{{solicitud.cuantos_dias}}</td>
                             <td>{{solicitud.fecha_apartir}} al {{solicitud.fecha_hasta}}</td>
                             <td>{{solicitud.motivo}}</td>
-                            <td><button class="btn btn-light descargar"><i class="bi bi-download"></i></button></td>
+                            <td>{{solicitud.status}}</td>
+                            <td><button class="btn btn-light descargar" (click)="generatePDFWithPdfMake(solicitud)"><i class="bi bi-download"></i></button></td>
                             <!-- <td><span class="badge rounded-pill bg-warning">{{solicitud.status}}</span></td> -->
                             </tr>
                         </tbody>

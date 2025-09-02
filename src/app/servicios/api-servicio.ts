@@ -29,8 +29,8 @@ export class ApiServicio {
     return this.http.post<any>(`${this.apiUrl}/form`, item);
   }
 
-  getSolicitudes(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/solicitudes`);
+  getSolicitudes(tipo: string): Observable<any[]> {
+    return this.http.post<any[]>(`${this.apiUrl}/solicitudes`, {tipo});
   }
 
   aprobar(id: number, accion: number, dias_d: number, dias_u: number, clave: string): Observable<any>{
@@ -40,6 +40,20 @@ export class ApiServicio {
   consultaReporteSolicitud(criterio: any): Observable<any> {
     // console.log("Entra");
     return this.http.post<any>(`${this.apiUrl}/reporteSolicitud`, criterio);
+  }
+
+  firmaJefeInmediato(id: number): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/firma-jefe-inmediato`, {id});
+  }
+
+  firmaGerente(id: number): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/firma-gerente`, {id});
+  }
+
+  getCoAsociados(tipo: string, tipo_dep: string){
+        return this.http.post<any>(`${this.apiUrl}/colaboradores-asociados`, {tipo, tipo_dep});
   }
 
 }

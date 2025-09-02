@@ -13,6 +13,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatIconModule} from '@angular/material/icon';
+import { Colaborador } from '../../interfaces/colaborador';
 
 
 @Component({
@@ -41,8 +42,25 @@ export class Form {
   ano_hoy: string = '';
   fechaAlta: any = '';
   cumplidos: number = 0;
+  dias_diponibles: number = 0;
 
   fechaConversionApartir: string = '';
+
+  colaboradores: any[] = [];
+  colaborador: any;
+  banderaDias: boolean = false;
+
+  //////////////////// Datos colaborador ////////////////////////
+  fecha_co_hoy: string = '';
+  ano_co_actual: string = '';
+  nombre_co: string = '';
+  fecha_co_ingreso: string = '';
+  anos_co_cumplidos: number = 0;
+  no_tarjeta_co: string = '';
+  dep_co: string = '';
+  centro_co: string = '';
+  opcionselect: string = '';
+  ///////////////////////////////////////////////////////////////
 
   constructor(private fb: FormBuilder, private router: Router, private dialog: MatDialog, private api: ApiServicio){
 
@@ -74,6 +92,31 @@ export class Form {
       fechaFin: ['', [Validators.required]],
       firmaRI: ['', [Validators.required]]
     });
+
+    this.colaborador = {
+       Apellido_materno: '',
+    Apellido_paterno: '',
+    CURP: '',
+    Clave: 0,
+    Contraseña: '',
+    Departamento: '',
+    Dias_disponibles: '',
+    Dias_ocupados: '',
+    Dias_vacaciones: '',
+    Estatus: '',
+    Estatus_Solicitud: '',
+    Fecha_de_alta: '',
+    Fecha_de_baja: '',
+    Fecha_de_nacimiento: '',
+    Nombre: '',
+    Nombre_completo: '',
+    Puesto: '',
+    RFC: '',
+    Sexo: '',
+    Tipo: '',
+    Tipo_Dep: '',
+    Usuario: '',
+    }
     
   }
 
@@ -81,16 +124,25 @@ export class Form {
     this.checkLeyenda = 'Autorizar';
     this.selectOption = 'Selecciona una opción';
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
+    if(this.user[0].Tipo == 'S' && this.user[0].Tipo_Dep == 'Ref'){
+     this.cargarColaboradores(this.user[0].Tipo, this.user[0].Tipo_Dep);
+    }
+
     console.log('Usuario: ', this.user);
     this.fecha = this.obtenerFechaDeHoy();
-    this.fecha_hoy = this.fecha.substring(0,12);
-    this.ano_hoy = this.fecha.substring(18,20);
+    this.fecha_hoy = this.fecha.substring(0,16);
+    this.ano_hoy = this.fecha.substring(22,24);
     console.log(this.fecha);
     // console.log(this.user[0].Fecha_alta.substring(6,10));
     // this.cumplidos = this.obtenerAnosCumplidos(this.user[0].Fecha_alta);
     // console.log(this.cumplidos);
     this.fechaAlta = this.obtenerFechaAlta(this.user[0].Fecha_de_alta);
-    this.obtenerAnosCumplidos(this.user[0].Fecha_de_alta);
+    this.obtenerAnosCumplidos(this.fechaAlta);
+    if(parseInt(this.user[0].Dias_disponibles) == 0){
+      this.dias_diponibles = parseInt(this.user[0].Dias_vacaciones);
+    }else{
+      this.dias_diponibles = parseInt(this.user[0].Dias_disponibles)
+    }
     // this.formatCustomDate();
     
   }
@@ -106,24 +158,98 @@ export class Form {
     return hoy.toLocaleDateString('es-ES', opciones);
   }
 
-  obtenerFechaAlta(fecha: string){
-    const dia = fecha.substring(0,2);
-    const mes = fecha.substring(3,5) == '01' ? 'enero' 
-    : fecha.substring(3,5) == '02' ? 'febrero' 
-    : fecha.substring(3,5) == '03' ? 'marzo'
-    : fecha.substring(3,5) == '04' ? 'abril'
-    : fecha.substring(3,5) == '05' ? 'mayo'
-    : fecha.substring(3,5) == '06' ? 'junio'
-    : fecha.substring(3,5) == '07' ? 'julio'
-    : fecha.substring(3,5) == '08' ? 'agosto'
-    : fecha.substring(3,5) == '09' ? 'septiembre'
-    : fecha.substring(3,5) == '10' ? 'octubre'
-    : fecha.substring(3,5) == '11' ? 'noviembre'
-    : fecha.substring(3,5) == '12' ? 'diciembre' : 'Otro Mes';
-    const año = fecha.substring(6,10);
-    const fechaAlta = dia + ' de ' + mes + ' del ' + año;
-    return fechaAlta;
+   obtenerFechaAltaFormato(fecha: Date){
+    const opciones: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    };
+
+    return fecha.toLocaleDateString('es-ES', opciones);
   }
+
+  cargarColaboradores(tipo: string, tipo_dep: string){
+
+    this.api.getCoAsociados(tipo, tipo_dep).subscribe(data => {
+        // this.items = data;
+        console.log(data);
+        this.colaboradores = data;
+        const opcion = {Nombre_completo: 'Selecciona colaborador'}
+        this.colaboradores.unshift(opcion);
+    });
+
+  };
+
+  datosCo(event: Event): void {
+
+    const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
+    const selectedValue = selectElement.value;
+
+    if(selectedValue == 'Selecciona colaborador'){
+        this.fecha_co_hoy = '';
+        this.ano_co_actual = '';
+        this.nombre_co = '';
+        this.fecha_co_ingreso =  '';
+        this.anos_co_cumplidos = 0;
+        this.no_tarjeta_co = '';
+        this.dep_co = '';
+        this.centro_co = '';
+        this.banderaDias = true;
+    }else{
+      this.banderaDias = false;
+        this.colaborador = this.colaboradores.filter(ele => ele.Nombre_completo == selectedValue);
+        console.log(this.colaborador);
+        this.fecha_co_hoy = this.obtenerFechaDeHoy().substring(0,16);
+        this.ano_co_actual = '25';
+        this.nombre_co = this.colaborador[0].Nombre_completo;
+        this.fecha_co_ingreso =  this.obtenerFechaAlta(this.colaborador[0].Fecha_de_alta);;
+        this.anos_co_cumplidos = this.obtenerAnosCumplidos(this.formatoFecha(this.colaborador[0].Fecha_de_alta));
+        this.no_tarjeta_co = this.colaborador[0].Clave;
+        this.dep_co = this.colaborador[0].Departamento;
+        this.centro_co = '300';
+        this.dias_diponibles = this.colaborador[0].Dias_disponibles;
+    }
+  }
+
+  // obtenerFechaAlta(fecha: string){
+  //   const dia = fecha.substring(0,2);
+  //   const mes = fecha.substring(3,5) == '01' ? 'enero' 
+  //   : fecha.substring(3,5) == '02' ? 'febrero' 
+  //   : fecha.substring(3,5) == '03' ? 'marzo'
+  //   : fecha.substring(3,5) == '04' ? 'abril'
+  //   : fecha.substring(3,5) == '05' ? 'mayo'
+  //   : fecha.substring(3,5) == '06' ? 'junio'
+  //   : fecha.substring(3,5) == '07' ? 'julio'
+  //   : fecha.substring(3,5) == '08' ? 'agosto'
+  //   : fecha.substring(3,5) == '09' ? 'septiembre'
+  //   : fecha.substring(3,5) == '10' ? 'octubre'
+  //   : fecha.substring(3,5) == '11' ? 'noviembre'
+  //   : fecha.substring(3,5) == '12' ? 'diciembre' : 'Otro Mes';
+  //   const año = fecha.substring(6,10);
+  //   const fechaAlta = dia + ' de ' + mes + ' del ' + año;
+  //   return fechaAlta;
+  // }
+
+  obtenerFechaAlta(fechaISO: string): string {
+    const fecha = new Date(fechaISO);
+    const dia = fecha.getDate()+1;
+    const mes = fecha.toLocaleString('default', { month: 'long' });
+    const año = fecha.getFullYear();
+
+    return `${dia} de ${mes} del ${año}`;
+  }
+
+  formatoFecha(fecha: string){
+    var date = new Date(fecha);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const formatoFechaHoy = day + '/' + month +'/' + year;
+    return formatoFechaHoy;
+  }
+
 
   formatCustomDate(){
     var date = new Date();
@@ -149,18 +275,22 @@ export class Form {
     const añoA = parseInt(fechaAlta.substring(6,10));
 
     this.cumplidos = añoH - añoA;
-    console.log(diaA, diaH)
+    console.log(diaA, diaH);
 
-    if(diaH >= diaA){
+    if(diaH >= diaA && mesH >= mesA){
       this.cumplidos = this.cumplidos;
-      console.log('Entro');
-    }else{
-      this.cumplidos = this.cumplidos - 1;
-      console.log('Entro');
     }
+    if(diaH >= diaA && mesH < mesA){
+      this.cumplidos = this.cumplidos - 1;
+    }
+    // if(diaH < diaA && mesH < mesA){
+    //   this.cumplidos = this.cumplidos;
+    // }
     if(añoA == añoH){
       this.cumplidos = 0;
     }
+
+    return this.cumplidos;
 
   }
 
@@ -259,6 +389,13 @@ export class Form {
     return hoy.toLocaleDateString('es-ES', opciones);
   }
 
+  valorSelect(event: Event): void {
+
+    const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
+    this.opcionselect = selectElement.value;
+     
+  }
+
   enviar(){
     // console.log('Formulario:',this.solicitudForm.value.fecha);
     this.solicitudForm.value.fecha = this.solicitudForm.value.fecha + ' del 20' + this.solicitudForm.value.año;
@@ -266,15 +403,25 @@ export class Form {
     // this.solicitudForm.value.tPermiso = this.solicitudForm.value.tPermiso1 == true? 'Con goce de sueldo' : this.solicitudForm.value.tPermiso2 == true? 'Sin goce de sueldo' : this.solicitudForm.value.tPermiso3 == true? 'Sindicalizado' : this.solicitudForm.value.tPermiso4 == true? 'No sindicalizado' : '';
 
     this.solicitudForm.value.fecha = this.fecha_hoy + ' del 20' + this.ano_hoy;
-    this.solicitudForm.value.nombre = this.user[0].Nombre_completo;
-    this.solicitudForm.value.fechaIngreso = this.fechaAlta;
+    this.solicitudForm.value.nombre = this.user[0].Tipo == 'S'? this.nombre_co : this.user[0].Nombre_completo;
+    this.solicitudForm.value.fechaIngreso = this.user[0].Tipo == 'S'? this.fecha_co_ingreso : this.fechaAlta;
     this.solicitudForm.value.añosCumplidos = this.cumplidos;
     this.solicitudForm.value.noTarjeta = this.user[0].No_Tarjeta;
-    this.solicitudForm.value.depto = this.user[0].Departamento;
+    this.solicitudForm.value.depto = this.user[0].Tipo == 'S'? this.dep_co : this.user[0].Departamento;
     this.solicitudForm.value.cCostos = this.user[0].Centro_costos;
     this.solicitudForm.value.fechaApartir = this.converetirFecha(this.solicitudForm.value.fechaApartir);
     this.solicitudForm.value.fechaHasta = this.converetirFecha(this.solicitudForm.value.fechaHasta);
-    this.solicitudForm.value.clave = this.user[0].Clave;
+    this.solicitudForm.value.clave = this.user[0].Tipo == 'S'? this.no_tarjeta_co : this.user[0].Clave;
+
+    this.solicitudForm.value.motivo = this.opcionselect + ': ' + this.solicitudForm.value.motivo;
+
+    // if(this.user[0].Tipo == 'S'){
+
+    //  this.solicitudForm.value.nombre = this.colaborador[0].nombre_co;
+    //  this.solicitudForm.value.depto = this.colaborador[0].dep_co;
+    //  this.solicitudForm.value.clave = this.colaborador[0].Clave;
+
+    // }
 
     // console.log('fecha:', this.solicitudForm.value.fecha);
 

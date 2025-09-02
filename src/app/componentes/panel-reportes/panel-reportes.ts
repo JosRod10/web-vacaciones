@@ -6,6 +6,15 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ApiServicio } from '../../servicios/api-servicio';
 
+// import pdfMake from 'pdfmake/build/pdfmake';
+// import pdfFonts from 'pdfmake/build/vfs_fonts';
+// (pdfMake as any).vfs = pdfFonts;
+// (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+
+
+
+
 @Component({
   selector: 'app-panel-reportes',
   standalone: true,
@@ -18,6 +27,7 @@ export class PanelReportes {
   user: any;
   consultaForm: FormGroup
   solicitudes: any;
+  nDias: number = 0;
 
   constructor(private dialog: MatDialog, private router: Router, private fb: FormBuilder, private api: ApiServicio){
 
@@ -48,6 +58,13 @@ export class PanelReportes {
       (response) => {
         const data =  response;
         this.solicitudes = data;
+
+        const total = this.solicitudes.reduce((acumulador: any, elemento: any) => acumulador + parseInt(elemento.cuantos_dias), 0);
+        this.nDias = total;
+        console.log(this.nDias); // Output: 175
+        // this.solicitudes.map(sol => {
+        //   this.diasUtilizados = sol.cuantos_dias++
+        // })
         console.log(data);
       },
       (error) => {
@@ -55,6 +72,319 @@ export class PanelReportes {
          }
 
     );
+  }
+
+  obtenerFechaAlta(fechaISO: string): string {
+    const fecha = new Date(fechaISO);
+    const dia = fecha.getDate()+1;
+    const mes = fecha.toLocaleString('default', { month: 'long' });
+    const año = fecha.getFullYear();
+
+    return `${dia} de ${mes} del ${año}`;
+  }
+
+  async loadAndPrintPDF() {
+  const { default: pdfMake } = await import('pdfmake/build/pdfmake')
+  const { default: pdfFonts } = await import('pdfmake/build/vfs_fonts')
+  // @ts-expect-error: addVirtualFileSystem is not defined
+  pdfMake.addVirtualFileSystem(pdfFonts)
+  return pdfMake
+}
+
+  async generatePDFWithPdfMake(solicitud: any) {
+
+    const cgs = solicitud.con_sueldo == true? 'X' : '';
+    const sgs = solicitud.sin_sueldo == true? 'X' : '';
+    const s = solicitud.sindicalizado == true? 'X' : '';
+    const ns = solicitud.no_sindicalizado == true? 'X' : '';
+
+    const i = solicitud.firma_interesado == 'true'? 'Autorizó' : '';
+    const ji = solicitud.firma_jefe_in == 'true'? 'Autorizó' : '';
+    const g = solicitud.firms_gerente == 'true'? 'Autorizó' : '';
+
+    const statusA = solicitud.status != 'Aceptado'? '' : 'X';
+    const statusR = solicitud.status != 'Rechazado'? '' : 'X';
+
+    const rel = solicitud.status == 'Aceptado'? 'Autorizó' : '';
+    
+    const docDefinition = {
+      content: [
+        
+         {
+          columns: [
+            {
+              width: '25%',
+              text: '',
+            },
+            {
+              width: '50%',
+              text: 'AUTORIZACION DE PERMISO', style: 'header',
+            },
+            {
+              width: '25%',
+              text: '',
+            },
+          ],
+        },
+        {
+          columns: [
+            {
+              width: '10%',
+              text: '',
+            },
+            {
+              width: '80%',
+              text: 'PARA USO EXCLUSIVO DEL DEPARTAMENTO INTERESADO', style: 'headerSub',
+            },
+            {
+              width: '10%',
+              text: '',
+            },
+          ],
+        },
+        // {
+        //   table: {
+        //     headerRows: 1,
+        //     widths: ['*', 'auto', 100],
+        //     body: [
+        //       ['Header 1', 'Header 2', 'Header 3'],
+        //       ['Row 1 Col 1', 'Row 1 Col 2', 'Row 1 Col 3'],
+        //       ['Row 2 Col 1', 'Row 2 Col 2', 'Row 2 Col 3'],
+        //     ],
+        //   },
+        // },
+        {text: 'Fecha: ' + solicitud.fecha_solicitud, style: 'parrafo'},
+        {text: 'Por medio del presente solicitamos se autorice a:' + ' ' + solicitud.nombre, style: 'parrafo'},
+        {
+          columns: [
+            {
+              width: '50%',
+              text: 'Fecha de ingreso: ' + ' ' + this.obtenerFechaAlta(solicitud.Fecha_de_alta),
+              style: 'parrafo'
+            },
+            {
+              width: '25%',
+              text: 'Años Cump: 0',
+              style: 'parrafo'
+            },
+            {
+              width: '25%',
+              text: 'No. Tarjeta: ' + ' ' + solicitud.clave,
+              style: 'parrafo'
+            },
+          ],
+        },
+        {
+          columns: [
+            {
+              width: '65%',
+              text: 'del Departamento de: ' + ' ' + solicitud.Departamento,
+              style: 'parrafo'
+            },
+            {
+              width: '10%',
+              text: '',
+              style: 'parrafo'
+            },
+            {
+              width: '25%',
+              text: 'Centro de Costos: 304',
+              style: 'parrafo'
+            },
+          ],
+        },
+        {text: 'Permiso para faltar a sus labores:', style: 'parrafo'},
+        {
+          stack: [
+            {
+              width: '25%',
+              text: '[' + ' ' + cgs + ' ' + '] Con goce de sueldo',
+            },
+            {
+              width: '25%',
+              text: '[' + ' ' + sgs + ' ' + '] Sin goce de sueldo',
+            },
+            {
+              width: '25%',
+              text: '[' + ' ' + s + ' ' + '] Sindicalizado',
+            },
+            {
+              width: '25%',
+              text: '[' + ' ' + ns + ' ' + '] No Sindicalizado',
+              style: 'parrafo'
+            },
+          ],
+        },
+        {
+          columns: [
+            {
+              width: '30%',
+              text: 'Por: ' + solicitud.cuantos_dias + ' ' + 'día(s)',
+              style: 'parrafo'
+            },
+            {
+              width: '70%',
+              text: ',a partir del: ' + solicitud.fecha_apartir,
+              style: 'parrafo'
+            },
+          ],
+        },
+        {
+          columns: [
+            {
+              width: '45%',
+              text: 'al día: ' + solicitud.fecha_hasta + ' ' + 'inclusive',
+              style: 'parrafo'
+            },
+          ],
+        },
+        {
+          columns: [
+            {
+              width: '100%',
+              text: 'Motivo: ' + solicitud.motivo,
+              style: 'parrafoFirmas'
+            },
+          ],
+        },
+        {
+          columns: [
+            {
+              width: '33%',
+              text: 'Interesado [ ' + i + ' ' + ']',
+              style: 'parrafo'
+            },
+            {
+              width: '33%',
+              text: 'Jefe Inmediato [ ' + ji + ' ' + ']',
+              style: 'parrafo'
+            },
+            {
+              width: '34%',
+              text: 'Gerente [ ' + g + ' ' + ']',
+              style: 'parrafoFirmas'
+            },
+          ],
+        },
+        {
+          columns: [
+            {
+              width: '10%',
+              text: '',
+            },
+            {
+              width: '80%',
+              text: 'PARA USO EXCLUSIVO DE RELACIONES INDUSTRIALES', style: 'headerSub',
+            },
+            {
+              width: '10%',
+              text: '',
+            },
+          ],
+        },
+        {
+          columns: [
+            {
+              width: '33%',
+              text: 'Contestación:',
+              style: 'parrafo'
+            },
+            {
+              width: '33%',
+              text: 'Aceptado [ ' + statusA + ' ' + ']',
+              style: 'parrafo'
+            },
+            {
+              width: '34%',
+              text: 'Rechazado [ ' + statusR + ' ' + ']',
+              style: 'parrafo'
+            },
+          ],
+        },
+        {
+          columns: [
+            {
+              width: '25%',
+              text: 'Número de días: ' + solicitud.cuantos_dias,
+              style: 'parrafoFirmas'
+            },
+            {
+              width: '38%',
+              text: 'del día ' + solicitud.fecha_apartir,
+              style: 'parrafoFirmas'
+            },
+            {
+              width: '37%',
+              text: 'al día ' + solicitud.fecha_hasta,
+              style: 'parrafoFirmas'
+            },
+          ],
+        },
+        {text: 'Nota:', style: 'parrafo'},
+        {text: '1.- Este aviso será valido, exclusivamente si está firmado por el departamento de personal, ya que este departamento mantiene el registro de los días de vacaciones por disfrutar.', style: 'parrafo'},
+        {text: '2.- Este aviso debe de ser entregado en original y copia al departamento de personal.', style: 'parrafo'},
+        {text: '3.- El departamento de personal lo regresará al interesado, indicando los días que le', style: 'parrafo'},
+        {text:  'corresponden al trabajador.', style: 'parrafoFinal'},
+        {
+          columns: [
+            {
+              width: '33%',
+              text: '',
+              style: 'parrafo'
+            },
+            {
+              width: '34%',
+              text: 'Personal [ ' + rel + ' ' + ']',
+              style: 'parrafo'
+            },
+            {
+              width: '33%',
+              text: '',
+              style: 'parrafoFirmas'
+            },
+          ],
+        },
+        // {
+        //   table: {
+        //     headerRows: 1,
+        //     widths: ['*', 'auto', 100],
+        //     body: [
+        //       ['Header 1', 'Header 2', 'Header 3'],
+        //       ['Row 1 Col 1', 'Row 1 Col 2', 'Row 1 Col 3'],
+        //       ['Row 2 Col 1', 'Row 2 Col 2', 'Row 2 Col 3'],
+        //     ],
+        //   },
+        // },
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          lineHeight: 3
+        },
+        headerSub: {
+          fontSize: 14,
+          bold: true,
+          lineHeight: 3,
+          
+        },
+        parrafo: {
+          fontSize: 12,
+          lineHeight: 1.5
+        },
+        parrafoFirmas: {
+          fontSize: 12,
+          lineHeight: 3
+        },
+        parrafoFinal: {
+          fontSize: 12,
+          lineHeight: 5
+        },
+      },
+    };
+      //pdfMake.createPdf(docDefinition).open(); // Abre el PDF en una nueva ventana
+      const pdf = await this.loadAndPrintPDF();
+      pdf.createPdf(docDefinition).download('solicitud-autorizacion-permiso.pdf'); // Descarga el PDF
   }
 
 }

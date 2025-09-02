@@ -117,8 +117,11 @@ export class Login {
             if(data[0].Tipo == 'C'){
               this.router.navigate(['solicitud']);
             }
-            if(data[0].Tipo == 'RI'){
+            if(data[0].Tipo == 'RI' || data[0].Tipo == 'JI' || data[0].Tipo == 'G'){
               this.router.navigate(['panel-solicitud']);
+            }
+            if(data[0].Tipo == 'S'){
+              this.router.navigate(['solicitud']);
             }
             
           }else if(data.length > 0 && data[0].Estatus_Solicitud == 'Pendiente'){
