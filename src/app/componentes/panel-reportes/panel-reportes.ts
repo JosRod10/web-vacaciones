@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Cerrarsesion } from '../alertas/cerrarsesion/cerrarsesion';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,9 +27,16 @@ export class PanelReportes {
   user: any;
   consultaForm: FormGroup
   solicitudes: any;
+  solicitudesFilter: any;
   nDias: number = 0;
   reporte_solicitudes: any[] = [];
 
+  depto: string = '';
+  anio: string = '';
+  mes: string = '';
+
+  datosColaborador: any[] = [];
+  
   constructor(private dialog: MatDialog, private router: Router, private fb: FormBuilder, private api: ApiServicio){
 
     this.consultaForm = this.fb.group({
@@ -87,11 +94,50 @@ export class PanelReportes {
     this.router.navigate(['/panel-solicitud']);
   }
 
-  consultar(){
-    this.api.consultaReporteSolicitud(this.consultaForm.value).subscribe(
+  valorSelectDep(event: Event): void {
+
+    const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
+    this.depto = selectElement.value == 'Selecciona departamento' ? '' : selectElement.value;
+     
+  }
+
+  valorSelectA(event: Event): void {
+
+    const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
+    this.anio = selectElement.value == 'Año' ? '' : selectElement.value;
+     
+  }
+
+  valorSelectMes(event: Event): void {
+
+    const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
+    this.mes = selectElement.value == 'Mes' ? '' : selectElement.value;
+     
+  }
+
+  @HostListener('document:keyup', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.consultar(this.user[0].Tipo);
+    }
+  }
+
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.consultar(this.user[0].Tipo); // Llama a la función del botón al presionar Enter
+    }
+  }
+
+  consultar(tipo: string){
+     this.datosColaborador = [];
+
+    this.api.consultaReporteSolicitud(this.depto, this.anio, this.mes, this.consultaForm.value, tipo).subscribe(
       (response) => {
         const data =  response;
         this.solicitudes = data;
+
+        this.datosColaborador.push(this.solicitudes[0]);
+        console.log(this.datosColaborador);
 
         const total = this.solicitudes.reduce((acumulador: any, elemento: any) => acumulador + parseInt(elemento.cuantos_dias), 0);
         this.nDias = total;
@@ -106,6 +152,28 @@ export class PanelReportes {
          }
 
     );
+  }
+
+  datos(datos: any){
+
+    this.solicitudesFilter = this.solicitudes.filter((ele: any) => ele.Clave == datos.Clave);
+
+    const total = this.solicitudesFilter.reduce((acumulador: any, ele: any) => acumulador + parseInt(ele.cuantos_dias), 0);
+    this.nDias = total;
+
+    this.solicitudesFilter.forEach((ele: any) => {
+        ele.sumaDias = this.nDias;
+        ele.dis_Dias = parseInt(datos.Dias_disponibles) - this.nDias;
+    });
+
+    console.log(this.solicitudesFilter);
+
+    this.datosColaborador = [];
+    if(this.datosColaborador = []){
+     this.datosColaborador.push(datos);
+    //  console.log(this.datosColaborador);
+    }
+    // console.log(this.solicitudes);
   }
 
   obtenerFechaAlta(fechaISO: string): string {

@@ -36,6 +36,11 @@ export class PanelSolicitudes {
 
   activarCard(solicitud: any){
     this.cardSolicitud = solicitud;
+    console.log(this.cardSolicitud);
+    const tipoSolicitud = this.cardSolicitud.motivo.includes('Permiso')? 'Permiso' : this.cardSolicitud.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
+    this.cardSolicitud = Object.assign({tipoSolicitud: tipoSolicitud}, this.cardSolicitud);
+    console.log(this.cardSolicitud);
+    this.cardSolicitud.motivo = tipoSolicitud == 'Vacaciones'? this.cardSolicitud.motivo.substring(12,100) : tipoSolicitud == 'Permiso'? this.cardSolicitud.motivo.substring(9,100) : tipoSolicitud == 'Pago tiempo por tiempo'? this.cardSolicitud.motivo.substring(24,100) : this.cardSolicitud.motivo;
   }
 
   abrirAlerta() {
@@ -58,6 +63,11 @@ export class PanelSolicitudes {
         this.ausentes = data.filter(solicitud => solicitud.status == 'Ausente');
         console.log(this.solicitudes, this.ausentes);
         this.cardSolicitud =  this.solicitudes[0];
+        const tipoSolicitud = this.cardSolicitud.motivo.includes('Permiso')? 'Permiso' : this.cardSolicitud.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
+        this.cardSolicitud = Object.assign({tipoSolicitud: tipoSolicitud}, this.cardSolicitud);
+        console.log(this.cardSolicitud);
+        this.cardSolicitud.motivo = tipoSolicitud == 'Vacaciones'? this.cardSolicitud.motivo.substring(12,100) : tipoSolicitud == 'Permiso'? this.cardSolicitud.motivo.substring(9,100) : tipoSolicitud == 'Pago tiempo por tiempo'? this.cardSolicitud.motivo.substring(24,100) : this.cardSolicitud.motivo;
+
     });
   }
 

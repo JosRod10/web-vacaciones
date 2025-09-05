@@ -5,12 +5,14 @@
                 <div class="col-lg-1 col-md-1 col-sm-12 d-flex justify-content-start">
                     <i class="bi bi-arrow-left"  style="font-size: 3.5vh;" (click)="volver()"></i>
                 </div>
-                <div class="col-lg-8 col-md-8 col-sm-12 d-flex justify-content-center">
-                    <p *ngIf="this.nDias != 0">{{this.solicitudes[0].nombre}}:</p>&nbsp;
-                    <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-warning">DIAS DE VACACIONES: {{this.solicitudes[0].Dias_vacaciones}}</span></p>&nbsp;&nbsp;
-                    <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-danger">DIAS OCUPADOS: {{this.solicitudes[0].Dias_ocupados}}</span></p>&nbsp;&nbsp;
-                    <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-primary">DIAS DISPONIBLES: {{this.solicitudes[0].Dias_disponibles}}</span></p>&nbsp;&nbsp;
+                <div class="col-lg-8 col-md-8 col-sm-12">
+                   <div class="d-flex justify-content-center" *ngIf="datosColaborador"> 
+                    <p *ngIf="this.nDias != 0">{{this.datosColaborador[0].Nombre_completo}}:</p>&nbsp;
+                    <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-warning">DIAS DE VACACIONES: {{this.datosColaborador[0].Dias_vacaciones}}</span></p>&nbsp;&nbsp;
+                    <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-danger">DIAS OCUPADOS: {{this.datosColaborador[0].Dias_ocupados}}</span></p>&nbsp;&nbsp;
+                    <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-primary">DIAS DISPONIBLES: {{this.datosColaborador[0].Dias_disponibles}}</span></p>&nbsp;&nbsp;
                     <p *ngIf="this.nDias != 0"><span (click)="descargarExcel()" style="cursor: pointer;" class="badge rounded-pill bg-success"><i class="bi bi-file-earmark-spreadsheet"></i> DESCARGAR EXCEL</span></p>
+                   </div>
                 </div>
                 <div class="col-lg-3 col-md-5 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
                    <p>{{this.user[0].Nombre_completo}}</p>&nbsp;&nbsp;
@@ -22,72 +24,72 @@
 
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-sm-12">
-                            <select class="form-select" aria-label="Default select example">
+                            <select (change)="valorSelectDep($event)" class="form-select" aria-label="Default select example">
                                 <option selected>Selecciona departamento</option>
-                                <option value="1">ALMACEN</option>
-                                <option value="2">CERAMICA</option>
-                                <option value="3">COMPRAS</option>
-                                <option value="4">CONTABILIDAD</option>
-                                <option value="5">CONTROL DE CALIDAD</option>
-                                <option value="6">CONTROL DE PRODUCCION</option>
-                                <option value="7">CREDITO Y COBRANZAS</option>
-                                <option value="8">DESARROLLO DE ABRASIVOS</option>
-                                <option value="9">EMBARQUES Y EMPAQUES</option>
-                                <option value="10">ESPECIALIDADES REFRACTARIAS</option>
-                                <option value="11">GERENCIA EJECUTIVOS</option>
-                                <option value="12">HORNOS</option>
-                                <option value="13">ING.NVO.PROYECTOS</option>
-                                <option value="14">ING.NVO.PROYECTOS REFRACTARIOS</option>
-                                <option value="15">MANTENIMIENTO</option>
-                                <option value="16">OFICINA CDMX</option>
-                                <option value="17">OFICINA GUADALAJARA</option>
-                                <option value="18">OFICINA MONTERREY</option>
-                                <option value="19">OFICINA PUEBLA</option>
-                                <option value="20">OFICINA QUERETARO</option>
-                                <option value="21">PUNTAS MONTADAS</option>
-                                <option value="22">REFRACTARIOS</option>
-                                <option value="23">RELACIONES INDUSTRIALES</option>
-                                <option value="24">SHELLACK</option>
-                                <option value="25">SISTEMAS DE INFORMACION</option>
-                                <option value="26">TECNICO</option>
-                                <option value="27">TERMINADO</option>
-                                <option value="28">VENTAS REFRACTARIOS</option>
-                                <option value="29">VENTAS TOLUCA</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="ALMACEN">ALMACEN</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="CERAMICA">CERAMICA</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="COMPRAS">COMPRAS</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="CONTABILIDAD">CONTABILIDAD</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="CONTROL DE CALIDAD">CONTROL DE CALIDAD</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="CONTROL DE PRODUCCION">CONTROL DE PRODUCCION</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="CREDITO Y COBRANZAS">CREDITO Y COBRANZAS</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="DESARROLLO DE ABRASIVOS">DESARROLLO DE ABRASIVOS</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="EMBARQUES Y EMPAQUES">EMBARQUES Y EMPAQUES</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="ESPECIALIDADES REFRACTARIAS">ESPECIALIDADES REFRACTARIAS</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="GERENCIA EJECUTIVOS">GERENCIA EJECUTIVOS</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="HORNOS">HORNOS</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="ING.NVO.PROYECTOS">ING.NVO.PROYECTOS</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="ING.NVO.PROYECTOS REFRACTARIOS">ING.NVO.PROYECTOS REFRACTARIOS</option>
+                                <option *ngIf="user[0].Tipo == 'RI' || user[0].Tipo == 'JI' || user[0].Tipo == 'G'" value="MANTENIMIENTO">MANTENIMIENTO</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA CDMX">OFICINA CDMX</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA GUADALAJARA">OFICINA GUADALAJARA</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA MONTERREY">OFICINA MONTERREY</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA PUEBLA">OFICINA PUEBLA</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA QUERETARO">OFICINA QUERETARO</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="PUNTAS MONTADAS">PUNTAS MONTADAS</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="REFRACTARIOS">REFRACTARIOS</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="RELACIONES INDUSTRIALES">RELACIONES INDUSTRIALES</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="SHELLACK">SHELLACK</option>
+                                <option *ngIf="user[0].Tipo == 'RI' || user[0].Tipo == 'JI' || user[0].Tipo == 'G'" value="SISTEMAS DE INFORMACION">SISTEMAS DE INFORMACION</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="TECNICO">TECNICO</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="TERMINADO">TERMINADO</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="VENTAS REFRACTARIOS">VENTAS REFRACTARIOS</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="VENTAS TOLUCA">VENTAS TOLUCA</option>
                             </select>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-12">
-                            <select class="form-select" aria-label="Default select example">
+                            <select (change)="valorSelectA($event)" class="form-select" aria-label="Default select example">
                                 <option selected>Año</option>
-                                <option value="1">2020</option>
-                                <option value="2">2021</option>
-                                <option value="3">2022</option>
-                                <option value="1">2023</option>
-                                <option value="2">2024</option>
-                                <option value="3">2025</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
                             </select>
                         </div>
                           <div class="col-lg-2 col-md-1 col-sm-12">
-                            <select class="form-select" aria-label="Default select example">
+                            <select (change)="valorSelectMes($event)" class="form-select" aria-label="Default select example">
                                 <option selected>Mes</option>
-                                <option value="1">Enero</option>
-                                <option value="2">Febrero</option>
-                                <option value="3">Marzo</option>
-                                <option value="1">Abril</option>
-                                <option value="2">Mayo</option>
-                                <option value="3">Junio</option>
-                                <option value="1">Julio</option>
-                                <option value="2">Agosto</option>
-                                <option value="3">Septiembre</option>
-                                <option value="1">Octubre</option>
-                                <option value="2">Noviembre</option>
-                                <option value="3">Diciembre</option>
+                                <option value="enero">Enero</option>
+                                <option value="febrero">Febrero</option>
+                                <option value="marzo">Marzo</option>
+                                <option value="abril">Abril</option>
+                                <option value="mayo">Mayo</option>
+                                <option value="junio">Junio</option>
+                                <option value="julio">Julio</option>
+                                <option value="agosto">Agosto</option>
+                                <option value="septiembre">Septiembre</option>
+                                <option value="octubre">Octubre</option>
+                                <option value="noviembre">Noviembre</option>
+                                <option value="diciembre">Diciembre</option>
                             </select>
                         </div>
                         <div class="col-lg-6 col-md-8 col-sm-12">
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
-                                <input type="text" class="form-control" formControlName="criterio" placeholder="Consultar" aria-label="Username" aria-describedby="basic-addon1">
-                                <button class="btn btn-secondary" (click)="consultar()">Consultar</button>
+                                <input (keydown)="onKeydown($event)" type="text" class="form-control" formControlName="criterio" placeholder="Consultar" aria-label="Username" aria-describedby="basic-addon1">
+                                <button class="btn btn-secondary" (click)="consultar(user[0].Tipo)">Consultar</button>
                             </div>
                         </div>
                     </div>        
@@ -102,6 +104,7 @@
                             <tr>
                             <th scope="col">#</th>
                             <th scope="col">Nombre</th>
+                            <th scope="col">Depto.</th>
                             <th scope="col">Fecha Solicitud</th>
                             <th scope="col">Días</th>
                             <th scope="col">Periodo</th>
@@ -111,9 +114,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let solicitud of solicitudes; let i = index">
+                            <tr (click)="datos(solicitud)" *ngFor="let solicitud of solicitudes; let i = index">
                             <th scope="row">{{i+1}}</th>
-                            <td>{{solicitud.nombre}}</td>
+                            <td>{{solicitud.Nombre_completo}}</td>
+                            <td>{{solicitud.Departamento}}</td>
                             <td>{{solicitud.fecha_solicitud}}</td>
                             <td>{{solicitud.cuantos_dias}}</td>
                             <td>{{solicitud.fecha_apartir}} al {{solicitud.fecha_hasta}}</td>

@@ -206,8 +206,8 @@ export class Form {
         this.anos_co_cumplidos = this.obtenerAnosCumplidos(this.formatoFecha(this.colaborador[0].Fecha_de_alta));
         this.no_tarjeta_co = this.colaborador[0].Clave;
         this.dep_co = this.colaborador[0].Departamento;
-        this.centro_co = '300';
-        this.dias_diponibles = this.colaborador[0].Dias_disponibles;
+        this.centro_co = '106';
+        this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles);
     }
   }
 
@@ -392,7 +392,7 @@ export class Form {
   valorSelect(event: Event): void {
 
     const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
-    this.opcionselect = selectElement.value;
+    this.opcionselect = selectElement.value == 'Selecciona una opción'? '' : selectElement.value;
      
   }
 

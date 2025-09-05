@@ -37,9 +37,9 @@ export class ApiServicio {
     return this.http.post<any>(`${this.apiUrl}/aprobar`, {id, accion, dias_d, dias_u, clave});
   }
 
-  consultaReporteSolicitud(criterio: any): Observable<any> {
+  consultaReporteSolicitud(departamento: string, anio: string, mes: string, criterio: any, tipo: string): Observable<any> {
     // console.log("Entra");
-    return this.http.post<any>(`${this.apiUrl}/reporteSolicitud`, criterio);
+    return this.http.post<any>(`${this.apiUrl}/reporteSolicitud`, {departamento, anio, mes, criterio, tipo});
   }
 
   firmaJefeInmediato(id: number): Observable<any> {
