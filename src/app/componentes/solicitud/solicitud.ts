@@ -128,11 +128,11 @@ export class Form {
      this.cargarColaboradores(this.user[0].Tipo, this.user[0].Tipo_Dep);
     }
 
-    console.log('Usuario: ', this.user);
+  
     this.fecha = this.obtenerFechaDeHoy();
     this.fecha_hoy = this.fecha.substring(0,16);
     this.ano_hoy = this.fecha.substring(22,24);
-    console.log(this.fecha);
+    
     // console.log(this.user[0].Fecha_alta.substring(6,10));
     // this.cumplidos = this.obtenerAnosCumplidos(this.user[0].Fecha_alta);
     // console.log(this.cumplidos);
@@ -172,7 +172,7 @@ export class Form {
 
     this.api.getCoAsociados(tipo, tipo_dep).subscribe(data => {
         // this.items = data;
-        console.log(data);
+        
         this.colaboradores = data;
         const opcion = {Nombre_completo: 'Selecciona colaborador'}
         this.colaboradores.unshift(opcion);
@@ -198,7 +198,7 @@ export class Form {
     }else{
       this.banderaDias = false;
         this.colaborador = this.colaboradores.filter(ele => ele.Nombre_completo == selectedValue);
-        console.log(this.colaborador);
+        
         this.fecha_co_hoy = this.obtenerFechaDeHoy().substring(0,16);
         this.ano_co_actual = '25';
         this.nombre_co = this.colaborador[0].Nombre_completo;
@@ -266,7 +266,7 @@ export class Form {
   obtenerAnosCumplidos(fecha_alta: string){
     const fechaHoy = this.formatCustomDate();
     const fechaAlta = fecha_alta;
-    console.log('fecha hoy:', fechaHoy, 'fecha alta:', fechaAlta);
+   
     const diaH = parseInt(fechaHoy.substring(0,2));
     const mesH = parseInt(fechaHoy.substring(3,5));
     const añoH = parseInt(fechaHoy.substring(6,10));
@@ -275,7 +275,7 @@ export class Form {
     const añoA = parseInt(fechaAlta.substring(6,10));
 
     this.cumplidos = añoH - añoA;
-    console.log(diaA, diaH);
+   
 
     if(diaH >= diaA && mesH >= mesA){
       this.cumplidos = this.cumplidos;
@@ -328,7 +328,7 @@ export class Form {
 
   cambiarLeyenda(event: MouseEvent) {
     const input = event.target as HTMLInputElement;
-    console.log('Evento:', event);
+    
 
     if (input.checked == true) {
       this.checkLeyenda = 'Autorizado';
@@ -340,7 +340,7 @@ export class Form {
 
   async cerrarAlerta(){
     setTimeout(() => {
-      console.log('Mensaje despúes de 4 segundos.');
+      
       if(this.alertSuccess){
         this.alertSuccess = false;
         this.cerrarSesion(1);

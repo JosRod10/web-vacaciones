@@ -137,15 +137,15 @@ export class PanelReportes {
         this.solicitudes = data;
 
         this.datosColaborador.push(this.solicitudes[0]);
-        console.log(this.datosColaborador);
+        
 
         const total = this.solicitudes.reduce((acumulador: any, elemento: any) => acumulador + parseInt(elemento.cuantos_dias), 0);
         this.nDias = total;
-        console.log(this.nDias); // Output: 175
+        
         // this.solicitudes.map(sol => {
         //   this.diasUtilizados = sol.cuantos_dias++
         // })
-        console.log(data);
+        
       },
       (error) => {
            console.error('Error al obtener datos:', error);
@@ -166,7 +166,7 @@ export class PanelReportes {
         ele.dis_Dias = parseInt(datos.Dias_disponibles) - this.nDias;
     });
 
-    console.log(this.solicitudesFilter);
+    
 
     this.datosColaborador = [];
     if(this.datosColaborador = []){

@@ -31,15 +31,15 @@ export class PanelSolicitudes {
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
     this.cargarSolicitudes(this.user[0].Tipo);
-    console.log(this.user);
+    
   }
 
   activarCard(solicitud: any){
     this.cardSolicitud = solicitud;
-    console.log(this.cardSolicitud);
+    
     const tipoSolicitud = this.cardSolicitud.motivo.includes('Permiso')? 'Permiso' : this.cardSolicitud.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
     this.cardSolicitud = Object.assign({tipoSolicitud: tipoSolicitud}, this.cardSolicitud);
-    console.log(this.cardSolicitud);
+    
     this.cardSolicitud.motivo = tipoSolicitud == 'Vacaciones'? this.cardSolicitud.motivo.substring(12,100) : tipoSolicitud == 'Permiso'? this.cardSolicitud.motivo.substring(9,100) : tipoSolicitud == 'Pago tiempo por tiempo'? this.cardSolicitud.motivo.substring(24,100) : this.cardSolicitud.motivo;
   }
 
@@ -57,15 +57,13 @@ export class PanelSolicitudes {
 
   cargarSolicitudes(tipo: string){
     this.api.getSolicitudes(tipo).subscribe(data => {
-        // this.items = data;
-        console.log(data);
         this.solicitudes = data;
         this.ausentes = data.filter(solicitud => solicitud.status == 'Ausente');
-        console.log(this.solicitudes, this.ausentes);
+        
         this.cardSolicitud =  this.solicitudes[0];
         const tipoSolicitud = this.cardSolicitud.motivo.includes('Permiso')? 'Permiso' : this.cardSolicitud.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
         this.cardSolicitud = Object.assign({tipoSolicitud: tipoSolicitud}, this.cardSolicitud);
-        console.log(this.cardSolicitud);
+        
         this.cardSolicitud.motivo = tipoSolicitud == 'Vacaciones'? this.cardSolicitud.motivo.substring(12,100) : tipoSolicitud == 'Permiso'? this.cardSolicitud.motivo.substring(9,100) : tipoSolicitud == 'Pago tiempo por tiempo'? this.cardSolicitud.motivo.substring(24,100) : this.cardSolicitud.motivo;
 
     });
@@ -112,7 +110,7 @@ export class PanelSolicitudes {
     const dias_u = parseInt(this.solicitudes[0].Dias_ocupados) + parseInt(this.solicitudes[0].cuantos_dias);
     const clave = this.solicitudes[0].Clave;
     
-    console.log(dias_d, dias_u)
+
     this.api.aprobar(id, accion, dias_d, dias_u, clave).subscribe(
       (response) => {
           if(response == true){

@@ -50,7 +50,7 @@ export class Modal implements AfterViewInit {
       alert('Por favor, firme antes de continuar.');
     } else {
       this.firmaGuardada = this.signaturePad.toDataURL('image/png');
-      console.log('Firma guardada:', this.firmaGuardada);
+      
       const firmaDataUrl = this.signaturePad.toDataURL('image/png');
       this.dialogRef.close(firmaDataUrl); // Enviamos la firma al cerrar el modal
     }

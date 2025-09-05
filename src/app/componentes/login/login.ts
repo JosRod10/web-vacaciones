@@ -67,13 +67,13 @@ export class Login {
   async login() {
     
     const esValido = await this.authService.validarCredenciales(this.loginForm.value.user, this.loginForm.value.pass);
-    console.log(esValido);
+    
     if (esValido) {
       this.router.navigate(['form']);
     } else {
       this.abrirAlerta();
       this.error = 'Usuario o contraseña incorrectos';
-      console.log(this.error);
+      
     }
   }
 
@@ -135,7 +135,7 @@ export class Login {
           } else {
             this.abrirAlerta();
             this.error = 'Usuario o contraseña incorrectos';
-            console.log(this.error);
+            
           }
          },
          (error) => {

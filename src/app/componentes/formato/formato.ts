@@ -83,7 +83,7 @@ export class Formato {
         ngOnInit(): void {
           this.api.getItems().subscribe(data => {
             // this.items = data;
-            console.log(data);
+          
           });
         }
 
@@ -103,7 +103,7 @@ export class Formato {
     dialogRef.afterClosed().subscribe((resultado: string | null) => {
       if (resultado) {
         this.firmaDataUrl = resultado;
-        console.log('Firma recibida:', this.firmaDataUrl);
+        
       }
     });
   }
