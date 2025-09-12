@@ -82,3 +82,56 @@ input.activ:checked::before {
   width: 66vh;
   z-index: 10;
 }
+
+.motivo{
+  font-size: medium;
+}
+
+.motivo-text{
+  font-size: small;
+  font-weight: normal;
+  color: grey;
+}
+
+.loader {
+  width: 48px;
+  height: 12px;
+  /* margin-top: 40px; */
+  background: rgb(4, 114, 26);
+  opacity: .9;
+  display: inline-block;
+  position: relative;
+}
+.loader::after {
+  content: '';  
+  left: 50%;
+  top: -47px;
+  transform: translate(-50%, 0);
+  position: absolute;
+  border: 15px solid transparent;
+  border-bottom-color: rgb(4, 114, 26);
+  box-sizing: border-box;
+  animation: bump 0.4s ease-in-out infinite alternate;
+}
+.loader::before {
+  content: '';  
+  left: 50%;
+  bottom: 15px;
+  transform: translate(-50%, 0);
+  position: absolute;
+  width: 15px;
+  height: 20px;
+  background: rgb(4, 114, 26);
+  opacity: .9;
+  box-sizing: border-box;
+  animation: bump 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes bump {
+  0% {
+    transform: translate(-50%, 5px);
+  }
+  100% {
+    transform: translate(-50%, -5px);
+  }
+}

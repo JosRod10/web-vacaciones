@@ -50,6 +50,8 @@ export class Form {
   colaborador: any;
   banderaDias: boolean = false;
 
+  spinerBandera: boolean = false;
+
   //////////////////// Datos colaborador ////////////////////////
   fecha_co_hoy: string = '';
   ano_co_actual: string = '';
@@ -397,6 +399,7 @@ export class Form {
   }
 
   enviar(){
+    this.spinerBandera = !this.spinerBandera;
     // console.log('Formulario:',this.solicitudForm.value.fecha);
     this.solicitudForm.value.fecha = this.solicitudForm.value.fecha + ' del 20' + this.solicitudForm.value.año;
     this.solicitudForm.value.firma = this.solicitudForm.value.firma.toString();
@@ -428,6 +431,7 @@ export class Form {
     this.api.form(this.solicitudForm.value).subscribe(
       (response) => {
           if(response == true){
+            this.spinerBandera = !this.spinerBandera;
             this.vaciarFormulario();
             this.alertSuccess = !this.alertSuccess;
             this.alertDanger = false;

@@ -5,6 +5,7 @@ import { Cerrarsesion } from '../alertas/cerrarsesion/cerrarsesion';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ViewChild, ElementRef } from '@angular/core';
+import { AlertaFirma } from '../alertas/alerta-firma/alerta-firma';
 
 @Component({
   selector: 'app-panel-solicitudes',
@@ -23,6 +24,7 @@ export class PanelSolicitudes {
   cardSolicitud: any;
   user: any;
   firmaCheck: boolean =  false;
+  spinerBandera: boolean = false;
 
   constructor(private api: ApiServicio, private dialog: MatDialog, private router: Router){
     
@@ -40,7 +42,7 @@ export class PanelSolicitudes {
     const tipoSolicitud = this.cardSolicitud.motivo.includes('Permiso')? 'Permiso' : this.cardSolicitud.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
     this.cardSolicitud = Object.assign({tipoSolicitud: tipoSolicitud}, this.cardSolicitud);
     
-    this.cardSolicitud.motivo = tipoSolicitud == 'Vacaciones'? this.cardSolicitud.motivo.substring(12,100) : tipoSolicitud == 'Permiso'? this.cardSolicitud.motivo.substring(9,100) : tipoSolicitud == 'Pago tiempo por tiempo'? this.cardSolicitud.motivo.substring(24,100) : this.cardSolicitud.motivo;
+    this.cardSolicitud.motivo = tipoSolicitud == 'Vacaciones'? this.cardSolicitud.motivo.substring(12,500) : tipoSolicitud == 'Permiso'? this.cardSolicitud.motivo.substring(9,500) : tipoSolicitud == 'Pago tiempo por tiempo'? this.cardSolicitud.motivo.substring(24,500) : this.cardSolicitud.motivo;
   }
 
   abrirAlerta() {
@@ -50,6 +52,21 @@ export class PanelSolicitudes {
       disableClose: false, // true para que no se cierre al hacer clic fuera
     });
   }
+
+  abrirAlertaFirma() {
+    const dialogRef = this.dialog.open(AlertaFirma, {
+      width: '500px',
+      height: '150px',
+      disableClose: false, // true para que no se cierre al hacer clic fuera
+    });
+  }
+
+  // abrirDialogo() {
+  //     const dialogConfig = {
+  //       data: { id: 123, nombre: 'Ejemplo' } // Tus datos a pasar
+  //     };
+  //     this.dialog.open(AlertaFirma, dialogConfig);
+  // }
 
   abrirPanelReportes(){
     this.router.navigate(['/reportes']);
@@ -64,7 +81,7 @@ export class PanelSolicitudes {
         const tipoSolicitud = this.cardSolicitud.motivo.includes('Permiso')? 'Permiso' : this.cardSolicitud.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
         this.cardSolicitud = Object.assign({tipoSolicitud: tipoSolicitud}, this.cardSolicitud);
         
-        this.cardSolicitud.motivo = tipoSolicitud == 'Vacaciones'? this.cardSolicitud.motivo.substring(12,100) : tipoSolicitud == 'Permiso'? this.cardSolicitud.motivo.substring(9,100) : tipoSolicitud == 'Pago tiempo por tiempo'? this.cardSolicitud.motivo.substring(24,100) : this.cardSolicitud.motivo;
+        this.cardSolicitud.motivo = tipoSolicitud == 'Vacaciones'? this.cardSolicitud.motivo.substring(12,500) : tipoSolicitud == 'Permiso'? this.cardSolicitud.motivo.substring(9,500) : tipoSolicitud == 'Pago tiempo por tiempo'? this.cardSolicitud.motivo.substring(24,500) : this.cardSolicitud.motivo;
 
     });
   }
@@ -73,11 +90,47 @@ export class PanelSolicitudes {
     this.firmaCheck = true;
   }
 
-  firmaJefe(id: number){
+  firmaRelaciones(id: number, accion: number){
+    this.spinerBandera = !this.spinerBandera;
 
-    this.api.firmaJefeInmediato(id).subscribe(
+    const dias_d = parseInt(this.solicitudes[0].Dias_disponibles) - parseInt(this.solicitudes[0].cuantos_dias);
+    const dias_u = parseInt(this.solicitudes[0].Dias_ocupados) + parseInt(this.solicitudes[0].cuantos_dias);
+    const clave = this.solicitudes[0].Clave;
+    
+
+    this.api.aprobar(id, accion, dias_d, dias_u, clave).subscribe(
       (response) => {
           if(response == true){
+            const modalElement = document.getElementById('modal');
+            if (modalElement) {
+              // Usamos el método 'hide' de Bootstrap para cerrar el modal
+              // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
+              (window as any).bootstrap.Modal.getInstance(modalElement).hide();
+            }
+            this.cargarSolicitudes(this.user[0].Tipo);
+            this.firmaCheck = false;
+            this.miCheckboxRI.nativeElement.checked = false;
+          }
+         },
+         (error) => {
+           console.error('Error al obtener datos:', error);
+         }
+    );
+  }
+  
+
+  firmaJefe(solicitud: any){
+    this.spinerBandera = !this.spinerBandera;
+
+    this.api.firmaJefeInmediato(solicitud).subscribe(
+      (response) => {
+          if(response == true){
+            const modalElement = document.getElementById('modal');
+            if (modalElement) {
+              // Usamos el método 'hide' de Bootstrap para cerrar el modal
+              // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
+              (window as any).bootstrap.Modal.getInstance(modalElement).hide();
+            }
             this.cargarSolicitudes(this.user[0].Tipo);
             this.miCheckboxJI.nativeElement.checked = false;
           }
@@ -89,11 +142,17 @@ export class PanelSolicitudes {
 
   }
 
-  firmaGerente(id: number){
-
-    this.api.firmaGerente(id).subscribe(
+  firmaGerente(solicitud: any){
+    this.spinerBandera = !this.spinerBandera;
+    this.api.firmaGerente(solicitud).subscribe(
       (response) => {
           if(response == true){
+            const modalElement = document.getElementById('modal');
+            if (modalElement) {
+              // Usamos el método 'hide' de Bootstrap para cerrar el modal
+              // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
+              (window as any).bootstrap.Modal.getInstance(modalElement).hide();
+            }
             this.cargarSolicitudes(this.user[0].Tipo);
             this.miCheckboxG.nativeElement.checked = false;
           }
@@ -114,6 +173,7 @@ export class PanelSolicitudes {
     this.api.aprobar(id, accion, dias_d, dias_u, clave).subscribe(
       (response) => {
           if(response == true){
+       
             this.cargarSolicitudes(this.user[0].Tipo);
             this.firmaCheck = false;
             this.miCheckboxRI.nativeElement.checked = false;

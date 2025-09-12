@@ -61,7 +61,15 @@
 
                 <div class="card mb-1" style="min-height: 35vh;" *ngIf="this.solicitudes[0]">
                     <div class="card-header">
-                        {{this.cardSolicitud.fecha_solicitud}} <span *ngIf="this.cardSolicitud.firma_interesado" class="badge rounded-pill bg-success">Interesado</span>&nbsp;<span *ngIf="this.cardSolicitud.firma_jefe_in" class="badge rounded-pill bg-success">Jefe inmediato</span>&nbsp;<span *ngIf="this.cardSolicitud.firms_gerente" class="badge rounded-pill bg-success">Gerente</span>
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-12 d-flex justify-content-start align-items-center">
+                               {{this.cardSolicitud.fecha_solicitud}}&nbsp;<span *ngIf="this.cardSolicitud.firma_interesado" class="badge rounded-pill bg-success">Interesado</span>&nbsp;<span *ngIf="this.cardSolicitud.firma_jefe_in" class="badge rounded-pill bg-success">Jefe inmediato</span>&nbsp;<span *ngIf="this.cardSolicitud.firms_gerente" class="badge rounded-pill bg-success">Gerente</span>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-end align-items-center">
+                               <span class="badge rounded-pill bg-warning">{{this.cardSolicitud.tipoSolicitud}}</span>
+                            </div>
+                        </div>
+                        
                     </div>
                     <div class="card-body">
                         
@@ -100,11 +108,16 @@
                                     </div>
                                     <div class="col-2"></div>
                                 </div>
-                                <div class="row mt-4"></div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-6 col-md-5 col-sm-12"><span style="font-weight: bold;">Días ocupados: {{this.cardSolicitud.Dias_ocupados}} de {{this.cardSolicitud.Dias_vacaciones}} días</span></div>
-                                    <div class="col-lg-4 col-md-5 col-sm-12"></div>
-                                    <div class="col-lg-2 col-md-2 col-sm-12"></div>
+                                <div class="row"></div>
+                                <div class="row mt-1">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <!-- <li class="list-group-item" style="font-weight: bold;">Tipo Solicitud: <span class="badge rounded-pill bg-warning">{{this.cardSolicitud.tipoSolicitud}}</span></li> -->
+                                        <p class="motivo">Motivo: </p><p class="motivo-text">{{this.cardSolicitud.motivo}}</p>
+
+                                        <!-- <span style="font-weight: bold;">Días ocupados: {{this.cardSolicitud.Dias_ocupados}} de {{this.cardSolicitud.Dias_vacaciones}} días</span> -->
+                                    </div>
+                                    <!-- <div class="col-lg-4 col-md-5 col-sm-12"></div>
+                                    <div class="col-lg-2 col-md-2 col-sm-12"></div> -->
                                 </div>
                                 
                             </div>
@@ -139,8 +152,8 @@
                                                 </label>
                                             </div>
                                         </li>
-                                        <li class="list-group-item" style="font-weight: bold;">Tipo Solicitud: <span class="badge rounded-pill bg-warning">{{this.cardSolicitud.tipoSolicitud}}</span></li>
-                                        <li class="list-group-item" style="font-weight: bold;">Motivo: <span class="badge rounded-pill bg-primary">{{this.cardSolicitud.motivo}}</span></li>
+                                        <!-- <li class="list-group-item" style="font-weight: bold;">Tipo Solicitud: <span class="badge rounded-pill bg-warning">{{this.cardSolicitud.tipoSolicitud}}</span></li> -->
+                                        <li class="list-group-item" style="font-weight: bold;"><span style="font-weight: bold;">Días ocupados: {{this.cardSolicitud.Dias_ocupados}} de {{this.cardSolicitud.Dias_vacaciones}} días</span></li>
                                         <!-- <li class="list-group-item">A fourth item</li> -->
                                     </ul>
                                 </div>
@@ -150,39 +163,58 @@
                                     
                                     <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-end">
 
-                                        <label *ngIf="this.firmaCheck" class="aut">Firmar</label>&nbsp;&nbsp;
+                                        <!-- <label *ngIf="this.firmaCheck" class="aut">Firmar</label>&nbsp;&nbsp;
                                         <div *ngIf="this.firmaCheck" class="form-check form-switch">
                                             <input #miCheckboxRI class="form-check-input activ" formControlName="firma" type="checkbox" id="flexSwitchCheckDefault" (change)="accion(this.cardSolicitud.id, 1)">
-                                            &nbsp;&nbsp;<label class="form-check-label aut" for="flexSwitchCheckDefault"></label>
+                                            &nbsp;&nbsp;<label class="form-check-label aut" for="flexSwitchCheckDefault"></label> -->
                                             <!-- {{checkLeyenda}} -->
-                                        </div>
+                                        <!-- </div> -->
 
-                                        <label *ngIf="this.user[0].Tipo == 'JI'" class="aut">Firmar</label>&nbsp;&nbsp;
+                                        <!-- <label *ngIf="this.user[0].Tipo == 'JI'" class="aut">Firmar</label>&nbsp;&nbsp;
                                         <div *ngIf="this.user[0].Tipo == 'JI'" class="form-check form-switch">
                                             <input #miCheckboxJI class="form-check-input activ" formControlName="firma" type="checkbox" id="flexSwitchCheckDefault" (change)="firmaJefe(this.cardSolicitud.id)">
-                                            &nbsp;&nbsp;<label class="form-check-label aut" for="flexSwitchCheckDefault"></label>
+                                            &nbsp;&nbsp;<label class="form-check-label aut" for="flexSwitchCheckDefault"></label> -->
                                             <!-- {{checkLeyenda}} -->
-                                        </div>
+                                        <!-- </div> -->
 
-                                        <label *ngIf="this.user[0].Tipo == 'G'" class="aut">Firmar</label>&nbsp;&nbsp;
+                                        <button *ngIf="this.firmaCheck" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
+                                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
+                                        <i class="bi bi-check-lg"></i> Firmar
+                                        </button>
+
+                                        <button *ngIf="this.user[0].Tipo == 'JI'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
+                                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
+                                        <i class="bi bi-check-lg"></i> Firmar
+                                        </button>
+
+                                        <button *ngIf="this.user[0].Tipo == 'G'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
+                                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
+                                        <i class="bi bi-check-lg"></i> Firmar
+                                        </button>
+
+
+                                        <!-- <label *ngIf="this.user[0].Tipo == 'G'" class="aut">Firmar</label>&nbsp;&nbsp;
                                         <div *ngIf="this.user[0].Tipo == 'G'" class="form-check form-switch">
                                             <input #miCheckboxG class="form-check-input activ" formControlName="firma" type="checkbox" id="flexSwitchCheckDefault" (change)="firmaGerente(this.cardSolicitud.id)">
-                                            &nbsp;&nbsp;<label class="form-check-label aut" for="flexSwitchCheckDefault"></label>
+                                            &nbsp;&nbsp;<label class="form-check-label aut" for="flexSwitchCheckDefault"></label> -->
                                             <!-- {{checkLeyenda}} -->
-                                        </div>
+                                        <!-- </div> -->
 
                                         <button *ngIf="this.cardSolicitud.firma_interesado == 'true' && this.cardSolicitud.firma_jefe_in == 'true' && this.cardSolicitud.firms_gerente == 'true' && this.firmaCheck == false" type="button" class="btn btn-outline-success" (click)="activarFirma()"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Aceptado
                                         </button>
+
                                          <button disabled *ngIf="this.cardSolicitud.firma_interesado == 'true' && this.cardSolicitud.firma_jefe_in == 'false' && this.cardSolicitud.firms_gerente == 'false'" type="button" class="btn btn-outline-success" (click)="accion(this.cardSolicitud.id, 1)"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Aceptado
                                         </button>
+
                                         <button type="button" class="btn btn-outline-danger" (click)="accion(this.cardSolicitud.id, 0)"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
                                         <i class="bi bi-x-lg"></i> Rechazado
                                         </button>
+
                                     </div>
                                     <!-- <div class="col-lg-4 col-md-1 col-sm-12 d-flex justify-content-end"><span style="font-weight: bold;">Contestación:</span></div> -->
                                     <!-- <div class="col-lg-2 col-md-2 col-sm-12 d-flex justify-content-start" style="margin-right: 10em;"> -->
@@ -235,3 +267,37 @@
 
     <!-- </div> -->
 </div>
+
+<!-- <button role="button" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'">Abrir Modal</button> -->
+<!-- Vertically centered modal -->
+  <div class="modal" [id]="'modal'" tabindex="-1">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header d-flex justify-content-center">
+            <h3 style="font-weight: bold;" *ngIf="spinerBandera == false" class="modal-title">¡Alerta!</h3>
+            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+        </div>
+        <div *ngIf="spinerBandera == false" class="modal-body">
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12  d-flex justify-content-center">
+                    <p style="font-size: medium;">¿ Estas seguro de firmar esta solicitud ?</p>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12  d-flex justify-content-center">
+                    <i class="bi bi-pencil-fill" style="font-size: 2em;"></i>
+                </div>
+            </div>
+
+        </div>
+        <div *ngIf="spinerBandera" class="modal-body d-flex justify-content-center">
+            <span class="loader"></span>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+            <button *ngIf="this.firmaCheck && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaRelaciones(this.cardSolicitud.id, 1)">Firmar</button>
+            <button *ngIf="this.user[0].Tipo == 'JI' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaJefe(this.cardSolicitud)">Firmar</button>
+            <button *ngIf="this.user[0].Tipo == 'G' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaGerente(this.cardSolicitud)">Firmar</button>
+            <button *ngIf="spinerBandera == false" type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+        </div>
+    </div>
+  </div>

@@ -135,6 +135,11 @@ export class PanelReportes {
       (response) => {
         const data =  response;
         this.solicitudes = data;
+        this.solicitudes.forEach((ele: any) =>{
+          ele.tipoSolicitud = ele.motivo.includes('Permiso')? 'Permiso' : ele.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
+          ele.motivo = ele.tipoSolicitud == 'Vacaciones'? ele.motivo.substring(12,100) : ele.tipoSolicitud == 'Permiso'? ele.motivo.substring(9,100) : ele.tipoSolicitud == 'Pago tiempo por tiempo'? ele.motivo.substring(24,100) : ele.motivo;
+          
+        })
 
         this.datosColaborador.push(this.solicitudes[0]);
         
@@ -194,6 +199,9 @@ export class PanelReportes {
 }
 
   async generatePDFWithPdfMake(solicitud: any) {
+    // console.log(solicitud);
+    // const tipoSolicitud = solicitud.motivo.includes('Permiso')? 'Permiso' : solicitud.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
+    // solicitud.motivo = tipoSolicitud == 'Vacaciones'? solicitud.motivo.substring(12,100) : tipoSolicitud == 'Permiso'? solicitud.motivo.substring(9,100) : tipoSolicitud == 'Pago tiempo por tiempo'? solicitud.motivo.substring(24,100) : solicitud.motivo;
 
     const cgs = solicitud.con_sueldo == true? 'X' : '';
     const sgs = solicitud.sin_sueldo == true? 'X' : '';
@@ -343,9 +351,14 @@ export class PanelReportes {
         {
           columns: [
             {
-              width: '100%',
-              text: 'Motivo: ' + solicitud.motivo,
+              width: '30%',
+              text: 'Solicitud: ' + solicitud.tipoSolicitud,
               style: 'parrafoFirmas'
+            },
+            {
+              width: '70%',
+              text: 'Motivo: ' + solicitud.motivo,
+              style: 'parrafo'
             },
           ],
         },

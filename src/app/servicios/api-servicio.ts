@@ -42,14 +42,14 @@ export class ApiServicio {
     return this.http.post<any>(`${this.apiUrl}/reporteSolicitud`, {departamento, anio, mes, criterio, tipo});
   }
 
-  firmaJefeInmediato(id: number): Observable<any> {
+  firmaJefeInmediato(item: any): Observable<any> {
     // console.log("Entra");
-    return this.http.post<any>(`${this.apiUrl}/firma-jefe-inmediato`, {id});
+    return this.http.post<any>(`${this.apiUrl}/firma-jefe-inmediato`, item);
   }
 
-  firmaGerente(id: number): Observable<any> {
+  firmaGerente(item: any): Observable<any> {
     // console.log("Entra");
-    return this.http.post<any>(`${this.apiUrl}/firma-gerente`, {id});
+    return this.http.post<any>(`${this.apiUrl}/firma-gerente`, item);
   }
 
   getCoAsociados(tipo: string, tipo_dep: string){

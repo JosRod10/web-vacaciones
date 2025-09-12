@@ -150,7 +150,7 @@
 
                     <div class="input-group d-flex justify-content-center mt-4">
                         <div class="row d-flex justify-content-center">
-                            <div class="col-lg-12 col-sm-12 d-flex justify-content-center">
+                            <div class="col-lg-12 col-sm-12 d-flex justify-content-center" *ngIf="this.spinerBandera == false">
                                 <label class="aut">Firmar</label>&nbsp;&nbsp;
                                 <div class="form-check form-switch">
                                     <input class="form-check-input activ" formControlName="firma" type="checkbox" id="flexSwitchCheckDefault" (click)="cambiarLeyenda($event)">
@@ -169,8 +169,14 @@
             <div class="col-lg-5 col-sm-12"></div>
             <div class="col-lg-2 col-sm-12">
                 <div class="container-fluid d-flex justify-content-center" style="margin-top: 3vh;">
-                    <button *ngIf="this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.solicitudForm.get('cDias')?.value <= this.dias_diponibles && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true)" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
-                    <button *ngIf="this.opcionselect == '' || this.solicitudForm.value.firma == 0 || this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || this.solicitudForm.get('cDias')?.value > this.dias_diponibles || (this.solicitudForm.value.tPermiso1 == false && this.solicitudForm.value.tPermiso2 == false && this.solicitudForm.value.tPermiso3 == false && this.solicitudForm.value.tPermiso4 == false)" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
+                    <button *ngIf="this.spinerBandera == false && this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.solicitudForm.get('cDias')?.value <= this.dias_diponibles && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true)" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
+                    <button *ngIf="this.spinerBandera == false && this.opcionselect == '' || this.solicitudForm.value.firma == 0 || this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || this.solicitudForm.get('cDias')?.value > this.dias_diponibles || (this.solicitudForm.value.tPermiso1 == false && this.solicitudForm.value.tPermiso2 == false && this.solicitudForm.value.tPermiso3 == false && this.solicitudForm.value.tPermiso4 == false)" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
+                    <!-- <div class="text-center" *ngIf="spinerBandera">
+                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div> -->
+                    <span *ngIf="spinerBandera" class="loader"></span>
                 </div>
             </div>
             <div class="col-lg-5 col-sm-12"></div>
@@ -329,7 +335,7 @@
 
                     <div class="input-group d-flex justify-content-center mt-4">
                         <div class="row d-flex justify-content-center">
-                            <div class="col-lg-12 col-sm-12 d-flex justify-content-center">
+                            <div class="col-lg-12 col-sm-12 d-flex justify-content-center" *ngIf="this.spinerBandera == false">
                                 <label class="aut">Firmar</label>&nbsp;&nbsp;
                                 <div class="form-check form-switch">
                                     <input class="form-check-input activ" formControlName="firma" type="checkbox" id="flexSwitchCheckDefault" (click)="cambiarLeyenda($event)">
@@ -348,8 +354,14 @@
             <div class="col-lg-5 col-sm-12"></div>
             <div class="col-lg-2 col-sm-12">
                 <div class="container-fluid d-flex justify-content-center" style="margin-top: 3vh;">
-                    <button *ngIf="this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.solicitudForm.get('cDias')?.value <= this.dias_diponibles && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true)" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
-                    <button *ngIf="this.opcionselect == '' || this.solicitudForm.value.firma == 0 || this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || this.solicitudForm.get('cDias')?.value > this.dias_diponibles || (this.solicitudForm.value.tPermiso1 == false && this.solicitudForm.value.tPermiso2 == false && this.solicitudForm.value.tPermiso3 == false && this.solicitudForm.value.tPermiso4 == false)" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
+                    <button *ngIf="this.spinerBandera == false && this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.solicitudForm.get('cDias')?.value <= this.dias_diponibles && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true)" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
+                    <button *ngIf="this.spinerBandera == false && this.opcionselect == '' || this.solicitudForm.value.firma == 0 || this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || this.solicitudForm.get('cDias')?.value > this.dias_diponibles || (this.solicitudForm.value.tPermiso1 == false && this.solicitudForm.value.tPermiso2 == false && this.solicitudForm.value.tPermiso3 == false && this.solicitudForm.value.tPermiso4 == false)" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
+                    <!-- <div class="text-center" *ngIf="spinerBandera">
+                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div> -->
+                    <span *ngIf="spinerBandera" class="loader"></span>
                 </div>
             </div>
             <div class="col-lg-5 col-sm-12"></div>
