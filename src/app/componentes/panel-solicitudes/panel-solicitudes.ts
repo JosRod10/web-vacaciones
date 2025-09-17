@@ -25,6 +25,7 @@ export class PanelSolicitudes {
   user: any;
   firmaCheck: boolean =  false;
   spinerBandera: boolean = false;
+  spinerFirma: boolean = false;
 
   constructor(private api: ApiServicio, private dialog: MatDialog, private router: Router){
     
@@ -86,8 +87,22 @@ export class PanelSolicitudes {
     });
   }
 
-  activarFirma(){
-    this.firmaCheck = true;
+  activarFirma(id: number){
+    this.spinerFirma = !this.spinerFirma;
+    this.api.aceptarRI(id).subscribe(
+      (response) => {
+          if(response == true){
+            
+            console.log('Se autorizó la firma de RI');
+            this.spinerFirma = !this.spinerFirma;
+            this.cargarSolicitudes(this.user[0].Tipo);
+           
+          }
+         },
+         (error) => {
+           console.error('Error al obtener datos:', error);
+         }
+    );
   }
 
   firmaRelaciones(id: number, accion: number){
@@ -106,6 +121,7 @@ export class PanelSolicitudes {
               // Usamos el método 'hide' de Bootstrap para cerrar el modal
               // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
               (window as any).bootstrap.Modal.getInstance(modalElement).hide();
+              this.spinerBandera = !this.spinerBandera;
             }
             this.cargarSolicitudes(this.user[0].Tipo);
             this.firmaCheck = false;
@@ -130,9 +146,10 @@ export class PanelSolicitudes {
               // Usamos el método 'hide' de Bootstrap para cerrar el modal
               // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
               (window as any).bootstrap.Modal.getInstance(modalElement).hide();
+              this.spinerBandera = !this.spinerBandera;
             }
             this.cargarSolicitudes(this.user[0].Tipo);
-            this.miCheckboxJI.nativeElement.checked = false;
+            // this.miCheckboxJI.nativeElement.checked = false;
           }
          },
          (error) => {
@@ -152,9 +169,10 @@ export class PanelSolicitudes {
               // Usamos el método 'hide' de Bootstrap para cerrar el modal
               // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
               (window as any).bootstrap.Modal.getInstance(modalElement).hide();
+              this.spinerBandera = !this.spinerBandera;
             }
             this.cargarSolicitudes(this.user[0].Tipo);
-            this.miCheckboxG.nativeElement.checked = false;
+            // this.miCheckboxG.nativeElement.checked = false;
           }
          },
          (error) => {

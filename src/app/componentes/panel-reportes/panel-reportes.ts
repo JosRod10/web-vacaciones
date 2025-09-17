@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ApiServicio } from '../../servicios/api-servicio';
 import * as XLSX from 'xlsx';
+import { LoginServices } from '../../servicios/login';
 // import pdfMake from 'pdfmake/build/pdfmake';
 // import pdfFonts from 'pdfmake/build/vfs_fonts';
 // (pdfMake as any).vfs = pdfFonts;
@@ -37,7 +38,8 @@ export class PanelReportes {
 
   datosColaborador: any[] = [];
   
-  constructor(private dialog: MatDialog, private router: Router, private fb: FormBuilder, private api: ApiServicio){
+  constructor(private dialog: MatDialog, private router: Router, private fb: FormBuilder,
+     private api: ApiServicio, private loginServices: LoginServices){
 
     this.consultaForm = this.fb.group({
       criterio: ['', [Validators.required]],
@@ -190,6 +192,17 @@ export class PanelReportes {
     return `${dia} de ${mes} del ${año}`;
   }
 
+  formatoFecha(fecha: string){
+    var date = new Date(fecha);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const formatoFechaHoy = day + '/' + month +'/' + year;
+    return formatoFechaHoy;
+  }
+
   async loadAndPrintPDF() {
   const { default: pdfMake } = await import('pdfmake/build/pdfmake')
   const { default: pdfFonts } = await import('pdfmake/build/vfs_fonts')
@@ -212,10 +225,10 @@ export class PanelReportes {
     const ji = solicitud.firma_jefe_in == 'true'? 'Autorizó' : '';
     const g = solicitud.firms_gerente == 'true'? 'Autorizó' : '';
 
-    const statusA = solicitud.status != 'Aceptado'? '' : 'X';
+    const statusA = solicitud.status == 'Aceptado'? 'X' : solicitud.status == 'Completado'? 'X' : '';
     const statusR = solicitud.status != 'Rechazado'? '' : 'X';
 
-    const rel = solicitud.status == 'Aceptado'? 'Autorizó' : '';
+    const rel = solicitud.status == 'Completado'? 'Autorizó' : '';
     
     const docDefinition = {
       content: [
@@ -274,7 +287,7 @@ export class PanelReportes {
             },
             {
               width: '25%',
-              text: 'Años Cump: 0',
+              text: 'Años Cump: ' + ' ' + this.loginServices.obtenerAnosCumplidos(this.formatoFecha(solicitud.Fecha_de_alta)),
               style: 'parrafo'
             },
             {
@@ -298,7 +311,7 @@ export class PanelReportes {
             },
             {
               width: '25%',
-              text: 'Centro de Costos: 304',
+              text: 'Centro de Costos: ' + ' ' + solicitud.C_costos,
               style: 'parrafo'
             },
           ],
@@ -351,12 +364,12 @@ export class PanelReportes {
         {
           columns: [
             {
-              width: '30%',
+              width: '40%',
               text: 'Solicitud: ' + solicitud.tipoSolicitud,
               style: 'parrafoFirmas'
             },
             {
-              width: '70%',
+              width: '60%',
               text: 'Motivo: ' + solicitud.motivo,
               style: 'parrafo'
             },

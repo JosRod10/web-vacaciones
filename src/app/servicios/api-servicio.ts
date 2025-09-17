@@ -56,4 +56,8 @@ export class ApiServicio {
         return this.http.post<any>(`${this.apiUrl}/colaboradores-asociados`, {tipo, tipo_dep});
   }
 
+  aceptarRI(id: number): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/aceptar-ri`, {id});
+  }
 }

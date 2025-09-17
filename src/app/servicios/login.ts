@@ -9,6 +9,8 @@ import { ApiServicio } from './api-servicio';
   providedIn: 'root'
 })
 export class LoginServices {
+  cumplidos: number = 0;
+  
   constructor(private http: HttpClient, private api: ApiServicio) {}
 
   // async validarCredenciales(usuario: string, contraseña: string): Promise<boolean> {
@@ -47,6 +49,49 @@ export class LoginServices {
       }
 
       return false;
+  }
+
+    formatCustomDate(){
+    var date = new Date();
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const formatoFechaHoy = day + '/' + month +'/' + year;
+    return formatoFechaHoy;
+  }
+
+
+  obtenerAnosCumplidos(fecha_alta: string){
+    const fechaHoy = this.formatCustomDate();
+    const fechaAlta = fecha_alta;
+   
+    const diaH = parseInt(fechaHoy.substring(0,2));
+    const mesH = parseInt(fechaHoy.substring(3,5));
+    const añoH = parseInt(fechaHoy.substring(6,10));
+    const diaA = parseInt(fechaAlta.substring(0,2));
+    const mesA = parseInt(fechaAlta.substring(3,5));
+    const añoA = parseInt(fechaAlta.substring(6,10));
+
+    this.cumplidos = añoH - añoA;
+   
+
+    if(diaH >= diaA && mesH >= mesA){
+      this.cumplidos = this.cumplidos;
+    }
+    if(diaH >= diaA && mesH < mesA){
+      this.cumplidos = this.cumplidos - 1;
+    }
+    // if(diaH < diaA && mesH < mesA){
+    //   this.cumplidos = this.cumplidos;
+    // }
+    if(añoA == añoH){
+      this.cumplidos = 0;
+    }
+
+    return this.cumplidos;
+
   }
 
 }
