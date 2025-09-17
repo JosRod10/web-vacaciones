@@ -191,6 +191,17 @@ export class PanelSolicitudes {
     this.api.aprobar(id, accion, dias_d, dias_u, clave).subscribe(
       (response) => {
           if(response == true){
+
+            if(accion == 0){
+
+              const modalElement = document.getElementById('modal-re');
+              if (modalElement) {
+                // Usamos el método 'hide' de Bootstrap para cerrar el modal
+                // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
+                (window as any).bootstrap.Modal.getInstance(modalElement).hide();
+                this.spinerBandera = !this.spinerBandera;
+              }
+            }
        
             this.cargarSolicitudes(this.user[0].Tipo);
             this.firmaCheck = false;

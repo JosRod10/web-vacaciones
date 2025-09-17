@@ -17,3 +17,10 @@ div p{
   background-color: rgb(2, 161, 2);
   color: #fff;
 }
+
+    .table thead {
+        position: sticky;
+        top: 0;
+        background-color: #f8f9fa; /* O el color de fondo que prefieras */
+        z-index: 1; /* Asegura que el encabezado esté por encima del contenido */
+    }

@@ -2,19 +2,35 @@
     <div class="container-fluid contenedor shadow p-2">
         <div class="container-fluid box">
             <div class="row mb-1">
-                <div class="col-lg-1 col-md-1 col-sm-12 d-flex justify-content-start">
+                <div class="col-lg-1 col-md-12 col-sm-12 d-flex justify-content-start">
                     <i class="bi bi-arrow-left"  style="font-size: 3.5vh;" (click)="volver()"></i>
                 </div>
-                <div class="col-lg-8 col-md-8 col-sm-12">
-                   <div class="d-flex justify-content-center" *ngIf="datosColaborador"> 
+                <div class="col-lg-8 col-md-12 col-sm-12">
+                    <div class="row" *ngIf="datosColaborador">
+
+                        <div class="col-lg-5 col-md-5 col-sm-12 d-flex justify-content-end">
+                            <p *ngIf="this.nDias != 0">{{this.datosColaborador[0].Nombre_completo}}:</p>
+                        </div>
+                        <div class="col-lg-7 col-md-7 col-sm-12 d-flex">
+                            <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-warning">DIAS DE VACACIONES: {{this.datosColaborador[0].Dias_vacaciones}}</span></p>&nbsp;
+                            <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-danger">DIAS OCUPADOS: {{this.datosColaborador[0].Dias_ocupados}}</span></p>&nbsp;
+                            <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-primary">DIAS DISPONIBLES: {{this.datosColaborador[0].Dias_disponibles}}</span></p>&nbsp;
+                            <p *ngIf="this.nDias != 0"><span (click)="descargarExcel()" style="cursor: pointer;" class="badge rounded-pill bg-success"><i class="bi bi-file-earmark-spreadsheet"></i> DESCARGAR EXCEL</span></p>&nbsp;
+                        </div>
+
+                    </div>
+
+
+                   <!-- <div class="d-flex justify-content-center" *ngIf="datosColaborador"> 
                     <p *ngIf="this.nDias != 0">{{this.datosColaborador[0].Nombre_completo}}:</p>&nbsp;
                     <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-warning">DIAS DE VACACIONES: {{this.datosColaborador[0].Dias_vacaciones}}</span></p>&nbsp;&nbsp;
                     <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-danger">DIAS OCUPADOS: {{this.datosColaborador[0].Dias_ocupados}}</span></p>&nbsp;&nbsp;
                     <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-primary">DIAS DISPONIBLES: {{this.datosColaborador[0].Dias_disponibles}}</span></p>&nbsp;&nbsp;
                     <p *ngIf="this.nDias != 0"><span (click)="descargarExcel()" style="cursor: pointer;" class="badge rounded-pill bg-success"><i class="bi bi-file-earmark-spreadsheet"></i> DESCARGAR EXCEL</span></p>
-                   </div>
+                   </div> -->
+
                 </div>
-                <div class="col-lg-3 col-md-5 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
+                <div class="col-lg-3 col-md-12 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
                    <p>{{this.user[0].Nombre_completo}}</p>&nbsp;&nbsp;
                    <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i>
                 </div>
@@ -95,7 +111,8 @@
                     </div>        
                 </div>
             </div>
-            <div class="overflow-auto" style="max-height: 77vh;">      
+            <!-- <div class="overflow-auto" style="max-height: 77vh;"> -->
+                <div class="table-responsive overflow-auto" style="max-height: 77vh;">     
                     <table class="table table-light table-hover">
                         <thead>
                             <!-- <tr class="table-title">
@@ -128,7 +145,8 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                    </div> 
+                <!-- </div> -->
         </div>
     </div>
 </div>
