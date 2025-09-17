@@ -8,12 +8,14 @@
                 <div class="col-lg-8 col-md-12 col-sm-12">
                     <div class="row" *ngIf="datosColaborador">
 
-                        <div class="col-lg-5 col-md-5 col-sm-12 d-flex justify-content-end">
+                        <div class="col-lg-5 col-md-5 col-sm-12 d-flex justify-content-center">
                             <p *ngIf="this.nDias != 0">{{this.datosColaborador[0].Nombre_completo}}:</p>
                         </div>
-                        <div class="col-lg-7 col-md-7 col-sm-12 d-flex">
+                        <div class="col-lg-3 col-md-3 col-sm-12 d-flex justify-content-center">
                             <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-warning">DIAS DE VACACIONES: {{this.datosColaborador[0].Dias_vacaciones}}</span></p>&nbsp;
                             <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-danger">DIAS OCUPADOS: {{this.datosColaborador[0].Dias_ocupados}}</span></p>&nbsp;
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-end">
                             <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-primary">DIAS DISPONIBLES: {{this.datosColaborador[0].Dias_disponibles}}</span></p>&nbsp;
                             <p *ngIf="this.nDias != 0"><span (click)="descargarExcel()" style="cursor: pointer;" class="badge rounded-pill bg-success"><i class="bi bi-file-earmark-spreadsheet"></i> DESCARGAR EXCEL</span></p>&nbsp;
                         </div>
