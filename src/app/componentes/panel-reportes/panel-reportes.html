@@ -124,6 +124,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Depto.</th>
+                            <th scope="col">Tipo</th>
                             <th scope="col">Fecha Solicitud</th>
                             <th scope="col">Días</th>
                             <th scope="col">Periodo</th>
@@ -137,11 +138,13 @@
                             <th scope="row">{{i+1}}</th>
                             <td>{{solicitud.Nombre_completo}}</td>
                             <td>{{solicitud.Departamento}}</td>
+                            <td><span class="badge rounded-pill bg-secondary">{{solicitud.tipo_solicitud}}</span></td>
                             <td>{{solicitud.fecha_solicitud}}</td>
                             <td>{{solicitud.cuantos_dias}}</td>
-                            <td>{{solicitud.fecha_apartir}} al {{solicitud.fecha_hasta}}</td>
-                            <td>{{solicitud.motivo}}</td>
-                            <td>{{solicitud.status}}</td>
+                            <td style="font-size: small;">{{solicitud.fecha_apartir}} al {{solicitud.fecha_hasta}}</td>
+                            <td style="font-size: small;">{{solicitud.motivo}}</td>
+                            <!-- <td>{{solicitud.status}}</td> -->
+                            <td><span class="badge rounded-pill bg-light" style="color: #000;">{{solicitud.status}}</span></td>
                             <td><button class="btn btn-light descargar" (click)="generatePDFWithPdfMake(solicitud)"><i class="bi bi-download"></i></button></td>
                             <!-- <td><span class="badge rounded-pill bg-warning">{{solicitud.status}}</span></td> -->
                             </tr>

@@ -14,6 +14,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatIconModule} from '@angular/material/icon';
 import { Colaborador } from '../../interfaces/colaborador';
+import { LoginServices } from '../../servicios/login';
 
 
 @Component({
@@ -64,7 +65,7 @@ export class Form {
   opcionselect: string = '';
   ///////////////////////////////////////////////////////////////
 
-  constructor(private fb: FormBuilder, private router: Router, private dialog: MatDialog, private api: ApiServicio){
+  constructor(private fb: FormBuilder, private router: Router, private dialog: MatDialog, private api: ApiServicio, private authservice: LoginServices){
 
     this.solicitudForm = this.fb.group({
       fecha: ['', [Validators.required]],
@@ -82,6 +83,7 @@ export class Form {
       cDias: ['', [Validators.required]],
       fechaApartir: ['', []],
       fechaHasta: ['', []],
+      tipo_solicitud: ['', []],
       motivo: ['', [Validators.required,]],// Validators.minLength(10)
       firma: ['', [Validators.required]],
       clave: ['', []],
@@ -134,10 +136,6 @@ export class Form {
     this.fecha = this.obtenerFechaDeHoy();
     this.fecha_hoy = this.fecha.substring(0,16);
     this.ano_hoy = this.fecha.substring(22,24);
-    
-    // console.log(this.user[0].Fecha_alta.substring(6,10));
-    // this.cumplidos = this.obtenerAnosCumplidos(this.user[0].Fecha_alta);
-    // console.log(this.cumplidos);
     this.fechaAlta = this.obtenerFechaAlta(this.user[0].Fecha_de_alta);
     this.obtenerAnosCumplidos(this.fechaAlta);
     if(parseInt(this.user[0].Dias_disponibles) == 0){
@@ -145,7 +143,6 @@ export class Form {
     }else{
       this.dias_diponibles = parseInt(this.user[0].Dias_disponibles)
     }
-    // this.formatCustomDate();
     
   }
 
@@ -173,7 +170,6 @@ export class Form {
   cargarColaboradores(tipo: string, tipo_dep: string){
 
     this.api.getCoAsociados(tipo, tipo_dep).subscribe(data => {
-        // this.items = data;
         
         this.colaboradores = data;
         const opcion = {Nombre_completo: 'Selecciona colaborador'}
@@ -212,25 +208,6 @@ export class Form {
         this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles);
     }
   }
-
-  // obtenerFechaAlta(fecha: string){
-  //   const dia = fecha.substring(0,2);
-  //   const mes = fecha.substring(3,5) == '01' ? 'enero' 
-  //   : fecha.substring(3,5) == '02' ? 'febrero' 
-  //   : fecha.substring(3,5) == '03' ? 'marzo'
-  //   : fecha.substring(3,5) == '04' ? 'abril'
-  //   : fecha.substring(3,5) == '05' ? 'mayo'
-  //   : fecha.substring(3,5) == '06' ? 'junio'
-  //   : fecha.substring(3,5) == '07' ? 'julio'
-  //   : fecha.substring(3,5) == '08' ? 'agosto'
-  //   : fecha.substring(3,5) == '09' ? 'septiembre'
-  //   : fecha.substring(3,5) == '10' ? 'octubre'
-  //   : fecha.substring(3,5) == '11' ? 'noviembre'
-  //   : fecha.substring(3,5) == '12' ? 'diciembre' : 'Otro Mes';
-  //   const año = fecha.substring(6,10);
-  //   const fechaAlta = dia + ' de ' + mes + ' del ' + año;
-  //   return fechaAlta;
-  // }
 
   obtenerFechaAlta(fechaISO: string): string {
     const fecha = new Date(fechaISO);
@@ -282,12 +259,11 @@ export class Form {
     if(diaH >= diaA && mesH >= mesA){
       this.cumplidos = this.cumplidos;
     }
+
     if(diaH >= diaA && mesH < mesA){
       this.cumplidos = this.cumplidos - 1;
     }
-    // if(diaH < diaA && mesH < mesA){
-    //   this.cumplidos = this.cumplidos;
-    // }
+  
     if(añoA == añoH){
       this.cumplidos = 0;
     }
@@ -295,28 +271,6 @@ export class Form {
     return this.cumplidos;
 
   }
-
-  // convertirFecha(fecha: any){
-  //   // const fecha = this.solicitudForm.value.fechaApartir;
-  //   console.log(fecha);
-  //   const opciones: Intl.DateTimeFormatOptions = {
-  //     day: '2-digit',
-  //     month: 'long',
-  //     year: 'numeric'
-  //   };
-  //   this.fechaConversionApartir = fecha.toLocaleDateString('es-ES', opciones);
-  //   console.log(this.fechaConversionApartir);
-
-  //   // return this.fechaConversionApartir;
-
-  // }
-
-  // onDateChange(event: any) {
-  //      const selectedDate = event.value;
-  //      console.log(selectedDate);
-  //      // Llama a tu función aquí con el selectedDate
-  //      this.convertirFecha(selectedDate);
-  //   }
 
   isInvalid(field: string): boolean {
     const control = this.solicitudForm.get(field);
@@ -341,11 +295,19 @@ export class Form {
   }
 
   async cerrarAlerta(){
+    
     setTimeout(() => {
       
       if(this.alertSuccess){
         this.alertSuccess = false;
-        this.cerrarSesion(1);
+
+        if(this.user[0].Tipo == 'C'){
+           this.cerrarSesion(1);
+        }
+        if(this.user[0].Tipo == 'S'){
+          window.location.reload();
+        }
+
       }
       if(this.alertDanger){
         this.alertDanger = false;
@@ -354,12 +316,11 @@ export class Form {
 
   }
 
-
   cerrarSesion(accion: number){
     if(accion == 0){
       const res = confirm('Seguro que quieres cerrar la sesión?');
       if(res){
-        localStorage.removeItem('Usuario');
+        this.authservice.logout();
         this.router.navigate(['login']);
       }else{
         return;
@@ -400,10 +361,8 @@ export class Form {
 
   enviar(){
     this.spinerBandera = !this.spinerBandera;
-    // console.log('Formulario:',this.solicitudForm.value.fecha);
     this.solicitudForm.value.fecha = this.solicitudForm.value.fecha + ' del 20' + this.solicitudForm.value.año;
     this.solicitudForm.value.firma = this.solicitudForm.value.firma.toString();
-    // this.solicitudForm.value.tPermiso = this.solicitudForm.value.tPermiso1 == true? 'Con goce de sueldo' : this.solicitudForm.value.tPermiso2 == true? 'Sin goce de sueldo' : this.solicitudForm.value.tPermiso3 == true? 'Sindicalizado' : this.solicitudForm.value.tPermiso4 == true? 'No sindicalizado' : '';
 
     this.solicitudForm.value.fecha = this.fecha_hoy + ' del 20' + this.ano_hoy;
     this.solicitudForm.value.nombre = this.user[0].Tipo == 'S'? this.nombre_co : this.user[0].Nombre_completo;
@@ -416,17 +375,8 @@ export class Form {
     this.solicitudForm.value.fechaHasta = this.converetirFecha(this.solicitudForm.value.fechaHasta);
     this.solicitudForm.value.clave = this.user[0].Tipo == 'S'? this.no_tarjeta_co : this.user[0].Clave;
 
-    this.solicitudForm.value.motivo = this.opcionselect + ': ' + this.solicitudForm.value.motivo;
-
-    // if(this.user[0].Tipo == 'S'){
-
-    //  this.solicitudForm.value.nombre = this.colaborador[0].nombre_co;
-    //  this.solicitudForm.value.depto = this.colaborador[0].dep_co;
-    //  this.solicitudForm.value.clave = this.colaborador[0].Clave;
-
-    // }
-
-    // console.log('fecha:', this.solicitudForm.value.fecha);
+    this.solicitudForm.value.motivo = this.solicitudForm.value.motivo;
+    this.solicitudForm.value.tipo_solicitud = this.opcionselect;
 
     this.api.form(this.solicitudForm.value).subscribe(
       (response) => {
@@ -448,15 +398,6 @@ export class Form {
 
     );
 
-    // this.api.form(this.user).subscribe(
-    //      (response) => {
-    //       const data = response; // Asigna los datos recibidos a la variable 'data'
-    //       console.log("Mensaje: ", data);
-    //      },
-    //      (error) => {
-    //        console.error('Error al obtener datos:', error);
-    //      }
-    // );
   }
 
   vaciarFormulario(){

@@ -59,7 +59,8 @@ export class Login {
   onSubmit() {
     if (this.loginForm.valid) {
       // console.log('Login exitoso', this.loginForm.value);
-      this.loginSQL();
+      // this.loginSQL();
+      this.loginToken();
     } else {
       this.loginForm.markAllAsTouched();
     }
@@ -143,6 +144,51 @@ export class Login {
          }
     );
         
+  }
+
+  async loginToken(){
+    // En tu componente de login
+      // ... (envía credenciales a la API)
+      this.user = {
+      user: this.loginForm.value.user,
+      pass: this.loginForm.value.pass
+    }
+      this.api.login(this.user).subscribe(
+        (response)=>{
+          const data = response.result;
+          const token = response.token;
+          if (token) {
+            this.authService.login(token, data);
+            if(data[0].Tipo == 'C'){
+                this.router.navigate(['solicitud']);
+            }
+            if(data[0].Tipo == 'RI' || data[0].Tipo == 'JI' || data[0].Tipo == 'G'){
+                this.router.navigate(['panel-solicitud']);
+            }
+            if(data[0].Tipo == 'S'){
+                this.router.navigate(['solicitud']);
+            }
+          }
+          // if(!token && data.length > 0 && data[0].Estatus_Solicitud == 'Pendiente'){
+          //   this.alerta = true,     
+          //   setTimeout(() => {
+          //     this.alerta = false;
+          //     this.loginForm.get('user')?.setValue('');
+          //     this.loginForm.get('pass')?.setValue('');
+          //   }, 4000); // 4000 milisegundos = 4 segundos
+
+          // } 
+          if(!token) {
+            this.abrirAlerta();
+            this.error = 'Usuario o contraseña incorrectos';
+            
+          }
+        },
+        (err)=>{
+          console.log(err);
+        }
+      );
+    
   }
 
 }

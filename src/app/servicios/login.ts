@@ -10,7 +10,9 @@ import { ApiServicio } from './api-servicio';
 })
 export class LoginServices {
   cumplidos: number = 0;
-  
+
+  private token: string | null = null;
+
   constructor(private http: HttpClient, private api: ApiServicio) {}
 
   // async validarCredenciales(usuario: string, contraseña: string): Promise<boolean> {
@@ -93,6 +95,31 @@ export class LoginServices {
     return this.cumplidos;
 
   }
+
+  // auth.service.ts
+
+  login(token: any, user: any) {
+    this.token = token;
+    localStorage.setItem('authToken', token); // O en cookies para más seguridad
+    localStorage.setItem('Usuario', JSON.stringify(user));
+    console.log('Token almacenado');
+  }
+
+  logout() {
+    this.token = null;
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('Usuario');
+    console.log('Sesión cerrada');
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('authToken');
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
+
 
 }
 

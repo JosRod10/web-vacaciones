@@ -137,11 +137,11 @@ export class PanelReportes {
       (response) => {
         const data =  response;
         this.solicitudes = data;
-        this.solicitudes.forEach((ele: any) =>{
-          ele.tipoSolicitud = ele.motivo.includes('Permiso')? 'Permiso' : ele.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
-          ele.motivo = ele.tipoSolicitud == 'Vacaciones'? ele.motivo.substring(12,100) : ele.tipoSolicitud == 'Permiso'? ele.motivo.substring(9,100) : ele.tipoSolicitud == 'Pago tiempo por tiempo'? ele.motivo.substring(24,100) : ele.motivo;
+        // this.solicitudes.forEach((ele: any) =>{
+        //   ele.tipoSolicitud = ele.motivo.includes('Permiso')? 'Permiso' : ele.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
+        //   ele.motivo = ele.tipoSolicitud == 'Vacaciones'? ele.motivo.substring(12,100) : ele.tipoSolicitud == 'Permiso'? ele.motivo.substring(9,100) : ele.tipoSolicitud == 'Pago tiempo por tiempo'? ele.motivo.substring(24,100) : ele.motivo;
           
-        })
+        // })
 
         this.datosColaborador.push(this.solicitudes[0]);
         
