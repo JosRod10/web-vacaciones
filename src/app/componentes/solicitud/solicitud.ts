@@ -53,6 +53,8 @@ export class Form {
 
   spinerBandera: boolean = false;
 
+  solicitudesUsuario: any[] = []
+
   //////////////////// Datos colaborador ////////////////////////
   fecha_co_hoy: string = '';
   ano_co_actual: string = '';
@@ -86,7 +88,7 @@ export class Form {
       tipo_solicitud: ['', []],
       motivo: ['', [Validators.required,]],// Validators.minLength(10)
       firma: ['', [Validators.required]],
-      clave: ['', []],
+      clave: ['', []]
     });
 
     this.solicitudFormRI = this.fb.group({
@@ -134,8 +136,8 @@ export class Form {
 
   
     this.fecha = this.obtenerFechaDeHoy();
-    this.fecha_hoy = this.fecha.substring(0,16);
-    this.ano_hoy = this.fecha.substring(22,24);
+    this.fecha_hoy = this.fecha.substring(0,13);
+    this.ano_hoy = this.fecha.substring(19,21);
     this.fechaAlta = this.obtenerFechaAlta(this.user[0].Fecha_de_alta);
     this.obtenerAnosCumplidos(this.fechaAlta);
     if(parseInt(this.user[0].Dias_disponibles) == 0){
@@ -197,14 +199,14 @@ export class Form {
       this.banderaDias = false;
         this.colaborador = this.colaboradores.filter(ele => ele.Nombre_completo == selectedValue);
         
-        this.fecha_co_hoy = this.obtenerFechaDeHoy().substring(0,16);
+        this.fecha_co_hoy = this.obtenerFechaDeHoy().substring(0,13);
         this.ano_co_actual = '25';
         this.nombre_co = this.colaborador[0].Nombre_completo;
         this.fecha_co_ingreso =  this.obtenerFechaAlta(this.colaborador[0].Fecha_de_alta);;
         this.anos_co_cumplidos = this.obtenerAnosCumplidos(this.formatoFecha(this.colaborador[0].Fecha_de_alta));
         this.no_tarjeta_co = this.colaborador[0].Clave;
         this.dep_co = this.colaborador[0].Departamento;
-        this.centro_co = '106';
+        this.centro_co = this.colaborador[0].C_costos;
         this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles);
     }
   }
@@ -415,6 +417,56 @@ export class Form {
     this.solicitudForm.get('fechaHasta')?.setValue('');
     this.solicitudForm.get('motivo')?.setValue('');
     this.solicitudForm.get('firma')?.setValue(0);
+  }
+
+  convertirFecha(fecha: string){
+    const [year, month, day] = fecha.split('-');
+    const meses = [
+      "enero", "febrero", "marzo", "abril", "mayo", "junio",
+      "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+    ];
+
+    // Crear un objeto Date a partir de la cadena original (se le pasa el año, mes, día)
+    const fechaObjeto = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+
+    // Obtener el día, mes y año del objeto Date
+    const dia = fechaObjeto.getDate();
+    const mes = meses[fechaObjeto.getMonth()];
+    const anio = fechaObjeto.getFullYear();
+
+    // Formatear la nueva cadena
+    const fechaFormateada = `${dia.toString().padStart(2, '0')} de ${mes} de ${anio}`;
+    return fechaFormateada
+  }
+
+  consultarHistorial(clave: number){
+    this.api.getHistorial(clave).subscribe(
+      (response) => {
+        this.solicitudesUsuario = response;
+        this.solicitudesUsuario = this.solicitudesUsuario.map((ele: any)=>{
+          ele.fecha_apartir = this.convertirFecha(ele.fecha_apartir);
+          ele.fecha_hasta = this.convertirFecha(ele.fecha_hasta);
+          return ele;
+        });
+          // console.log(this.solicitudesUsuario);
+          // if(response == true){
+          //   this.spinerBandera = !this.spinerBandera;
+          //   this.vaciarFormulario();
+          //   this.alertSuccess = !this.alertSuccess;
+          //   this.alertDanger = false;
+          //   this.cerrarAlerta();
+
+          // }
+         },
+         (error) => {
+          // this.alertDanger = !this.alertDanger;
+          // this.alertSuccess = false;
+          // this.cerrarAlerta();
+          //  console.error('Error al obtener datos:', error);
+         }
+
+    );
+
   }
 
 }

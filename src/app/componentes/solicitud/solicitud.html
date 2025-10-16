@@ -3,7 +3,7 @@
         <div class="container-fluid box">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-12 d-flex justify-content-start">
-                   <p>Días ocupados: {{this.user[0].Dias_ocupados}} de {{this.user[0].Dias_vacaciones}} días</p>
+                   <!-- <p>Días ocupados: {{this.user[0].Dias_ocupados}} de {{this.user[0].Dias_vacaciones}} días</p> -->
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-0"></div>
                 <div class="col-lg-4 col-md-2 col-sm-0">
@@ -32,26 +32,45 @@
                 <div class="col-lg-2 col-md-2 col-sm-0"></div>
             </div>
         </div>
-
+        <div class="container-fluid d-flex justify-content-center">
+            <div class="row">
+                <div class="col-lg-4">
+                    <button class="btn btn-success rounded-pill mt-1" type="button">
+                        <a>2023 Días disponibles: 0 </a>
+                    </button>
+                </div>
+                <div class="col-lg-4">
+                    <button class="btn btn-success rounded-pill mt-1" type="button">
+                        <a> 2024 Días disponibles: 0 </a>
+                    </button>
+                </div>
+                <div class="col-lg-4">
+                    <button class="btn btn-success rounded-pill mt-1" style="width: 28vh;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                        <a (click)="consultarHistorial(this.user[0].Clave)" data-bs-toggle="tooltip" data-bs-placement="right" title="Mi Historial">2025 Días disponibles: {{this.user[0].Dias_disponibles}} </a>
+                    </button>
+                </div>
+                <!-- <p style="cursor: pointer;"><span class="badge rounded-pill bg-success mt-1" style="font-size: medium;"> Días disponibles: {{this.user[0].Dias_disponibles}} </span></p> -->
+            </div>
+        </div>
         <form [formGroup]="solicitudForm">
             <div class="row">
-                <div class="container d-flex justify-content-center mb-1"><h2 style="color: #fff; font-weight: bold; font-size: 2em;"></h2></div>
+                <div class="container d-flex justify-content-center"><h2 style="color: #fff; font-weight: bold; font-size: 2em;"></h2></div>
                 <div class="col-lg-2 col-sm-12"></div>
                 <div class="col-lg-8 col-sm-12">
 
-                    <div class="input-group mb-1">
+                    <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">Fecha</span>
                         <input type="text" class="form-control" [value] ="this.fecha_hoy" disabled aria-label="Username">
                         <span class="input-group-text">del 20</span>
                         <input type="text" class="form-control" [value] ="this.ano_hoy" disabled aria-label="Server">
                     </div>
 
-                    <div class="input-group mb-1">
+                    <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">Por medio del presente solicitamos se autorice a</span>
                         <input type="text" class="form-control" [value] ="this.user[0].Nombre_completo"  disabled aria-label="Username" aria-describedby="basic-addon1">
                     </div>
 
-                    <div class="input-group mb-1">
+                    <div class="input-group">
                         <!-- [value]="this.user[0].Fecha_de_alta" -->
                         <span class="input-group-text" id="basic-addon1">Fecha de ingreso</span>
                         <input type="text" class="form-control" [value]="this.fechaAlta" disabled aria-label="Username">
@@ -62,7 +81,7 @@
                         <input type="text" class="form-control" [value]="this.user[0].Clave" disabled aria-label="Server">
                     </div>
 
-                    <div class="input-group mb-1">
+                    <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">Del departamento de</span>
                         <input type="text" class="form-control" [value] ="this.user[0].Departamento" disabled aria-label="Username">
                         <span class="input-group-text">Centro de costos&nbsp;
@@ -148,7 +167,7 @@
                         <textarea class="form-control" aria-label="With textarea" formControlName="motivo"></textarea>
                     </div>
 
-                    <div class="input-group d-flex justify-content-center mt-4">
+                    <div class="input-group d-flex justify-content-center mt-2">
                         <div class="row d-flex justify-content-center">
                             <div class="col-lg-12 col-sm-12 d-flex justify-content-center" *ngIf="this.spinerBandera == false">
                                 <label class="aut">Firmar</label>&nbsp;&nbsp;
@@ -168,7 +187,7 @@
         <div class="row">
             <div class="col-lg-5 col-sm-12"></div>
             <div class="col-lg-2 col-sm-12">
-                <div class="container-fluid d-flex justify-content-center" style="margin-top: 3vh;">
+                <div class="container-fluid d-flex justify-content-center" style="margin-top: 1vh;">
                     <button *ngIf="this.spinerBandera == false && this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.solicitudForm.get('cDias')?.value <= this.dias_diponibles && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true)" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
                     <button *ngIf="this.spinerBandera == false && this.opcionselect == '' || this.solicitudForm.value.firma == 0 || this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || this.solicitudForm.get('cDias')?.value > this.dias_diponibles || (this.solicitudForm.value.tPermiso1 == false && this.solicitudForm.value.tPermiso2 == false && this.solicitudForm.value.tPermiso3 == false && this.solicitudForm.value.tPermiso4 == false)" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
                     <!-- <div class="text-center" *ngIf="spinerBandera">
@@ -188,7 +207,7 @@
         <div class="container-fluid box">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-12 d-flex justify-content-start">
-                   <p *ngIf="this.colaborador[0] && this.banderaDias == false">Días ocupados: {{this.colaborador[0].Dias_ocupados}} de {{this.colaborador[0].Dias_vacaciones}} días</p>
+                   <!-- <p *ngIf="this.colaborador[0] && this.banderaDias == false">Días ocupados: {{this.colaborador[0].Dias_ocupados}} de {{this.colaborador[0].Dias_vacaciones}} días</p> -->
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-0"></div>
                 <div class="col-lg-4 col-md-2 col-sm-0" style="margin-top: -2vh;">
@@ -217,26 +236,30 @@
                 <div class="col-lg-2 col-md-2 col-sm-0"></div>
             </div>
         </div>
-
+        <div class="container-fluid d-flex justify-content-center">
+            <div class="row">
+                <p *ngIf="this.colaborador[0] && this.banderaDias == false"><span class="badge rounded-pill bg-success mt-1" style="font-size: medium;"> Días disponibles {{this.colaborador[0].Dias_disponibles}} </span></p>
+            </div>
+        </div>
         <form [formGroup]="solicitudForm">
             <div class="row">
-                <div class="container d-flex justify-content-center mb-1"><h2 style="color: #fff; font-weight: bold; font-size: 2em;"></h2></div>
+                <div class="container d-flex justify-content-center"><h2 style="color: #fff; font-weight: bold; font-size: 2em;"></h2></div>
                 <div class="col-lg-2 col-sm-12"></div>
                 <div class="col-lg-8 col-sm-12">
 
-                    <div class="input-group mb-1">
+                    <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">Fecha</span>
                         <input type="text" class="form-control" [value] ="this.fecha_co_hoy" disabled aria-label="Username">
                         <span class="input-group-text">del 20</span>
                         <input type="text" class="form-control" [value] ="this.ano_co_actual" disabled aria-label="Server">
                     </div>
 
-                    <div class="input-group mb-1">
+                    <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">Por medio del presente solicitamos se autorice a</span>
                         <input type="text" class="form-control" [value] ="this.nombre_co"  disabled aria-label="Username" aria-describedby="basic-addon1">
                     </div>
 
-                    <div class="input-group mb-1">
+                    <div class="input-group">
                         <!-- [value]="this.user[0].Fecha_de_alta" -->
                         <span class="input-group-text" id="basic-addon1">Fecha de ingreso</span>
                         <input type="text" class="form-control" [value]="this.fecha_co_ingreso" disabled aria-label="Username">
@@ -247,7 +270,7 @@
                         <input type="text" class="form-control" [value]="this.no_tarjeta_co" disabled aria-label="Server">
                     </div>
 
-                    <div class="input-group mb-1">
+                    <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">Del departamento de</span>
                         <input type="text" class="form-control" [value] ="this.dep_co" disabled aria-label="Username">
                         <span class="input-group-text">Centro de costos&nbsp;
@@ -333,7 +356,7 @@
                         <textarea class="form-control" aria-label="With textarea" formControlName="motivo"></textarea>
                     </div>
 
-                    <div class="input-group d-flex justify-content-center mt-4">
+                    <div class="input-group d-flex justify-content-center mt-2">
                         <div class="row d-flex justify-content-center">
                             <div class="col-lg-12 col-sm-12 d-flex justify-content-center" *ngIf="this.spinerBandera == false">
                                 <label class="aut">Firmar</label>&nbsp;&nbsp;
@@ -353,7 +376,7 @@
         <div class="row">
             <div class="col-lg-5 col-sm-12"></div>
             <div class="col-lg-2 col-sm-12">
-                <div class="container-fluid d-flex justify-content-center" style="margin-top: 3vh;">
+                <div class="container-fluid d-flex justify-content-center" style="margin-top: 1vh;">
                     <button *ngIf="this.spinerBandera == false && this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.solicitudForm.get('cDias')?.value <= this.dias_diponibles && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true)" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
                     <button *ngIf="this.spinerBandera == false && this.opcionselect == '' || this.solicitudForm.value.firma == 0 || this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || this.solicitudForm.get('cDias')?.value > this.dias_diponibles || (this.solicitudForm.value.tPermiso1 == false && this.solicitudForm.value.tPermiso2 == false && this.solicitudForm.value.tPermiso3 == false && this.solicitudForm.value.tPermiso4 == false)" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
                     <!-- <div class="text-center" *ngIf="spinerBandera">
@@ -380,6 +403,88 @@
         </div>
     </div>
 
+</div>
+
+
+<!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+  Button with data-bs-target
+</button> -->
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Mi Historial</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      
+    </div>
+    <div class="dropdown mt-3">
+        <div *ngIf="this.solicitudesUsuario.length == 0" class="d-flex justify-content-center">
+            <p style="color: red;">Aún no hay solicitudes que mostrar.</p>
+        </div>
+        <div *ngIf="this.solicitudesUsuario.length == 0" class="d-flex justify-content-center">
+            <i class="bi bi-emoji-frown" style="color: red; font-size: 6vh;"></i>
+        </div>
+        <div *ngIf="this.solicitudesUsuario.length != 0" class="accordion-item">
+            
+                                    <div *ngFor="let solicitud of solicitudesUsuario; let i = index">
+                                    <h2 class="accordion-header" [attr.id]="'heading' + i">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse' + i" aria-expanded="false" [attr.aria-controls]="'collapse' + i">
+                                            <div class="row w-100 acordion-lista">
+                                                <!-- <div class="col-lg-1"> -->
+                                                    <!-- <img src="assets/carpeta.ico" alt="Carpeta" width="20" height="30" class="mb-1"> -->
+                                                <!-- </div> -->
+                                                <div class="col-lg-12">
+                                                    <a *ngIf="solicitud.tipo_solicitud != 'Pago tiempo por tiempo'">{{solicitud.fecha_solicitud}} {{solicitud.tipo_solicitud}}</a>
+                                                    <a *ngIf="solicitud.tipo_solicitud == 'Pago tiempo por tiempo'">{{solicitud.fecha_solicitud}} Pago tiempo x tiempo</a>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div [attr.id]="'collapse' + i" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading' + i">
+                                        <div class="accordion-body">
+                                            <div class="list-group">
+                                                <a class="list-group-item list-group-item-action list-group-item-light" role="button">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <strong>Por: </strong><a>{{solicitud.cuantos_dias}}</a> día(s)<br>
+                                                            <strong>Del: </strong><a>{{solicitud.fecha_apartir}}</a><br>
+                                                            <strong>Al: </strong><a>{{solicitud.fecha_hasta}}</a><br>
+                                                            <strong>Motivo: </strong><a>{{solicitud.motivo}}</a><br>
+                                                            <strong *ngIf="solicitud.status == 'Completado'">Status: </strong><a *ngIf="solicitud.status == 'Completado'" style="color: green; font-weight: bold;">{{solicitud.status}}</a>
+                                                            <strong *ngIf="solicitud.status == 'Rechazado'">Status: </strong><a *ngIf="solicitud.status == 'Rechazado'" style="color: red; font-weight: bold;">{{solicitud.status}}</a>
+                                                            <!-- <img src="assets/pdf.ico" alt="PDF" width="20" height="30" class="d-block mx-auto"> -->
+                                                        </div>
+                                                        <!-- <div class="col-11">
+                                                            <a></a>
+                                                        </div> -->
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                      
+                                    </div>
+                                </div>
+            </div>
+      
+      <!-- <div class="accordion" id="accordionExample">
+        <div class="accordion-item" >
+            <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-controls="collapseOne">
+                {{solicitud.fecha_solicitud}}
+            </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <strong>This is the first item's accordion body.</strong> It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+            </div>
+            </div>
+        </div>
+      </div> -->
+
+    </div>
+  </div>
 </div>
 
 

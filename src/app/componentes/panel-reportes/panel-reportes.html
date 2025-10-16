@@ -1,21 +1,21 @@
-<div class="p-4 fade-in-slow">
+<div class="fade-in-slow mt-1">
     <div class="container-fluid contenedor shadow p-2">
         <div class="container-fluid box">
             <div class="row mb-1">
-                <div class="col-lg-1 col-md-12 col-sm-12 d-flex justify-content-start">
+                <!-- <div class="col-lg-1 col-md-12 col-sm-12 d-flex justify-content-start">
                     <i class="bi bi-arrow-left"  style="font-size: 3.5vh;" (click)="volver()"></i>
-                </div>
-                <div class="col-lg-8 col-md-12 col-sm-12">
+                </div> -->
+                <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="row" *ngIf="datosColaborador">
 
-                        <div class="col-lg-5 col-md-5 col-sm-12 d-flex justify-content-center">
+                        <div class="col-lg-5 col-md-5 col-sm-12 d-flex justify-content-end">
                             <p *ngIf="this.nDias != 0">{{this.datosColaborador[0].Nombre_completo}}:</p>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-12 d-flex justify-content-center">
                             <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-warning">DIAS DE VACACIONES: {{this.datosColaborador[0].Dias_vacaciones}}</span></p>&nbsp;
-                            <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-danger">DIAS OCUPADOS: {{this.datosColaborador[0].Dias_ocupados}}</span></p>&nbsp;
+                            <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-danger">DIAS OCUPADOS: {{this.datosColaborador[0].Dias_ocupados}}</span></p>
                         </div>
-                        <div class="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-end">
+                        <div class="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-start">
                             <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-primary">DIAS DISPONIBLES: {{this.datosColaborador[0].Dias_disponibles}}</span></p>&nbsp;
                             <p *ngIf="this.nDias != 0"><span (click)="descargarExcel()" style="cursor: pointer;" class="badge rounded-pill bg-success"><i class="bi bi-file-earmark-spreadsheet"></i> DESCARGAR EXCEL</span></p>&nbsp;
                         </div>
@@ -32,10 +32,10 @@
                    </div> -->
 
                 </div>
-                <div class="col-lg-3 col-md-12 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
+                <!-- <div class="col-lg-3 col-md-12 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
                    <p>{{this.user[0].Nombre_completo}}</p>&nbsp;&nbsp;
                    <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i>
-                </div>
+                </div> -->
             </div>
             <div>
                 <div  [formGroup]="consultaForm">
@@ -44,7 +44,7 @@
                         <div class="col-lg-3 col-md-3 col-sm-12">
                             <select (change)="valorSelectDep($event)" class="form-select" aria-label="Default select example">
                                 <option selected>Selecciona departamento</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="ALMACEN">ALMACEN</option>
+                                <option *ngIf="user[0].Tipo == 'RI' || user[0].Tipo == 'JI' || user[0].Tipo == 'G'" value="ALMACEN">ALMACEN</option>
                                 <option *ngIf="user[0].Tipo == 'RI'" value="CERAMICA">CERAMICA</option>
                                 <option *ngIf="user[0].Tipo == 'RI'" value="COMPRAS">COMPRAS</option>
                                 <option *ngIf="user[0].Tipo == 'RI'" value="CONTABILIDAD">CONTABILIDAD</option>
@@ -58,7 +58,7 @@
                                 <option *ngIf="user[0].Tipo == 'RI'" value="HORNOS">HORNOS</option>
                                 <option *ngIf="user[0].Tipo == 'RI'" value="ING.NVO.PROYECTOS">ING.NVO.PROYECTOS</option>
                                 <option *ngIf="user[0].Tipo == 'RI'" value="ING.NVO.PROYECTOS REFRACTARIOS">ING.NVO.PROYECTOS REFRACTARIOS</option>
-                                <option *ngIf="user[0].Tipo == 'RI' || user[0].Tipo == 'JI' || user[0].Tipo == 'G'" value="MANTENIMIENTO">MANTENIMIENTO</option>
+                                <option *ngIf="user[0].Tipo == 'RI'" value="MANTENIMIENTO">MANTENIMIENTO</option>
                                 <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA CDMX">OFICINA CDMX</option>
                                 <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA GUADALAJARA">OFICINA GUADALAJARA</option>
                                 <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA MONTERREY">OFICINA MONTERREY</option>
@@ -114,7 +114,7 @@
                 </div>
             </div>
             <!-- <div class="overflow-auto" style="max-height: 77vh;"> -->
-                <div class="table-responsive overflow-auto" style="max-height: 77vh;">     
+                <div class="table-responsive overflow-auto" style="max-height: 83vh;">     
                     <table class="table table-light table-hover">
                         <thead>
                             <!-- <tr class="table-title">
@@ -128,7 +128,7 @@
                             <th scope="col">Fecha Solicitud</th>
                             <th scope="col">Días</th>
                             <th scope="col">Periodo</th>
-                            <th scope="col">Motivo</th>
+                            <!-- <th scope="col">Motivo</th> -->
                             <th scope="col">Status</th>
                             <th scope="col">Descargar</th>
                             </tr>
@@ -136,15 +136,15 @@
                         <tbody>
                             <tr (click)="datos(solicitud)" *ngFor="let solicitud of solicitudes; let i = index">
                             <th scope="row">{{i+1}}</th>
-                            <td>{{solicitud.Nombre_completo}}</td>
-                            <td>{{solicitud.Departamento}}</td>
-                            <td><span class="badge rounded-pill bg-secondary">{{solicitud.tipo_solicitud}}</span></td>
-                            <td>{{solicitud.fecha_solicitud}}</td>
-                            <td>{{solicitud.cuantos_dias}}</td>
+                            <td style="font-size: small;">{{solicitud.Nombre_completo}}</td>
+                            <td style="font-size: small;">{{solicitud.Departamento}}</td>
+                            <td style="font-size: small;"><span class="badge rounded-pill bg-secondary">{{solicitud.tipo_solicitud}}</span></td>
+                            <td style="font-size: small;">{{solicitud.fecha_solicitud}}</td>
+                            <td style="font-size: small;">{{solicitud.cuantos_dias}}</td>
                             <td style="font-size: small;">{{solicitud.fecha_apartir}} al {{solicitud.fecha_hasta}}</td>
-                            <td style="font-size: small;">{{solicitud.motivo}}</td>
+                            <!-- <td style="font-size: small;">{{solicitud.motivo}}</td> -->
                             <!-- <td>{{solicitud.status}}</td> -->
-                            <td><span class="badge rounded-pill bg-light" style="color: #000;">{{solicitud.status}}</span></td>
+                            <td style="font-size: small;"><span class="badge rounded-pill bg-light" style="color: #000;">{{solicitud.status}}</span></td>
                             <td><button class="btn btn-light descargar" (click)="generatePDFWithPdfMake(solicitud)"><i class="bi bi-download"></i></button></td>
                             <!-- <td><span class="badge rounded-pill bg-warning">{{solicitud.status}}</span></td> -->
                             </tr>

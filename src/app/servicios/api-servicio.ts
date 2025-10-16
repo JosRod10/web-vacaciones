@@ -33,7 +33,7 @@ export class ApiServicio {
     return this.http.post<any[]>(`${this.apiUrl}/solicitudes`, {tipo});
   }
 
-  aprobar(id: number, accion: number, dias_d: number, dias_u: number, clave: string): Observable<any>{
+  aprobar(id: number, accion: number, dias_d: number, dias_u: number, clave: number): Observable<any>{
     return this.http.post<any>(`${this.apiUrl}/aprobar`, {id, accion, dias_d, dias_u, clave});
   }
 
@@ -60,4 +60,35 @@ export class ApiServicio {
     // console.log("Entra");
     return this.http.post<any>(`${this.apiUrl}/aceptar-ri`, {id});
   }
+
+  getHistorial(clave: number): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/colaboradorHistorial`, {clave});
+  }
+
+  generarInhabil(item: any): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/generar-inhabil`, item);
+  }
+
+  accionTodas(claves: any, accion: number): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/accion-todas`, {claves, accion});
+  }
+
+  aceptarTodas(claves: any): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/aceptar-todas`, claves);
+  }
+
+  firmarTodasGerente(solicitudes: any): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/firmar-todas-gerente`, solicitudes);
+  }
+
+  firmarTodasRI(solicitudes: any): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/firmar-todas-ri`, solicitudes);
+  }
+
 }

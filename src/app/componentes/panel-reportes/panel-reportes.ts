@@ -37,6 +37,7 @@ export class PanelReportes {
   mes: string = '';
 
   datosColaborador: any[] = [];
+  fecha: any;;
   
   constructor(private dialog: MatDialog, private router: Router, private fb: FormBuilder,
      private api: ApiServicio, private loginServices: LoginServices){
@@ -49,6 +50,37 @@ export class PanelReportes {
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
+  }
+
+   obtenerFechaDeHoy(): string {
+    const hoy = new Date();
+    const opciones: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    };
+
+    return hoy.toLocaleDateString('es-ES', opciones);
+  }
+
+  convertirFecha(fecha: string){
+    const [year, month, day] = fecha.split('-');
+    const meses = [
+      "enero", "febrero", "marzo", "abril", "mayo", "junio",
+      "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+    ];
+
+    // Crear un objeto Date a partir de la cadena original (se le pasa el año, mes, día)
+    const fechaObjeto = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+
+    // Obtener el día, mes y año del objeto Date
+    const dia = fechaObjeto.getDate();
+    const mes = meses[fechaObjeto.getMonth()];
+    const anio = fechaObjeto.getFullYear();
+
+    // Formatear la nueva cadena
+    const fechaFormateada = `${dia.toString().padStart(2, '0')} de ${mes} de ${anio}`;
+    return fechaFormateada
   }
 
   descargarExcel(){
@@ -77,9 +109,9 @@ export class PanelReportes {
       // 2. Crea un nuevo libro de trabajo y añade la hoja de cálculo
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Datos'); // 'Datos' es el nombre de la hoja
-
+      this.fecha = this.obtenerFechaDeHoy();
       // 3. Genera y descarga el archivo XLSX
-      const nombreArchivo = 'reporte_solicitudes_vacaciones.xlsx';
+      const nombreArchivo = 'reporte_'+this.fecha+'.xlsx';
       XLSX.writeFile(wb, nombreArchivo);
 
   }
@@ -137,6 +169,11 @@ export class PanelReportes {
       (response) => {
         const data =  response;
         this.solicitudes = data;
+        this.solicitudes = this.solicitudes.map((ele: any)=>{
+          ele.fecha_apartir = this.convertirFecha(ele.fecha_apartir);
+          ele.fecha_hasta = this.convertirFecha(ele.fecha_hasta);
+          return ele;
+        });
         // this.solicitudes.forEach((ele: any) =>{
         //   ele.tipoSolicitud = ele.motivo.includes('Permiso')? 'Permiso' : ele.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
         //   ele.motivo = ele.tipoSolicitud == 'Vacaciones'? ele.motivo.substring(12,100) : ele.tipoSolicitud == 'Permiso'? ele.motivo.substring(9,100) : ele.tipoSolicitud == 'Pago tiempo por tiempo'? ele.motivo.substring(24,100) : ele.motivo;
@@ -221,9 +258,9 @@ export class PanelReportes {
     const s = solicitud.sindicalizado == true? 'X' : '';
     const ns = solicitud.no_sindicalizado == true? 'X' : '';
 
-    const i = solicitud.firma_interesado == 'true'? 'Autorizó' : '';
-    const ji = solicitud.firma_jefe_in == 'true'? 'Autorizó' : '';
-    const g = solicitud.firms_gerente == 'true'? 'Autorizó' : '';
+    const i = solicitud.firma_interesado != ''? 'Autorizó' : '';
+    const ji = solicitud.firma_jefe_in != ''? 'Autorizó' : '';
+    const g = solicitud.firms_gerente != ''? 'Autorizó' : '';
 
     const statusA = solicitud.status == 'Aceptado'? 'X' : solicitud.status == 'Completado'? 'X' : '';
     const statusR = solicitud.status != 'Rechazado'? '' : 'X';
@@ -302,17 +339,17 @@ export class PanelReportes {
             {
               width: '65%',
               text: 'del Departamento de: ' + ' ' + solicitud.Departamento,
-              style: 'parrafo'
+              style: 'parrafoVacio'
             },
             {
               width: '10%',
               text: '',
-              style: 'parrafo'
+              style: 'parrafoVacio'
             },
             {
               width: '25%',
               text: 'Centro de Costos: ' + ' ' + solicitud.C_costos,
-              style: 'parrafo'
+              style: 'parrafoVacio'
             },
           ],
         },
@@ -334,44 +371,49 @@ export class PanelReportes {
             {
               width: '25%',
               text: '[' + ' ' + ns + ' ' + '] No Sindicalizado',
-              style: 'parrafo'
+              style: 'parrafoFechas'
             },
           ],
         },
         {
           columns: [
             {
-              width: '30%',
+              width: '15%',
               text: 'Por: ' + solicitud.cuantos_dias + ' ' + 'día(s)',
-              style: 'parrafo'
+              style: 'parrafoFechas'
             },
             {
-              width: '70%',
+              width: '40%',
               text: ',a partir del: ' + solicitud.fecha_apartir,
-              style: 'parrafo'
+              style: 'parrafoFechas'
             },
-          ],
-        },
-        {
-          columns: [
             {
               width: '45%',
               text: 'al día: ' + solicitud.fecha_hasta + ' ' + 'inclusive',
-              style: 'parrafo'
+              style: 'parrafoFechas'
             },
           ],
         },
+        // {
+        //   columns: [
+        //     {
+        //       width: '70%',
+        //       text: 'al día: ' + solicitud.fecha_hasta + ' ' + 'inclusive',
+        //       style: 'parrafo'
+        //     },
+        //   ],
+        // },
         {
           columns: [
+            // {
+            //   width: '40%',
+            //   text: 'Solicitud: ' + solicitud.tipo_solicitud,
+            //   style: 'parrafoFirmas'
+            // },
             {
-              width: '40%',
-              text: 'Solicitud: ' + solicitud.tipoSolicitud,
-              style: 'parrafoFirmas'
-            },
-            {
-              width: '60%',
+              width: '100%',
               text: 'Motivo: ' + solicitud.motivo,
-              style: 'parrafo'
+              style: 'parrafoMotivo'
             },
           ],
         },
@@ -380,17 +422,45 @@ export class PanelReportes {
             {
               width: '33%',
               text: 'Interesado [ ' + i + ' ' + ']',
-              style: 'parrafo'
+              style: 'parrafoFirmas'
             },
             {
               width: '33%',
               text: 'Jefe Inmediato [ ' + ji + ' ' + ']',
-              style: 'parrafo'
+              style: 'parrafoFirmas'
             },
             {
               width: '34%',
               text: 'Gerente [ ' + g + ' ' + ']',
               style: 'parrafoFirmas'
+            },
+          ],
+        },
+        {
+          columns: [
+            {
+              width: '33%',
+              text: solicitud.firma_interesado,
+              style: 'parrafoPequeño'
+            },
+            {
+              width: '33%',
+              text: solicitud.firma_jefe_in,
+              style: 'parrafoPequeño'
+            },
+            {
+              width: '34%',
+              text: solicitud.firms_gerente,
+              style: 'parrafoPequeño'
+            },
+          ],
+        },
+        {
+          columns: [
+            {
+              width: '100%',
+              text: '',
+              style: 'parrafoVacio'
             },
           ],
         },
@@ -434,17 +504,17 @@ export class PanelReportes {
             {
               width: '25%',
               text: 'Número de días: ' + solicitud.cuantos_dias,
-              style: 'parrafoFirmas'
+              style: 'parrafoNota'
             },
             {
               width: '38%',
               text: 'del día ' + solicitud.fecha_apartir,
-              style: 'parrafoFirmas'
+              style: 'parrafoNota'
             },
             {
               width: '37%',
               text: 'al día ' + solicitud.fecha_hasta,
-              style: 'parrafoFirmas'
+              style: 'parrafoNota'
             },
           ],
         },
@@ -488,7 +558,7 @@ export class PanelReportes {
         header: {
           fontSize: 18,
           bold: true,
-          lineHeight: 3
+          lineHeight: 2
         },
         headerSub: {
           fontSize: 14,
@@ -500,9 +570,30 @@ export class PanelReportes {
           fontSize: 12,
           lineHeight: 1.5
         },
-        parrafoFirmas: {
+        parrafoFechas: {
           fontSize: 12,
           lineHeight: 3
+        },
+        parrafoPequeño: {
+          fontSize: 9,
+          lineHeight: 5
+        },
+        parrafoMotivo: {
+          fontSize: 10,
+          lineHeight: 3,
+        },
+        parrafoFirmas: {
+          fontSize: 12,
+          lineHeight: 1,
+          // align: 'center'
+        },
+        parrafoVacio: {
+          fontSize: 12,
+          lineHeight: 3
+        },
+        parrafoNota: {
+          fontSize: 12,
+          lineHeight: 2
         },
         parrafoFinal: {
           fontSize: 12,

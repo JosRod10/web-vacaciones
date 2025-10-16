@@ -1,5 +1,4 @@
-<div class="p-3 fade-in-slow">
-    <!-- <div class="container-fluid contenedor shadow p-2"> -->
+<!-- <div class="p-3 fade-in-slow">
         <div class="container-fluid box">
             <div class="row mb-1">
                 <div class="col-lg-3 col-md-4 col-sm-12 d-flex justify-content-start">
@@ -15,41 +14,19 @@
         </div>        
         <div class="row" style="min-height: 83vh;">
             <div class="col-lg-4 col-md-4 col-sm-12">
-                    <!-- <div class="d-flex justify-content-start mb-2">
-                        <h6>Solicitudes pendientes</h6>
-                    </div> -->
                 <div class="overflow-auto" style="max-height: 83vh;">
                     <div class="list-group" *ngFor="let solicitud of solicitudes">
                         <a class="list-group-item list-group-item-action" aria-current="true" style="cursor: pointer;" (click)="activarCard(solicitud)">
                             <div class="d-flex w-100 justify-content-between">
-                            <!-- <small><span class="punto">.</span></small> -->
                             <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i><h6 class="mb-1 font-weight-bold">{{solicitud.nombre}}</h6>
                             <small><span class="badge rounded-pill bg-primary">{{solicitud.cuantos_dias}} días</span></small>
-                            <!-- <small><button class="btn btn-light rechazar"><i class="bi bi-x-circle"></i></button><button class="btn btn-light aprobar"><i class="bi bi-check-circle"></i></button></small> -->
                             </div>
-                            <!-- <p class="mb-1"> {{solicitud.motivo}}</p> -->
                             <small>Del {{solicitud.fecha_apartir}} al {{solicitud.fecha_hasta}}</small>
                         </a>
-                        
-                        <!-- <ul class="list-group" *ngFor="let colaborador of colaboradores_faltantes">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span style="font-size: small; font-weight: bold;">{{colaborador.nombreCompleto}}
-                                <p style="color: #376fb2;">{{colaborador.departamento}}</p></span>
-                                <span *ngIf="colaborador.fecha != this.fecha_hoy.substring(0,12)" class="badge rounded-pill bg-primary">
-                                {{ colaborador.fecha }}
-                                </span>
-                                <span *ngIf="colaborador.fecha == this.fecha_hoy.substring(0,12)" class="badge rounded-pill bg-warning">
-                                ¡Felicidades! 🥳
-                                </span>
-                            </li>
-                        </ul> -->
                     </div>
                 </div>
-                
             </div>
-            
             <div class="col-lg-8 col-md-8 col-sm-12">
-
                 <div class="card mb-4 d-flex align-items-center justify-content-center" style="min-height: 35vh;" *ngIf="!this.solicitudes[0]">
                     <div class="spinner-grow mb-2" style="width: 3rem; height: 3rem;" role="status">
                         <span class="visually-hidden">Loading...</span>
@@ -58,7 +35,6 @@
                         <h5>Esperando recibir solicitud</h5>
                     </div>
                 </div>
-
                 <div class="card mb-1" style="min-height: 35vh;" *ngIf="this.solicitudes[0]">
                     <div class="card-header">
                         <div class="row">
@@ -68,12 +44,9 @@
                             <div class="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-end align-items-center">
                                <span class="badge rounded-pill bg-warning">{{this.cardSolicitud.tipo_solicitud}}</span>
                             </div>
-                        </div>
-                        
+                        </div> 
                     </div>
                     <div class="card-body">
-                        
-                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <h6 class="card-title">{{this.cardSolicitud.nombre}}</h6>
@@ -111,15 +84,9 @@
                                 <div class="row"></div>
                                 <div class="row mt-1">
                                     <div class="col-lg-12 col-md-12 col-sm-12">
-                                        <!-- <li class="list-group-item" style="font-weight: bold;">Tipo Solicitud: <span class="badge rounded-pill bg-warning">{{this.cardSolicitud.tipoSolicitud}}</span></li> -->
                                         <p class="motivo">Motivo: </p><p class="motivo-text">{{this.cardSolicitud.motivo}}</p>
-
-                                        <!-- <span style="font-weight: bold;">Días ocupados: {{this.cardSolicitud.Dias_ocupados}} de {{this.cardSolicitud.Dias_vacaciones}} días</span> -->
                                     </div>
-                                    <!-- <div class="col-lg-4 col-md-5 col-sm-12"></div>
-                                    <div class="col-lg-2 col-md-2 col-sm-12"></div> -->
                                 </div>
-                                
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div>
@@ -152,91 +119,42 @@
                                                 </label>
                                             </div>
                                         </li>
-                                        <!-- <li class="list-group-item" style="font-weight: bold;">Tipo Solicitud: <span class="badge rounded-pill bg-warning">{{this.cardSolicitud.tipoSolicitud}}</span></li> -->
                                         <li class="list-group-item" style="font-weight: bold;"><span style="font-weight: bold;">Días ocupados: {{this.cardSolicitud.Dias_ocupados}} de {{this.cardSolicitud.Dias_vacaciones}} días</span></li>
-                                        <!-- <li class="list-group-item">A fourth item</li> -->
                                     </ul>
                                 </div>
                                 <div class="row mt-2">
-                                    <!-- <div class="col-lg-4 col-md-4 col-sm-12"></div>
-                                    <div class="col-lg-3 col-md-3 col-sm-12"></div> -->
-                                    
                                     <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-end">
-
-                                        <!-- <label *ngIf="this.firmaCheck" class="aut">Firmar</label>&nbsp;&nbsp;
-                                        <div *ngIf="this.firmaCheck" class="form-check form-switch">
-                                            <input #miCheckboxRI class="form-check-input activ" formControlName="firma" type="checkbox" id="flexSwitchCheckDefault" (change)="accion(this.cardSolicitud.id, 1)">
-                                            &nbsp;&nbsp;<label class="form-check-label aut" for="flexSwitchCheckDefault"></label> -->
-                                            <!-- {{checkLeyenda}} -->
-                                        <!-- </div> -->
-
-                                        <!-- <label *ngIf="this.user[0].Tipo == 'JI'" class="aut">Firmar</label>&nbsp;&nbsp;
-                                        <div *ngIf="this.user[0].Tipo == 'JI'" class="form-check form-switch">
-                                            <input #miCheckboxJI class="form-check-input activ" formControlName="firma" type="checkbox" id="flexSwitchCheckDefault" (change)="firmaJefe(this.cardSolicitud.id)">
-                                            &nbsp;&nbsp;<label class="form-check-label aut" for="flexSwitchCheckDefault"></label> -->
-                                            <!-- {{checkLeyenda}} -->
-                                        <!-- </div> -->
-
                                         <span *ngIf="this.spinerFirma" class="loader-firm"></span>
-
                                         <button *ngIf="this.cardSolicitud.status == 'Aceptado'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Firmar
                                         </button>
-
                                         <button *ngIf="this.user[0].Tipo == 'JI'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Firmar
                                         </button>
-
                                         <button *ngIf="this.user[0].Tipo == 'G'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Firmar
                                         </button>
-
-
-                                        <!-- <label *ngIf="this.user[0].Tipo == 'G'" class="aut">Firmar</label>&nbsp;&nbsp;
-                                        <div *ngIf="this.user[0].Tipo == 'G'" class="form-check form-switch">
-                                            <input #miCheckboxG class="form-check-input activ" formControlName="firma" type="checkbox" id="flexSwitchCheckDefault" (change)="firmaGerente(this.cardSolicitud.id)">
-                                            &nbsp;&nbsp;<label class="form-check-label aut" for="flexSwitchCheckDefault"></label> -->
-                                            <!-- {{checkLeyenda}} -->
-                                        <!-- </div> -->
-
                                         <button *ngIf="this.cardSolicitud.firma_interesado == 'true' && this.cardSolicitud.firma_jefe_in == 'true' && this.cardSolicitud.firms_gerente == 'true' && this.firmaCheck == false && this.cardSolicitud.status != 'Aceptado'" type="button" class="btn btn-outline-success" (click)="activarFirma(this.cardSolicitud.id)"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Aceptado
                                         </button>
-
                                         <button disabled *ngIf="this.cardSolicitud.firma_interesado == 'true' && this.cardSolicitud.firma_jefe_in == 'false' && this.cardSolicitud.firms_gerente == 'false'" type="button" class="btn btn-outline-success" (click)="accion(this.cardSolicitud.id, 1)"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Aceptado
                                         </button>
-
                                         <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-re'"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
                                         <i class="bi bi-x-lg"></i> Rechazado
                                         </button>
-
                                     </div>
-                                    <!-- <div class="col-lg-4 col-md-1 col-sm-12 d-flex justify-content-end"><span style="font-weight: bold;">Contestación:</span></div> -->
-                                    <!-- <div class="col-lg-2 col-md-2 col-sm-12 d-flex justify-content-start" style="margin-right: 10em;"> -->
-                                        <!-- <button (click)="accion(this.cardSolicitud.id, 0)" type="button" class="btn btn-light rechazar" data-bs-toggle="tooltip" data-bs-placement="top" title="Rechazado">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button> -->
-                                        <!-- <button type="button" class="btn btn-primary"
-                                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                                        Rechazado
-                                        </button> -->
-                                    <!-- </div> -->
-                                    <!-- <div class="col-lg-1 col-md-1 col-sm-12"></div> -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- <div class="container sticky-header"><p class="table-title">Quienes estan ausentes?</p></div> -->
-                
-                    
                 <div class="overflow-auto" style="max-height: 41vh;">      
                     <table class="table table-light table-hover">
                         <thead>
@@ -254,7 +172,7 @@
                         <tbody>
                             <tr *ngFor="let persona of ausentes; let i = index">
                             <th scope="row">{{i+1}}</th>
-                            <td>{{persona.nombre}}</td>
+                            <td>{{persona.Nombre_completo}}</td>
                             <td>{{persona.cuantos_dias}}</td>
                             <td>{{persona.fecha_apartir}} al {{persona.fecha_hasta}}</td>
                             <td><span class="badge rounded-pill bg-warning">{{persona.status}}</span></td>
@@ -266,18 +184,13 @@
             </div>
         </div>
         <button class="btn btn-secondary g-boton" type="button" (click)="abrirPanelReportes()">Generar reporte</button>
-
-    <!-- </div> -->
 </div>
 
-<!-- <button role="button" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'">Abrir Modal</button> -->
-<!-- Modal para firmar solicitud -->
-  <div class="modal" [id]="'modal'" tabindex="-1">
+<div class="modal" [id]="'modal'" tabindex="-1">
     <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
         <div class="modal-header d-flex justify-content-center">
             <h3 style="font-weight: bold;" *ngIf="spinerBandera == false" class="modal-title">¡Alerta!</h3>
-            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
         </div>
         <div *ngIf="spinerBandera == false" class="modal-body">
 
@@ -294,7 +207,7 @@
         <div *ngIf="spinerBandera" class="modal-body d-flex justify-content-center">
             <span class="loader"></span>
         </div>
-        <div class="modal-footer d-flex justify-content-center">
+        <div class="modal-footer d-flex justify-content-center" *ngIf="this.cardSolicitud">
             <button *ngIf="this.cardSolicitud.status == 'Aceptado' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaRelaciones(this.cardSolicitud.id, 1)">Firmar</button>
             <button *ngIf="this.user[0].Tipo == 'JI' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaJefe(this.cardSolicitud)">Firmar</button>
             <button *ngIf="this.user[0].Tipo == 'G' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaGerente(this.cardSolicitud)">Firmar</button>
@@ -302,15 +215,13 @@
         </div>
         </div>
     </div>
-  </div>
+</div>
 
-<!-- Modal para rechazar solicitud -->
-  <div class="modal" [id]="'modal-re'" tabindex="-1">
+<div class="modal" [id]="'modal-re'" tabindex="-1">
     <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
         <div class="modal-header d-flex justify-content-center">
             <h3 style="font-weight: bold;" *ngIf="spinerBandera == false" class="modal-title">¡Alerta!</h3>
-            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
         </div>
         <div *ngIf="spinerBandera == false" class="modal-body">
 
@@ -322,15 +233,442 @@
                     <i class="bi bi-trash-fill" style="font-size: 2em;"></i>
                 </div>
             </div>
+        </div>
+        <div *ngIf="spinerBandera" class="modal-body d-flex justify-content-center">
+            <span class="loader-delete"></span>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+            <button *ngIf="spinerBandera == false" type="button" class="btn btn-outline-danger" (click)="accion(this.cardSolicitud.id, 0)">Rechazar</button>
+            <button *ngIf="spinerBandera == false" type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+        </div>
+    </div>
+</div> -->
+<div class=" fade-in-slow">
+<div class="container-fluid" style="background-color: whitesmoke;">
+    <div class="row">
+        <div class="col-lg-2 menu">
+            <div class="row row-contenedor-foto">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-10 contenedor-foto">
+                    <div class="div-perfil">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                </div>
+                <div class="col-lg-1"></div>
+            </div>
+            <div class="row row-perfil-text">
+                <div class="col-lg-12 d-flex justify-content-center">
+                    <p class="text-name">CINASA</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 d-flex justify-content-center">
+                    <p class="text-email">{{this.user[0].Nombre}} {{this.user[0].Apellido_paterno}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10 d-flex justify-content-center">
+                    <ul class="list-group list-group-flush">
+                        <li class="menu-lista" (click)="cambiarDash()"><i class="bi bi-app-indicator"></i> Dashbord</li>
+                        <!-- <li class="menu-lista" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-todas'"><i class="bi bi-pencil-square"></i> Firmar Todas</li> -->
+                        <li class="menu-lista" (click)="cambiarReporte()"><i class="bi bi-file-earmark-spreadsheet"></i> Reportes</li>
+                        <li *ngIf="this.user[0].Tipo == 'RI'" (click)="cambiarDia()" class="menu-lista"><i class="bi bi-calendar-check"></i> Día Inhábil</li>
+                        <li class="menu-lista" (click)="abrirAlerta()"><i class="bi bi-door-closed"></i> Cerrar Sesión</li>
+                        <!-- <li class="menu-lista"><i class="bi bi-bell-fill"></i> notification</li>
+                        <li class="menu-lista"><i class="bi bi-geo-alt-fill"></i> location</li>
+                        <li class="menu-lista"><i class="bi bi-pie-chart-fill"></i> graph</li> -->
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 lista" *ngIf="banderaDash == true">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-1">
+                    <div class="overflow-auto" style="max-height: 99vh;">
+                        <div class="list-group" *ngFor="let solicitud of solicitudes">
+                            <a class="list-group-item list-group-item-action list-group-item-light" aria-current="true" style="cursor: pointer;" (click)="activarCard(solicitud)">
+                                <div class="d-flex w-100 justify-content-between">
+                                <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i><h6 class="mb-1 font-weight-bold" style="font-size: small;">{{solicitud.nombre}}</h6>
+                                <small><span class="badge rounded-pill bg-primary">{{solicitud.cuantos_dias}} días</span></small>
+                                </div>
+                                <small>Del {{solicitud.fecha_apartir}} al {{solicitud.fecha_hasta}}</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 mt-1" *ngIf="banderaDash == true">
+            <div class="row solicitud">
+                <div class="card mb-4 d-flex align-items-center justify-content-center" style="min-height: 35vh;" *ngIf="!this.solicitudes[0]">
+                    <div class="spinner-grow mb-2" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div>
+                        <h5>Esperando recibir solicitud</h5>
+                    </div>
+                </div>
+                <div class="card mb-1" style="min-height: 35vh;" *ngIf="this.solicitudes[0]">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-12 d-flex justify-content-start align-items-center">
+                               {{this.cardSolicitud.fecha_solicitud}}&nbsp;<span *ngIf="this.cardSolicitud.firma_interesado" class="badge rounded-pill bg-success">Interesado</span>&nbsp;<span *ngIf="this.cardSolicitud.firma_jefe_in" class="badge rounded-pill bg-success">Jefe inmediato</span>&nbsp;<span *ngIf="this.cardSolicitud.firms_gerente" class="badge rounded-pill bg-success">Gerente</span>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-end align-items-center">
+                               <span class="badge rounded-pill bg-warning">{{this.cardSolicitud.tipo_solicitud}}</span>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <h6 class="card-title">{{this.cardSolicitud.nombre}}</h6>
+                                <span class="card-text-subtitle">Departamento: {{this.cardSolicitud.Departamento}}</span><br>
+                                <span class="card-text-subtitle">Puesto: {{this.cardSolicitud.Puesto}}</span>
+                                <div class="row mt-2">
+                                    <div class="col-lg-1 col-md-1 col-sm-1"></div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                        <div class="card" style="width: 10rem;">
+                                            <div class="card-header d-flex justify-content-center" style="background-color: rgb(242, 34, 34); font-size: large; font-weight: bold; color: #fff;">
+                                                {{this.cardSolicitud.fecha_apartir.substring(6,9)}}
+                                            </div>
+                                            <div class="card-body d-flex align-items-center justify-content-center" style="font-size:4em; font-weight: bold;">
+                                                <h2>{{this.cardSolicitud.fecha_apartir.substring(0,2)}}</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 d-flex justify-content-end align-items-center" style="font-size: 2em;">
+                                        <div>
+                                            <i class="bi bi-arrow-right"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                        <div class="card" style="width: 10rem;">
+                                            <div class="card-header d-flex justify-content-center" style="background-color: rgb(242, 34, 34); font-size: large; font-weight: bold; color: #fff;">
+                                                {{this.cardSolicitud.fecha_hasta.substring(6,9)}}
+                                            </div>
+                                            <div class="card-body d-flex align-items-center justify-content-center" style="font-size:4em; font-weight: bold;">
+                                                <h2>{{this.cardSolicitud.fecha_hasta.substring(0,2)}}</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2"></div>
+                                </div>
+                                <div class="row"></div>
+                                <div class="row mt-1">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <p class="motivo">Motivo: </p><p class="motivo-text">{{this.cardSolicitud.motivo}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item" style="font-weight: bold;">Días: <span class="badge rounded-pill bg-primary">{{this.cardSolicitud.cuantos_dias}}</span></li>
+                                        <li class="list-group-item" style="font-weight: bold;">Permiso: <span class="badge rounded-pill bg-primary">{{this.cardSolicitud.tipo_permiso}}</span></li>
+                                        <li class="list-group-item">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" [checked]="this.cardSolicitud.con_sueldo == true" disabled id="flexCheckDefault">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                    Con goce de sueldo
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" [checked]="this.cardSolicitud.sin_sueldo == true" disabled id="flexCheckDefault">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                    Sin goce de sueldo
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" [checked]="this.cardSolicitud.sindicalizado == true" disabled id="flexCheckDefault">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                    Sindicalizado
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" [checked]="this.cardSolicitud.no_sindicalizado == true" disabled id="flexCheckDefault">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                    No sindicalizado
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item" style="font-weight: bold;"><span style="font-weight: bold;">Días ocupados: {{this.cardSolicitud.Dias_ocupados}} de {{this.cardSolicitud.Dias_vacaciones}} días</span></li>
+                                    </ul>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-end">
+                                        <span *ngIf="this.spinerFirma" class="loader-firm"></span>
+                                        <button *ngIf="this.cardSolicitud.status == 'Aceptado'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
+                                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
+                                        <i class="bi bi-check-lg"></i> Firmar
+                                        </button>
+                                        <button *ngIf="this.user[0].Tipo == 'JI'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
+                                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
+                                        <i class="bi bi-check-lg"></i> Firmar
+                                        </button>
+                                        <button *ngIf="this.user[0].Tipo == 'G'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
+                                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
+                                        <i class="bi bi-check-lg"></i> Firmar
+                                        </button>
+                                        <button *ngIf="this.cardSolicitud.firma_interesado != '' && this.cardSolicitud.firma_jefe_in != '' && this.cardSolicitud.firms_gerente != '' && this.firmaCheck == false && this.cardSolicitud.status != 'Aceptado'" type="button" class="btn btn-outline-success" (click)="activarFirma(this.cardSolicitud.id)"
+                                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
+                                        <i class="bi bi-check-lg"></i> Aceptado
+                                        </button>
+                                        <!-- <button disabled *ngIf="this.cardSolicitud.firma_interesado != '' && this.cardSolicitud.firma_jefe_in == '' && this.cardSolicitud.firms_gerente == ''" type="button" class="btn btn-outline-success" (click)="accion(this.cardSolicitud.id, 1)"
+                                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
+                                        <i class="bi bi-check-lg"></i> Aceptado
+                                        </button> -->
+                                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-re'"
+                                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
+                                        <i class="bi bi-x-lg"></i> Rechazado
+                                        </button>
+
+                                        <button *ngIf="this.solicitudes.length >= 5" type="button" class="btn btn-outline-primary" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-todas'"
+                                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                                        <i class="bi bi-list-check"></i> Todas
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row ausentes">
+                <div class="overflow-auto" style="max-height: 41vh;">      
+                    <table class="table  table-hover">
+                        <thead>
+                            <tr class="table-title">
+                            Ausentes:
+                            </tr>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Dias</th>
+                            <th scope="col">Periodo</th>
+                            <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let persona of ausentes; let i = index">
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{persona.Nombre_completo}}</td>
+                            <td>{{persona.cuantos_dias}}</td>
+                            <td>{{persona.fecha_apartir}} al {{persona.fecha_hasta}}</td>
+                            <td><span class="badge rounded-pill bg-warning">{{persona.status}}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-10" *ngIf="banderaReporte == true">
+            <app-panel-reportes></app-panel-reportes>
+        </div>
+    
+        
+        <div class="col-lg-10 d-flex align-items-center justify-content-center fade-in-slow" *ngIf="banderaDia == true">
+            <div class="container d-flex justify-content-center">
+                
+                    <form [formGroup]="solicitudForm">
+                        <div class="form-dia">
+                            <div class="form-dia-enc"><h4>Generar día inhábil</h4></div>
+                            <div class="input-group mb-1">
+                                <span class="input-group-text" id="basic-addon1">Por&nbsp;
+                                    <label *ngIf="isInvalid('cDias')"  style="color: red; font-size: small;">( Campo obligatorio* )</label>
+                                </span>
+                                <input type="text" class="form-control" formControlName="cDias" placeholder="10" aria-label="Username">
+                                <span class="input-group-text">días</span>     
+                            </div>
+
+                            <div class="input-group mb-1">
+                                <span class="input-group-text">a partir del&nbsp;
+                                    <label *ngIf="isInvalid('fechaApartir')"  style="color: red; font-size: small;">( campo obligatorio* )</label>
+                                </span>
+                                <input class="form-control" matInput [matDatepicker]="inicioPicker" formControlName="fechaApartir"/>
+                                <span><mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle></span>
+                                <mat-datepicker #inicioPicker panelClass="calendario"></mat-datepicker>
+                            </div>
+
+                            <div class="input-group mb-1">
+                                <span class="input-group-text" id="basic-addon1">al día&nbsp;
+                                    <label *ngIf="isInvalid('fechaHasta')"  style="color: red; font-size: small;">( Campo obligatorio* )</label>
+                                </span>
+                                <input class="form-control" matInput [matDatepicker]="finPicker" formControlName="fechaHasta"/>
+                                <span><mat-datepicker-toggle matSuffix [for]="finPicker"></mat-datepicker-toggle></span>
+                                <mat-datepicker #finPicker panelClass="calendario"></mat-datepicker>                        
+                                <!-- <span class="input-group-text">inclusive</span> -->
+                            </div>
+
+                            <div class="input-group mb-1">
+                                <span class="input-group-text">Motivo&nbsp;
+                                    <label *ngIf="isInvalid('motivo')"  style="color: red; font-size: small;">( Campo obligatorio* )</label>
+                                </span>
+                                <textarea class="form-control" aria-label="With textarea" formControlName="motivo"></textarea>
+                            </div>
+                            <div *ngIf="spinerBandera == false" class="d-grid gap-2 mt-3">
+                                <button class="btn btn-success" *ngIf="this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.motivo != ''" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-generar'">Generar</button>
+                                <button class="btn btn-success" disabled *ngIf="this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.motivo == ''">Generar</button>
+                                <button class="btn btn-secondary" (click)="vaciarFormulario()">Borrar</button>
+                            </div>
+                            <div *ngIf="spinerBandera" class="d-flex justify-content-center content-spiner">
+                                <span class="loader-generar"></span>
+                            </div>
+                        </div>
+                    </form>       
+            </div>
+            
+        </div>
+
+    </div>
+</div>
+</div>
+
+<div class="alert alert-success d-flex align-items-center alert-pos" role="alert" *ngIf="alertSuccess" #alerToast>
+    <div>
+        <i class="bi bi-check-circle"></i>&nbsp;&nbsp;Día Inhábil generado con exito.
+    </div>
+</div>
+<div class="alert alert-danger d-flex align-items-center alert-pos" role="alert" *ngIf="alertDanger" #alerToast>
+    <div>
+        <i class="bi bi-exclamation-triangle-fill"></i>&nbsp;&nbsp;Error al generar el día, por favor comunicate con el área de Sistemas.
+    </div>
+</div>
+
+<div class="modal" [id]="'modal'" tabindex="-1">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header d-flex justify-content-center">
+            <h3 style="font-weight: bold;" *ngIf="spinerBandera == false" class="modal-title">¡Alerta!</h3>
+        </div>
+        <div *ngIf="spinerBandera == false" class="modal-body">
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12  d-flex justify-content-center">
+                    <p style="font-size: medium;">¿ Estas segur&#64; de firmar esta solicitud ?</p>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12  d-flex justify-content-center">
+                    <i class="bi bi-pencil-fill" style="font-size: 2em;"></i>
+                </div>
+            </div>
+
+        </div>
+        <div *ngIf="spinerBandera" class="modal-body d-flex justify-content-center">
+            <span class="loader"></span>
+        </div>
+        <div class="modal-footer d-flex justify-content-center" *ngIf="this.cardSolicitud">
+            <button *ngIf="this.cardSolicitud.status == 'Aceptado' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaRelaciones(this.cardSolicitud.id, 1, this.cardSolicitud.Clave)">Firmar</button>
+            <button *ngIf="this.user[0].Tipo == 'JI' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaJefe(this.cardSolicitud)">Firmar</button>
+            <button *ngIf="this.user[0].Tipo == 'G' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaGerente(this.cardSolicitud)">Firmar</button>
+            <button *ngIf="spinerBandera == false" type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" [id]="'modal-re'" tabindex="-1">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header d-flex justify-content-center">
+            <h3 style="font-weight: bold;" *ngIf="spinerBandera == false" class="modal-title">¡Alerta!</h3>
+        </div>
+        <div *ngIf="spinerBandera == false" class="modal-body">
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12  d-flex justify-content-center">
+                    <p style="font-size: medium;">¿ Estas segur&#64; de rechazar esta solicitud ?</p>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12  d-flex justify-content-center">
+                    <i class="bi bi-trash-fill" style="font-size: 2em;"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="spinerBandera" class="modal-body d-flex justify-content-center">
+            <span class="loader-delete"></span>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+            <button *ngIf="spinerBandera == false" type="button" class="btn btn-outline-danger" (click)="accion(this.cardSolicitud.id, 0)">Rechazar</button>
+            <button *ngIf="spinerBandera == false" type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" [id]="'modal-generar'" tabindex="-1">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header d-flex justify-content-center">
+            <h3 style="font-weight: bold;" *ngIf="spinerBandera == false" class="modal-title">¡Alerta!</h3>
+            
+        </div>
+        <div *ngIf="spinerBandera == false" class="modal-body">
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-center">
+                    <div>
+                        <h4><strong>Esta acción es irreversible.</strong></h4>
+                        <h6>¿ Estas segur&#64; de generar el día inhábil ?</h6>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12  d-flex justify-content-center">
+                    <i class="bi bi-list-columns-reverse" style="font-size: 2em;"></i>
+                </div>
+            </div>
 
         </div>
         <div *ngIf="spinerBandera" class="modal-body d-flex justify-content-center">
             <span class="loader"></span>
         </div>
         <div class="modal-footer d-flex justify-content-center">
-            <button type="button" class="btn btn-outline-danger" (click)="accion(this.cardSolicitud.id, 0)">Rechazar</button>
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-outline-success" (click)="generarInhabil()">Aceptar</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
         </div>
         </div>
     </div>
-  </div>
+</div>
+
+<div class="modal" [id]="'modal-todas'" tabindex="-1">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header d-flex justify-content-center">
+            <h3 style="font-weight: bold;" *ngIf="spinerFirma == false && spinerDelete == false" class="modal-title">¡Alerta!</h3>
+        </div>
+        <div *ngIf="spinerFirma == false && spinerDelete == false" class="modal-body">
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-center">
+                    <p style="font-size: medium;">Cualquier acción es irreversible, por favor elija correctamente.</p>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12  d-flex justify-content-center">
+                    <i class="bi bi-list-check" style="font-size: 2em;"></i>
+                </div>
+            </div>
+
+        </div>
+        <div *ngIf="spinerFirma" class="modal-body d-flex justify-content-center">
+            <span class="loader"></span>
+        </div>
+        <div *ngIf="spinerDelete" class="modal-body d-flex justify-content-center">
+            <span class="loader-delete"></span>
+        </div>
+        <div class="modal-footer d-flex justify-content-center" *ngIf="this.cardSolicitud">
+            <!-- <button *ngIf="this.cardSolicitud.status == 'Aceptado' && spinerFirma == false" type="button" class="btn btn-outline-success" (click)="firmaRelaciones(this.cardSolicitud.id, 1, this.cardSolicitud.Clave)">Firmar</button> -->
+            <button *ngIf="this.user[0].Tipo == 'RI' && spinerFirma == false && spinerDelete == false && this.solicitudPendienteGerente.length == 0 && this.solicitudPendienteAceptar.length != 0" type="button" class="btn btn-outline-success" (click)="aceptarTodo()">Aceptar Todas</button>
+            <button *ngIf="this.user[0].Tipo == 'RI' && spinerFirma == false && spinerDelete == false && this.solicitudPendienteAceptar.length == 0" type="button" class="btn btn-outline-success" (click)="firmarTodoRI()">Firmar Todas</button>
+            <button *ngIf="this.user[0].Tipo == 'JI' && spinerFirma == false && spinerDelete == false && this.solicitudPendienteAceptar.length == 0" type="button" class="btn btn-outline-success" (click)="firmarTodo(1)">Firmar Todas</button>
+            <button *ngIf="this.user[0].Tipo == 'G' && spinerFirma == false && spinerDelete == false && this.solicitudPendienteAceptar.length == 0" type="button" class="btn btn-outline-success" (click)="firmarTodoGerente()">Firmar Todas</button>
+            <button *ngIf="(this.user[0].Tipo == 'JI' || this.user[0].Tipo == 'RI' || this.user[0].Tipo == 'G') && spinerFirma == false && spinerDelete == false" type="button" class="btn btn-outline-danger" (click)="firmarTodo(0)">Rechazar Todas</button>
+            <!-- <button *ngIf="this.user[0].Tipo == 'G' && spinerFirma == false && spinerDelete == false" type="button" class="btn btn-outline-success" (click)="firmaGerente(this.cardSolicitud)">Firmar</button> -->
+            <button *ngIf="spinerFirma == false && spinerDelete == false" type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+        </div>
+    </div>
+</div>

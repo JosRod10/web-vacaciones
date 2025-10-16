@@ -142,5 +142,17 @@ mat-datepicker{
     transform: translate(-50%, -5px);
   }
 }
+
+.acordion-lista{
+  align-items: center;
+   height: 7vh;
+   border-radius: 5px;
+   border: 1px solid gainsboro;
+}
+
+.acordion-lista:hover{
+   background-color: rgb(146, 141, 141);
+   color: white;
+}
     
 
