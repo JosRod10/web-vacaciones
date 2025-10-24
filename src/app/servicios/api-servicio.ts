@@ -33,8 +33,8 @@ export class ApiServicio {
     return this.http.post<any[]>(`${this.apiUrl}/solicitudes`, {tipo});
   }
 
-  aprobar(id: number, accion: number, dias_d: number, dias_u: number, clave: number): Observable<any>{
-    return this.http.post<any>(`${this.apiUrl}/aprobar`, {id, accion, dias_d, dias_u, clave});
+  aprobar(id: number, accion: number, dias_d: number, dias_u: number, clave: number, periodo?: string): Observable<any>{
+    return this.http.post<any>(`${this.apiUrl}/aprobar`, {id, accion, dias_d, dias_u, clave, periodo});
   }
 
   consultaReporteSolicitud(departamento: string, anio: string, mes: string, criterio: any, tipo: string): Observable<any> {

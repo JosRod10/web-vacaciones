@@ -154,5 +154,13 @@ mat-datepicker{
    background-color: rgb(146, 141, 141);
    color: white;
 }
-    
 
+.arriba-rotada {
+  transition: transform 0.3s ease;
+  transform: rotate(180deg);
+}
+
+.abajo-rotada {
+  transition: transform 0.3s ease;
+  transform: rotate(180deg);
+}

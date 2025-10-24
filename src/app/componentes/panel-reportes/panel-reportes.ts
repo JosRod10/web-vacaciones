@@ -329,7 +329,7 @@ export class PanelReportes {
             },
             {
               width: '25%',
-              text: 'No. Tarjeta: ' + ' ' + solicitud.clave,
+              text: 'No. Empleado: ' + ' ' + solicitud.clave,
               style: 'parrafo'
             },
           ],
@@ -420,39 +420,59 @@ export class PanelReportes {
         {
           columns: [
             {
-              width: '33%',
+              width: '15%',
+              text: '',
+              style: 'parrafoFirmas'
+            },
+            {
+              width: '40%',
               text: 'Interesado [ ' + i + ' ' + ']',
               style: 'parrafoFirmas'
             },
             {
-              width: '33%',
+              width: '40%',
               text: 'Jefe Inmediato [ ' + ji + ' ' + ']',
               style: 'parrafoFirmas'
             },
             {
-              width: '34%',
-              text: 'Gerente [ ' + g + ' ' + ']',
+              width: '5%',
+              text: '',
               style: 'parrafoFirmas'
             },
+            // {
+            //   width: '34%',
+            //   text: 'Gerente [ ' + g + ' ' + ']',
+            //   style: 'parrafoFirmas'
+            // },
           ],
         },
         {
           columns: [
             {
-              width: '33%',
+              width: '13%',
+              text: '',
+              style: 'parrafoPequeño'
+            },
+            {
+              width: '42%',
               text: solicitud.firma_interesado,
               style: 'parrafoPequeño'
             },
             {
-              width: '33%',
+              width: '38%',
               text: solicitud.firma_jefe_in,
               style: 'parrafoPequeño'
             },
             {
-              width: '34%',
-              text: solicitud.firms_gerente,
+              width: '7%',
+              text: '',
               style: 'parrafoPequeño'
             },
+            // {
+            //   width: '34%',
+            //   text: solicitud.firms_gerente,
+            //   style: 'parrafoPequeño'
+            // },
           ],
         },
         {

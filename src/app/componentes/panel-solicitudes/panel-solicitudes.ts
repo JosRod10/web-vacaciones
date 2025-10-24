@@ -29,6 +29,7 @@ export class PanelSolicitudes {
   @ViewChild('alerToast') alerToast!: ElementRef;
 
   solicitudes: any;
+  solicitudes_listas: any;
   ausentes: any;
   cardSolicitud: any;
   user: any;
@@ -51,7 +52,7 @@ export class PanelSolicitudes {
   alertSuccess: boolean = false;
   alertDanger: boolean = false;
 
-  solicitudPendienteGerente: any[] = [];
+  solicitudPendienteJefe: any[] = [];
   solicitudPendienteAceptar: any[] = [];
 
   constructor(private api: ApiServicio, private dialog: MatDialog, private router: Router, private fb: FormBuilder){
@@ -97,13 +98,6 @@ export class PanelSolicitudes {
       disableClose: false, // true para que no se cierre al hacer clic fuera
     });
   }
-
-  // abrirDialogo() {
-  //     const dialogConfig = {
-  //       data: { id: 123, nombre: 'Ejemplo' } // Tus datos a pasar
-  //     };
-  //     this.dialog.open(AlertaFirma, dialogConfig);
-  // }
 
   cambiarDash(){
     this.banderaDash = true;
@@ -151,7 +145,7 @@ export class PanelSolicitudes {
   cargarSolicitudes(tipo: string){
     this.api.getSolicitudes(tipo).subscribe(data => {
         this.solicitudes = data.filter(solicitud => solicitud.status != 'Ausente');
-        console.log(this.solicitudes);
+        // console.log(this.solicitudes);
         this.solicitudes = this.solicitudes.map((ele: any)=>{
           ele.fecha_apartir = this.convertirFecha(ele.fecha_apartir);
           ele.fecha_hasta = this.convertirFecha(ele.fecha_hasta);
@@ -165,13 +159,12 @@ export class PanelSolicitudes {
           return ele;
         });
         if(this.user[0].Tipo == 'RI'){
-          this.solicitudPendienteGerente = data.filter(solicitud => solicitud.firms_gerente == '');
+          this.solicitudPendienteJefe = data.filter(solicitud => solicitud.firma_jefe_in == '');
           this.solicitudPendienteAceptar = data.filter(solicitud => solicitud.status != 'Aceptado');
-          // console.log(this.solicitudPendienteGerente);
-          // console.log(this.solicitudPendienteAceptar);
         }
 
         this.cardSolicitud =  this.solicitudes[0];
+        console.log(this.cardSolicitud);
         // const tipoSolicitud = this.cardSolicitud.motivo.includes('Permiso')? 'Permiso' : this.cardSolicitud.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
         // this.cardSolicitud = Object.assign({tipoSolicitud: tipoSolicitud}, this.cardSolicitud);
         
@@ -200,13 +193,37 @@ export class PanelSolicitudes {
 
   firmaRelaciones(id: number, accion: number, clave: number){
     this.spinerBandera = !this.spinerBandera;
-    console.log(this.cardSolicitud.Dias_disponibles, this.cardSolicitud.cuantos_dias);
-    const dias_d = parseInt(this.cardSolicitud.Dias_disponibles) - parseInt(this.cardSolicitud.cuantos_dias);
-    const dias_u = parseInt(this.cardSolicitud.Dias_ocupados) + parseInt(this.cardSolicitud.cuantos_dias);
+    // console.log(this.cardSolicitud.Dias_disponibles, this.cardSolicitud.cuantos_dias);
+    // const dias_d = parseInt(this.cardSolicitud.Dias_disponibles) - parseInt(this.cardSolicitud.cuantos_dias);
+    // const dias_u = parseInt(this.cardSolicitud.Dias_ocupados) + parseInt(this.cardSolicitud.cuantos_dias);
+
+    var dias_d: number = 0;
+    var dias_u: number = 0;
+    var dias_ant: number = 0;
+    var periodo: string = '';
+
+    if(this.cardSolicitud.Dias_disponibles_p2 != 0 || this.cardSolicitud.Dias_disponibles_p2 == this.cardSolicitud.cuantos_dias.toString()){
+      dias_d = parseInt(this.cardSolicitud.Dias_disponibles_p2) - parseInt(this.cardSolicitud.cuantos_dias);
+      dias_u = parseInt(this.cardSolicitud.Dias_ocupados_p2) + parseInt(this.cardSolicitud.cuantos_dias);
+      periodo = 'anterior';
+    }
+    if(this.cardSolicitud.Dias_disponibles_p2 == 0){
+      dias_d = parseInt(this.cardSolicitud.Dias_disponibles) - parseInt(this.cardSolicitud.cuantos_dias);
+      dias_u = parseInt(this.cardSolicitud.Dias_ocupados) + parseInt(this.cardSolicitud.cuantos_dias);
+      periodo = 'actual';
+    }
+    if(parseInt(this.cardSolicitud.Dias_disponibles_p2) < parseInt(this.cardSolicitud.cuantos_dias)){
+      dias_ant = parseInt(this.cardSolicitud.Dias_disponibles_p2) - parseInt(this.cardSolicitud.cuantos_dias);
+      // console.log(dias_ant);
+      const num_restar = Math.abs(dias_ant);
+      dias_d = parseInt(this.cardSolicitud.Dias_disponibles) + dias_ant;//el signo (+) es para que reste y no sume ya que dias_ant es negativo
+      dias_u = parseInt(this.cardSolicitud.Dias_ocupados) - dias_ant;//el signo (-) es para que sume y no reste ya que dias_ant es negativo
+      periodo = 'ambos';
+    }
     
     console.log(dias_d, dias_u);
 
-    this.api.aprobar(id, accion, dias_d, dias_u, clave).subscribe(
+    this.api.aprobar(id, accion, dias_d, dias_u, clave, periodo).subscribe(
       (response) => {
           if(response == true){
             const modalElement = document.getElementById('modal');
@@ -229,7 +246,146 @@ export class PanelSolicitudes {
 
   firmarTodoRI(){
 
+    // Dias_vacaciones: '12',
+    // Dias_disponibles: '12',
+    // Dias_ocupados: '0',
+    // Dias_vacaciones_p2: '12',
+    // Dias_disponibles_p2: '4',
+    // Dias_ocupados_p2: '8',
+    // cuantos_dias: '1',
+
+
    this.spinerFirma = !this.spinerFirma;
+
+// -------------------------------------------------------------------------------------------------------------------------->
+
+// const resultadoAgrupado = this.solicitudes.reduce((acumulador: any, item: any) => {
+//   const clave = item.Clave;
+//   if (!acumulador[clave]) {
+//     acumulador[clave] = [];
+//   }
+//   acumulador[clave].push(item);
+//   return acumulador;
+// }, {} as Record<string, []>);
+
+// console.log(resultadoAgrupado);
+
+// Función que agrupa, procesa y aplana el arreglo
+function procesarSolicitudes(solicitudes: any[]) {
+  // 1. Agrupar los objetos por la propiedad 'Clave'
+  const gruposPorClave = new Map();
+  solicitudes.forEach(solicitud => {
+    if (!gruposPorClave.has(solicitud.Clave)) {
+      gruposPorClave.set(solicitud.Clave, []);
+    }
+    gruposPorClave.get(solicitud.Clave).push(solicitud);
+  });
+
+  // 2. Procesar cada grupo de forma independiente
+  gruposPorClave.forEach(grupo => {
+    // Tomar los valores iniciales del primer elemento del grupo
+    let diasRestantesP2 = grupo[0].Dias_disponibles_p2;
+    let diasRestantes = grupo[0].Dias_disponibles;
+    
+    // Iterar sobre los elementos del grupo para aplicar la lógica
+    for (const solicitud of grupo) {
+    const cuantos_dias_a_restar = solicitud.cuantos_dias;
+    let dias_pendientes = cuantos_dias_a_restar;
+
+    // Lógica para Dias_disponibles_p2
+    // Si hay días disponibles en p2, restamos de ahí
+    if (diasRestantesP2 > 0) {
+      const resta_p2 = Math.min(diasRestantesP2, dias_pendientes);
+      diasRestantesP2 -= resta_p2;
+      dias_pendientes -= resta_p2;
+    }
+
+    // Lógica para Dias_disponibles (solo si Dias_disponibles_p2 ya es 0)
+    // Si todavía quedan días por restar y p2 ya se agotó, restamos de Dias_disponibles
+    if (dias_pendientes > 0 && diasRestantes > 0) {
+      const resta_normal = Math.min(diasRestantes, dias_pendientes);
+      diasRestantes -= resta_normal;
+      dias_pendientes -= resta_normal;
+    }
+
+    // Si no hay más días disponibles, los siguientes elementos tendrán 0
+    if (diasRestantes <= 0) {
+      diasRestantes = 0;
+    }
+    
+    if (diasRestantesP2 <= 0) {
+      diasRestantesP2 = 0;
+    }
+
+    // Actualiza los valores en el elemento actual del arreglo
+    solicitud.Dias_disponibles_p2 = diasRestantesP2;
+    solicitud.Dias_disponibles = diasRestantes;
+    solicitud.Dias_ocupados_p2 = parseInt(solicitud.Dias_vacaciones_p2) - solicitud.Dias_disponibles_p2;
+    solicitud.Dias_ocupados = parseInt(solicitud.Dias_vacaciones) - solicitud.Dias_disponibles;
+    }
+  });
+
+  // 3. Aplanar los grupos de vuelta a un solo arreglo
+  const resultadoFinal = Array.from(gruposPorClave.values()).flat();
+  return resultadoFinal;
+}
+
+const resultado = procesarSolicitudes(this.solicitudes);
+// console.log(resultado);
+
+
+
+  // ------------------------------------------------------------------------------------------------------------------->
+
+  // // Variables de estado para llevar la cuenta de los días restantes
+  // // Inicializamos con los valores del primer elemento
+  // let diasRestantesP2 = this.solicitudes[0].Dias_disponibles_p2;
+  // let diasRestantes = this.solicitudes[0].Dias_disponibles;
+
+  // // Bucle para iterar y actualizar el arreglo en su lugar
+  // for (let i = 0; i < this.solicitudes.length; i++) {
+  //   const cuantos_dias_a_restar = this.solicitudes[i].cuantos_dias;
+  //   let dias_pendientes = cuantos_dias_a_restar;
+
+  //   // Lógica para Dias_disponibles_p2
+  //   // Si hay días disponibles en p2, restamos de ahí
+  //   if (diasRestantesP2 > 0) {
+  //     const resta_p2 = Math.min(diasRestantesP2, dias_pendientes);
+  //     diasRestantesP2 -= resta_p2;
+  //     dias_pendientes -= resta_p2;
+  //   }
+
+  //   // Lógica para Dias_disponibles (solo si Dias_disponibles_p2 ya es 0)
+  //   // Si todavía quedan días por restar y p2 ya se agotó, restamos de Dias_disponibles
+  //   if (dias_pendientes > 0 && diasRestantes > 0) {
+  //     const resta_normal = Math.min(diasRestantes, dias_pendientes);
+  //     diasRestantes -= resta_normal;
+  //     dias_pendientes -= resta_normal;
+  //   }
+
+  //   // Si no hay más días disponibles, los siguientes elementos tendrán 0
+  //   if (diasRestantes <= 0) {
+  //     diasRestantes = 0;
+  //   }
+    
+  //   if (diasRestantesP2 <= 0) {
+  //     diasRestantesP2 = 0;
+  //   }
+
+  //   // Actualiza los valores en el elemento actual del arreglo
+  //   this.solicitudes[i].Dias_disponibles_p2 = diasRestantesP2;
+  //   this.solicitudes[i].Dias_disponibles = diasRestantes;
+  //   this.solicitudes[i].Dias_ocupados_p2 = parseInt(this.solicitudes[i].Dias_vacaciones_p2) - this.solicitudes[i].Dias_disponibles_p2;
+  //   this.solicitudes[i].Dias_ocupados = parseInt(this.solicitudes[i].Dias_vacaciones) - this.solicitudes[i].Dias_disponibles;
+  // }
+  
+
+// Ahora el arreglo 'this.solicitudes' ha sido modificado
+// console.log(this.solicitudes);
+
+
+// -------------------------------------------------------------------------------------------------------------------------->
+
    this.api.firmarTodasRI(this.solicitudes).subscribe(
     (response)=>{
             if(response == true){
@@ -277,53 +433,53 @@ export class PanelSolicitudes {
 
   }
 
-  firmaGerente(solicitud: any){
-    this.spinerBandera = !this.spinerBandera;
-    this.api.firmaGerente(solicitud).subscribe(
-      (response) => {
-          if(response == true){
-            const modalElement = document.getElementById('modal');
-            if (modalElement) {
-              // Usamos el método 'hide' de Bootstrap para cerrar el modal
-              // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
-              (window as any).bootstrap.Modal.getInstance(modalElement).hide();
-              this.spinerBandera = !this.spinerBandera;
-            }
-            this.cargarSolicitudes(this.user[0].Tipo);
-            // this.miCheckboxG.nativeElement.checked = false;
-          }
-         },
-         (error) => {
-           console.error('Error al obtener datos:', error);
-         }
-    );
+  // firmaGerente(solicitud: any){
+  //   this.spinerBandera = !this.spinerBandera;
+  //   this.api.firmaGerente(solicitud).subscribe(
+  //     (response) => {
+  //         if(response == true){
+  //           const modalElement = document.getElementById('modal');
+  //           if (modalElement) {
+  //             // Usamos el método 'hide' de Bootstrap para cerrar el modal
+  //             // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
+  //             (window as any).bootstrap.Modal.getInstance(modalElement).hide();
+  //             this.spinerBandera = !this.spinerBandera;
+  //           }
+  //           this.cargarSolicitudes(this.user[0].Tipo);
+  //           // this.miCheckboxG.nativeElement.checked = false;
+  //         }
+  //        },
+  //        (error) => {
+  //          console.error('Error al obtener datos:', error);
+  //        }
+  //   );
 
-  }
+  // }
 
-  firmarTodoGerente(){
+  // firmarTodoGerente(){
 
-   this.spinerFirma = !this.spinerFirma;
-   this.api.firmarTodasGerente(this.solicitudes).subscribe(
-    (response)=>{
-            if(response == true){
-              const modalElement = document.getElementById('modal-todas');
-              if (modalElement) {
-                // Usamos el método 'hide' de Bootstrap para cerrar el modal
-                // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
-                (window as any).bootstrap.Modal.getInstance(modalElement).hide();
-                this.spinerFirma = !this.spinerFirma;
-                this.cargarSolicitudes(this.user[0].Tipo);
-              }
-            }
+  //  this.spinerFirma = !this.spinerFirma;
+  //  this.api.firmarTodasGerente(this.solicitudes).subscribe(
+  //   (response)=>{
+  //           if(response == true){
+  //             const modalElement = document.getElementById('modal-todas');
+  //             if (modalElement) {
+  //               // Usamos el método 'hide' de Bootstrap para cerrar el modal
+  //               // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
+  //               (window as any).bootstrap.Modal.getInstance(modalElement).hide();
+  //               this.spinerFirma = !this.spinerFirma;
+  //               this.cargarSolicitudes(this.user[0].Tipo);
+  //             }
+  //           }
 
-    },
-    (error)=>{
-      console.log('Error: ' + error);
+  //   },
+  //   (error)=>{
+  //     console.log('Error: ' + error);
 
-    }
-   )
+  //   }
+  //  )
 
-  }
+  // }
 
   accion(id: number, accion: number){
     if(accion == 0){

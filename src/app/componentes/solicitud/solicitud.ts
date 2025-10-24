@@ -39,6 +39,7 @@ export class Form {
   solicitudForm: FormGroup;
   solicitudFormRI: FormGroup;
   fecha_hoy: string = '';
+  periodo_anterior: number = 0;
   fecha: any = '';
   ano_hoy: string = '';
   fechaAlta: any = '';
@@ -53,7 +54,11 @@ export class Form {
 
   spinerBandera: boolean = false;
 
-  solicitudesUsuario: any[] = []
+  solicitudesUsuario: any[] = [];
+
+  // regex: string = '^del \d{1,2} al \d{1,2} de [A-Z][a-z]+$';
+
+  // isRotated: boolean = false;
 
   //////////////////// Datos colaborador ////////////////////////
   fecha_co_hoy: string = '';
@@ -86,7 +91,8 @@ export class Form {
       fechaApartir: ['', []],
       fechaHasta: ['', []],
       tipo_solicitud: ['', []],
-      motivo: ['', [Validators.required,]],// Validators.minLength(10)
+      // motivo: ['', [Validators.required,]],// Validators.minLength(10)
+      motivo: ['', [Validators.required]],
       firma: ['', [Validators.required]],
       clave: ['', []]
     });
@@ -133,16 +139,28 @@ export class Form {
     if(this.user[0].Tipo == 'S' && this.user[0].Tipo_Dep == 'Ref'){
      this.cargarColaboradores(this.user[0].Tipo, this.user[0].Tipo_Dep);
     }
+    if(this.user[0].Tipo == 'RIA'){
+     this.cargarColaboradores(this.user[0].Tipo, this.user[0].Tipo_Dep);
+    }
+
+    if(this.user[0].Tipo == 'C'){
+     this.consultarHistorial(this.user[0].Clave);
+    }
 
   
     this.fecha = this.obtenerFechaDeHoy();
     this.fecha_hoy = this.fecha.substring(0,13);
     this.ano_hoy = this.fecha.substring(19,21);
+    this.periodo_anterior = parseInt(this.fecha.substring(17,21)) - 1;
     this.fechaAlta = this.obtenerFechaAlta(this.user[0].Fecha_de_alta);
     this.obtenerAnosCumplidos(this.fechaAlta);
-    if(parseInt(this.user[0].Dias_disponibles) == 0){
-      this.dias_diponibles = parseInt(this.user[0].Dias_vacaciones);
-    }else{
+    if(parseInt(this.user[0].Dias_disponibles_p2) != 0){
+      this.dias_diponibles = parseInt(this.user[0].Dias_disponibles) + parseInt(this.user[0].Dias_disponibles_p2)
+    //   this.dias_diponibles = parseInt(this.user[0].Dias_vacaciones);
+    // }else{
+      
+    }
+    if(parseInt(this.user[0].Dias_disponibles_p2) == 0){
       this.dias_diponibles = parseInt(this.user[0].Dias_disponibles)
     }
     
@@ -200,14 +218,21 @@ export class Form {
         this.colaborador = this.colaboradores.filter(ele => ele.Nombre_completo == selectedValue);
         
         this.fecha_co_hoy = this.obtenerFechaDeHoy().substring(0,13);
-        this.ano_co_actual = '25';
+        this.ano_co_actual = this.ano_hoy;
         this.nombre_co = this.colaborador[0].Nombre_completo;
         this.fecha_co_ingreso =  this.obtenerFechaAlta(this.colaborador[0].Fecha_de_alta);;
         this.anos_co_cumplidos = this.obtenerAnosCumplidos(this.formatoFecha(this.colaborador[0].Fecha_de_alta));
         this.no_tarjeta_co = this.colaborador[0].Clave;
         this.dep_co = this.colaborador[0].Departamento;
         this.centro_co = this.colaborador[0].C_costos;
-        this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles);
+        
+        if(parseInt(this.colaborador[0].Dias_disponibles_p2) != 0){
+          this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles) + parseInt(this.colaborador[0].Dias_disponibles_p2)
+        }
+       if(parseInt(this.colaborador[0].Dias_disponibles_p2) == 0){
+          this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles)
+       }
+        // this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles);
     }
   }
 
@@ -306,7 +331,7 @@ export class Form {
         if(this.user[0].Tipo == 'C'){
            this.cerrarSesion(1);
         }
-        if(this.user[0].Tipo == 'S'){
+        if(this.user[0].Tipo == 'S' || this.user[0].Tipo == 'RIA'){
           window.location.reload();
         }
 
@@ -367,15 +392,15 @@ export class Form {
     this.solicitudForm.value.firma = this.solicitudForm.value.firma.toString();
 
     this.solicitudForm.value.fecha = this.fecha_hoy + ' del 20' + this.ano_hoy;
-    this.solicitudForm.value.nombre = this.user[0].Tipo == 'S'? this.nombre_co : this.user[0].Nombre_completo;
-    this.solicitudForm.value.fechaIngreso = this.user[0].Tipo == 'S'? this.fecha_co_ingreso : this.fechaAlta;
+    this.solicitudForm.value.nombre = this.user[0].Tipo == 'S'? this.nombre_co : this.user[0].Tipo == 'RIA'? this.nombre_co : this.user[0].Nombre_completo;
+    this.solicitudForm.value.fechaIngreso = this.user[0].Tipo == 'S'? this.fecha_co_ingreso : this.user[0].Tipo == 'RIA'? this.fecha_co_ingreso : this.fechaAlta;
     this.solicitudForm.value.añosCumplidos = this.cumplidos;
     this.solicitudForm.value.noTarjeta = this.user[0].No_Tarjeta;
-    this.solicitudForm.value.depto = this.user[0].Tipo == 'S'? this.dep_co : this.user[0].Departamento;
+    this.solicitudForm.value.depto = this.user[0].Tipo == 'S'? this.dep_co : this.user[0].Tipo == 'RIA'? this.dep_co : this.user[0].Departamento;
     this.solicitudForm.value.cCostos = this.user[0].Centro_costos;
     this.solicitudForm.value.fechaApartir = this.converetirFecha(this.solicitudForm.value.fechaApartir);
     this.solicitudForm.value.fechaHasta = this.converetirFecha(this.solicitudForm.value.fechaHasta);
-    this.solicitudForm.value.clave = this.user[0].Tipo == 'S'? this.no_tarjeta_co : this.user[0].Clave;
+    this.solicitudForm.value.clave = this.user[0].Tipo == 'S'? this.no_tarjeta_co : this.user[0].Tipo == 'RIA'? this.no_tarjeta_co : this.user[0].Clave;
 
     this.solicitudForm.value.motivo = this.solicitudForm.value.motivo;
     this.solicitudForm.value.tipo_solicitud = this.opcionselect;
@@ -448,6 +473,19 @@ export class Form {
           ele.fecha_hasta = this.convertirFecha(ele.fecha_hasta);
           return ele;
         });
+        const newKey = "isRotated";
+        const newValue = false;
+
+        this.solicitudesUsuario.forEach(obj => {
+          obj[newKey] = newValue;
+        });
+        console.log(this.solicitudesUsuario);
+
+        // 1. Convierte el arreglo a JSON
+        const arregloJSON = JSON.stringify(this.solicitudesUsuario);
+
+        // 2. Guarda en localStorage
+        localStorage.setItem('misSolicitudes', arregloJSON);
           // console.log(this.solicitudesUsuario);
           // if(response == true){
           //   this.spinerBandera = !this.spinerBandera;
@@ -462,11 +500,21 @@ export class Form {
           // this.alertDanger = !this.alertDanger;
           // this.alertSuccess = false;
           // this.cerrarAlerta();
-          //  console.error('Error al obtener datos:', error);
+           console.error('Error al obtener datos:', error);
          }
 
     );
 
+  }
+
+  toggleRotation(solicitud: any) {
+    solicitud.isRotated = !solicitud.isRotated;
+  }
+
+  recuperarHistorial(){
+    const solicitudesGuardadas = localStorage.getItem('misSolicitudes');
+    const solicitudes: any[] = solicitudesGuardadas ? JSON.parse(solicitudesGuardadas) : [];
+    this.solicitudesUsuario = solicitudes;
   }
 
 }

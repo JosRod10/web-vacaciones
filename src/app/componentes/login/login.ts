@@ -121,7 +121,7 @@ export class Login {
             if(data[0].Tipo == 'RI' || data[0].Tipo == 'JI' || data[0].Tipo == 'G'){
               this.router.navigate(['panel-solicitud']);
             }
-            if(data[0].Tipo == 'S'){
+            if(data[0].Tipo == 'S' || data[0].Tipo == 'RIA'){
               this.router.navigate(['solicitud']);
             }
             
@@ -165,7 +165,7 @@ export class Login {
             if(data[0].Tipo == 'RI' || data[0].Tipo == 'JI' || data[0].Tipo == 'G'){
                 this.router.navigate(['panel-solicitud']);
             }
-            if(data[0].Tipo == 'S'){
+            if(data[0].Tipo == 'S' || data[0].Tipo == 'RIA'){
                 this.router.navigate(['solicitud']);
             }
           }

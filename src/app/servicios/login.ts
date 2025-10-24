@@ -109,6 +109,8 @@ export class LoginServices {
     this.token = null;
     localStorage.removeItem('authToken');
     localStorage.removeItem('Usuario');
+    localStorage.removeItem('misSolicitudes');
+    // localStorage.removeItem('misObjetos');
     console.log('Sesión cerrada');
   }
 
