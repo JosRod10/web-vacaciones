@@ -1,3 +1,14 @@
+.fade-in-slow {
+  opacity: 0;
+  animation: fadeInSlow 1s ease-in-out forwards;
+}
+
+@keyframes fadeInSlow {
+  to {
+    opacity: 1;
+  }
+}
+
 .login-container {
   height: 100vh;
   display: flex;
@@ -30,4 +41,16 @@
   bottom: 0;
   right: 0;
   margin-right: 1em;
+}
+
+.enlace-registro{
+  font-size: small;
+  color: rgb(4, 150, 7);
+  cursor: pointer;
+}
+
+.enlace-registro:hover{
+  font-weight: bold;
+  color: rgb(2, 95, 3);
+  cursor: pointer;
 }

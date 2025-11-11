@@ -10,6 +10,7 @@ import { PanelSolicitudes } from './app/componentes/panel-solicitudes/panel-soli
 import { MatDialogRef } from '@angular/material/dialog';
 import { PanelReportes } from './app/componentes/panel-reportes/panel-reportes';
 import { AuthGuard } from './app/guards/autenticacion-guard';
+import { withHashLocation } from '@angular/router';
 
 bootstrapApplication(App, {
   providers: [
@@ -28,7 +29,7 @@ bootstrapApplication(App, {
       // { path: 'reportes', component: PanelReportes},
       { path: '**', redirectTo: 'login' }
 
-    ]),
+    ], withHashLocation()),
     // provideHttpClient(),
     
   ],

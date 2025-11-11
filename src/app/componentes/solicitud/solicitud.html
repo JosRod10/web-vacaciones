@@ -1,5 +1,5 @@
 <div class="p-4 fade-in-slow">
-    <div class="container-fluid contenedor shadow" *ngIf="user[0].Tipo == 'C'">
+    <div class="container-fluid contenedor shadow" *ngIf="user[0].emp_tipo == 'C'">
         <div class="container-fluid box">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-12 d-flex justify-content-start">
@@ -7,7 +7,7 @@
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-0"></div>
                 <div class="col-lg-4 col-md-2 col-sm-0">
-                     <select *ngIf="this.user[0].Tipo == 'S'" class="form-select form-select-md" aria-label=".form-select-sm example">
+                     <select *ngIf="this.user[0].emp_tipo == 'S'" class="form-select form-select-md" aria-label=".form-select-sm example">
                             <!-- <option selected>Selecciona colaborador</option>
                             <option value="1">Vacaciones</option>
                             <option value="2">Permiso</option>
@@ -18,7 +18,7 @@
                      </select>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
-                   <p>{{this.user[0].Nombre_completo}}</p>&nbsp;&nbsp;
+                   <p>{{this.user[0].emp_nom}}</p>&nbsp;&nbsp;
                    <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i>
                 </div>
             </div>
@@ -32,23 +32,25 @@
                 <div class="col-lg-2 col-md-2 col-sm-0"></div>
             </div>
         </div>
-        <div class="container-fluid d-flex justify-content-center">
-            <div class="row">
+        <div class="container-fluid">
+            <div class="row d-flex justify-content-center">
                 <!-- <div class="col-lg-4">
                     <button class="btn btn-success rounded-pill mt-1" type="button">
                         <a>2023 Días disponibles: 0 </a>
                     </button>
                 </div> -->
-                <div class="col-lg-6">
+                <!-- <div class="col-lg-6">
                     <button class="btn btn-success rounded-pill mt-1" type="button">
                         <a> {{this.periodo_anterior}} Días disponibles: {{this.user[0].Dias_disponibles_p2}} </a>
                     </button>
-                </div>
-                <div class="col-lg-6">
-                    <button class="btn btn-success rounded-pill mt-1" style="width: 28vh;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-                        <a (click)="recuperarHistorial()" data-bs-toggle="tooltip" data-bs-placement="right" title="Mi Historial">2025 Días disponibles: {{this.user[0].Dias_disponibles}} </a>
-                    </button>
-                </div>
+                </div> -->
+                
+                    <div class="col-lg-4 d-flex justify-content-center" *ngFor="let usuario of user">
+                        <button class="btn btn-success rounded-pill mt-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                            <a (click)="recuperarHistorial(usuario.Periodo)" data-bs-toggle="tooltip" data-bs-placement="right" title="Mi Historial">Periodo {{usuario.Periodo}}: {{usuario.Saldo}} días disponibles</a>
+                        </button>
+                    </div>
+                
                 <!-- <p style="cursor: pointer;"><span class="badge rounded-pill bg-success mt-1" style="font-size: medium;"> Días disponibles: {{this.user[0].Dias_disponibles}} </span></p> -->
             </div>
         </div>
@@ -67,27 +69,27 @@
 
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">Por medio del presente solicitamos se autorice a</span>
-                        <input type="text" class="form-control" [value] ="this.user[0].Nombre_completo"  disabled aria-label="Username" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control" [value] ="this.user[0].emp_nom"  disabled aria-label="Username" aria-describedby="basic-addon1">
                     </div>
 
                     <div class="input-group">
                         <!-- [value]="this.user[0].Fecha_de_alta" -->
                         <span class="input-group-text" id="basic-addon1">Fecha de ingreso</span>
-                        <input type="text" class="form-control" [value]="this.fechaAlta" disabled aria-label="Username">
+                        <input style="width: 15vh;" type="text" class="form-control" [value]="this.fecha_ingreso" disabled aria-label="Username">
                         <span class="input-group-text">Años Cumplidos</span>
                         <!-- [value]="this.cumplidos" -->
-                        <input type="text" class="form-control" value="0" disabled aria-label="Server">
+                        <input type="text" class="form-control" [value]="this.cumplidos" disabled aria-label="Server">
                         <span class="input-group-text">No. Empleado</span>
-                        <input type="text" class="form-control" [value]="this.user[0].Clave" disabled aria-label="Server">
+                        <input type="text" class="form-control" [value]="this.user[0].emp_cve" disabled aria-label="Server">
                     </div>
 
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">Del departamento de</span>
-                        <input type="text" class="form-control" [value] ="this.user[0].Departamento" disabled aria-label="Username">
+                        <input type="text" class="form-control" [value] ="this.user[0].Descripcion" disabled aria-label="Username">
                         <span class="input-group-text">Centro de costos&nbsp;
                             <label *ngIf="isInvalid('cCostos')" style="color: red; font-size: small;">( campo obligatorio* )</label>
                         </span>
-                        <input type="text" class="form-control" value="304" disabled aria-label="Server">
+                        <input type="text" class="form-control" [value] ="this.user[0].dep_id" disabled aria-label="Server">
                     </div>
 
                     <label for="basic-url" class="form-label d-flex justify-content-center">Permiso para faltar a sus labores</label>
@@ -214,26 +216,26 @@
         
     </div>
 
-    <div class="container-fluid contenedor shadow" *ngIf="user[0].Tipo == 'S' || user[0].Tipo == 'RIA'">
+    <div class="container-fluid contenedor shadow" *ngIf="user[0].emp_tipo == 'S' || user[0].emp_tipo == 'RIA'">
         <div class="container-fluid box">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-12 d-flex justify-content-start">
                    <!-- <p *ngIf="this.colaborador[0] && this.banderaDias == false">Días ocupados: {{this.colaborador[0].Dias_ocupados}} de {{this.colaborador[0].Dias_vacaciones}} días</p> -->
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-0"></div>
-                <div class="col-lg-4 col-md-2 col-sm-0" style="margin-top: -2vh;">
+                <div class="col-lg-1 col-md-2 col-sm-0"></div>
+                <div class="col-lg-5 col-md-2 col-sm-0" style="margin-top: -2vh;">
                      <select (change)="datosCo($event)" class="form-select form-select-md" aria-label=".form-select-sm example">
                             <!-- <option selected>Selecciona colaborador</option>
                             <option value="1">Vacaciones</option>
                             <option value="2">Permiso</option>
                             <option value="3">Pago tiempo por tiempo</option> -->
                             <div *ngFor="let colaborador of colaboradores">
-                                <option value="{{colaborador.Nombre_completo}}">{{colaborador.Nombre_completo}}</option>
+                                <option value="{{colaborador.emp_cve}}{{colaborador.Periodo}}">{{colaborador.emp_cve}}&nbsp;&nbsp;&nbsp;{{colaborador.emp_nom}}&nbsp;&nbsp;&nbsp;{{colaborador.Periodo}}</option>
                             </div>
                      </select>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
-                   <p>{{this.user[0].Nombre_completo}}</p>&nbsp;&nbsp;
+                   <p>{{this.user[0].emp_nom}}</p>&nbsp;&nbsp;
                    <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i>
                 </div>
             </div>
@@ -249,7 +251,12 @@
         </div>
         <div class="container-fluid d-flex justify-content-center">
             <div class="row">
-                <div class="col-lg-6" *ngIf="this.colaborador[0] && this.banderaDias == false">
+                <div class="col-lg-12" *ngIf="this.colaborador[0] && this.banderaDias == false">
+                    <button class="btn btn-success rounded-pill mt-1" type="button"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                        <a (click)="recuperarHistorial(this.colaborador[0].Periodo)" data-bs-toggle="tooltip" data-bs-placement="right" title="Mi Historial"> Periodo {{this.colaborador[0].Periodo}}: {{this.colaborador[0].Saldo}} días disponibles</a>
+                    </button>
+                </div>
+                <!-- <div class="col-lg-6" *ngIf="this.colaborador[0] && this.banderaDias == false">
                     <button class="btn btn-success rounded-pill mt-1" type="button">
                         <a> {{this.periodo_anterior}} Días disponibles: {{this.colaborador[0].Dias_disponibles_p2}} </a>
                     </button>
@@ -258,7 +265,7 @@
                     <button class="btn btn-success rounded-pill mt-1" style="width: 28vh;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                         <a (click)="recuperarHistorial()" data-bs-toggle="tooltip" data-bs-placement="right" title="Mi Historial">2025 Días disponibles: {{this.colaborador[0].Dias_disponibles}} </a>
                     </button>
-                </div>
+                </div> -->
                 <!-- <p *ngIf="this.colaborador[0] && this.banderaDias == false"><span class="badge rounded-pill bg-success mt-1" style="font-size: medium;"> Días disponibles {{this.colaborador[0].Dias_disponibles}} </span></p> -->
             </div>
         </div>
@@ -283,7 +290,7 @@
                     <div class="input-group">
                         <!-- [value]="this.user[0].Fecha_de_alta" -->
                         <span class="input-group-text" id="basic-addon1">Fecha de ingreso</span>
-                        <input type="text" class="form-control" [value]="this.fecha_co_ingreso" disabled aria-label="Username">
+                        <input style="width: 15vh;" type="text" class="form-control" [value]="this.fecha_co_ingreso" disabled aria-label="Username">
                         <span class="input-group-text">Años Cumplidos</span>
                         <!-- [value]="this.cumplidos" -->
                         <input type="text" class="form-control" [value]="this.anos_co_cumplidos" disabled aria-label="Server">

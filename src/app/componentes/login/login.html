@@ -1,4 +1,4 @@
-<div class="login-container">
+<div class="login-container" *ngIf="banderaLogin == true">
   <div class="row">
     <div class="card p-4 shadow" style="width: 100%;">
       <div class="col-12">
@@ -71,6 +71,11 @@
                 Iniciar sesión
               </button>
             </div>
+
+            <!-- <div (click)="banderaRegistrar()" class="d-grid d-flex justify-content-center mt-2 enlace-registro">
+                <a>Registrarme</a>
+            </div> -->
+            
           </form>
       </div>
 
@@ -79,6 +84,142 @@
     
   </div>
 </div>
+
+<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<!-- <div class="login-container fade-in-slow" *ngIf="banderaRegistro == true">
+  <div class="row">
+    <div class="card p-4 shadow" style="width: 100%;">
+      <div class="col-12">
+          <img src="assets/cin.png" height="200vh">
+      </div>
+    <div class="col-12">
+        <div class="card-header text-center mb-2">
+          <h5 class="card-title mb-0" style="color: gray;">Registro</h5>
+        </div>
+
+        <div class="card-body">
+          <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+            
+            <div class="mb-2">
+              <label for="num" class="form-label">No. Empleado</label>
+              <div class="input-group">
+                
+                <span class="input-group-text"><i class="bi bi-list-ol"></i></span>
+                <input
+                  type="text"
+                  id="num"
+                  class="form-control"
+                  placeholder="000000"
+                  formControlName="num"
+                  [ngClass]="{ 'is-invalid': registroForm.get('num')?.invalid && registroForm.get('num')?.touched }"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="registroForm.get('num')?.hasError('required')">
+                El no. empleado es obligatorio
+              </div>
+            </div>
+
+            <div class="mb-2">
+              <label for="correo" class="form-label">Correo</label>
+              <div class="input-group">
+                
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input
+                  type="text"
+                  id="correo"
+                  class="form-control"
+                  placeholder="email@ejemplo.com"
+                  formControlName="correo"
+                  [ngClass]="{ 'is-invalid': registroForm.get('correo')?.invalid && registroForm.get('correo')?.touched }"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="registroForm.get('correo')?.hasError('required')">
+                El correo es obligatorio
+              </div>
+            </div>
+
+            
+            <div class="mb-2">
+              <label for="contrasena" class="form-label">Contraseña</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input
+                  [type]="hidePassword ? 'password' : 'text'"
+                  id="contrasena"
+                  class="form-control"
+                  placeholder="Contraseña"
+                  formControlName="contrasena"
+                  [ngClass]="{ 'is-invalid': registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched }"
+                />
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  (click)="hidePassword = !hidePassword"
+                  tabindex="-1"
+                >
+                  <i class="bi" [ngClass]="hidePassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback" *ngIf="registroForm.get('pass')?.hasError('required')">
+                La contraseña es obligatoria
+              </div>
+              <div class="invalid-feedback" *ngIf="registroForm.get('pass')?.hasError('minlength')">
+                Mínimo 6 caracteres
+              </div>
+            </div>
+            
+            <div class="mb-2">
+              <label for="con_contrasena" class="form-label">Confirmar Contraseña</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input
+                  [type]="hidePassword ? 'password' : 'text'"
+                  id="con_contrasena"
+                  class="form-control"
+                  placeholder="Contraseña"
+                  formControlName="con_contrasena"
+                  [ngClass]="{ 'is-invalid': registroForm.get('con_contrasena')?.invalid && registroForm.get('con_contrasena')?.touched }"
+                />
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  (click)="hidePassword = !hidePassword"
+                  tabindex="-1"
+                >
+                  <i class="bi" [ngClass]="hidePassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
+              </div>
+           
+            </div>
+
+            <div class="mb-2" *ngIf="registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched">
+                <div class="alert-text">
+                  Minimo 6 caracteres en la contraseña
+                </div>
+            </div>
+
+            
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success">
+                Registrarme
+              </button>
+            </div>
+
+             <div (click)="banderaLoginActivar()" class="d-grid d-flex justify-content-center mt-2 enlace-registro">
+                <a>Login</a>
+            </div>
+            
+          </form>
+      </div>
+
+    </div>
+    </div>
+    
+  </div>
+</div> -->
+
+<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
 <div class="alert alert-info d-flex align-items-center alert-pos" role="alert" *ngIf="alerta" #alerToast>
     <div>

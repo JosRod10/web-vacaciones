@@ -70,7 +70,7 @@ export class PanelSolicitudes {
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
-    this.cargarSolicitudes(this.user[0].Tipo);
+    this.cargarSolicitudes(this.user[0].emp_tipo);
     
   }
 
@@ -103,7 +103,7 @@ export class PanelSolicitudes {
     this.banderaDash = true;
     this.banderaReporte = false;
     this.banderaDia = false;
-    this.cargarSolicitudes(this.user[0].Tipo);
+    this.cargarSolicitudes(this.user[0].emp_tipo);
   }
 
   cambiarReporte(){
@@ -144,6 +144,7 @@ export class PanelSolicitudes {
 
   cargarSolicitudes(tipo: string){
     this.api.getSolicitudes(tipo).subscribe(data => {
+      // console.log(data);
         this.solicitudes = data.filter(solicitud => solicitud.status != 'Ausente');
         // console.log(this.solicitudes);
         this.solicitudes = this.solicitudes.map((ele: any)=>{
@@ -158,13 +159,13 @@ export class PanelSolicitudes {
           ele.fecha_hasta = this.convertirFecha(ele.fecha_hasta);
           return ele;
         });
-        if(this.user[0].Tipo == 'RI'){
+        if(this.user[0].emp_tipo == 'RI'){
           this.solicitudPendienteJefe = data.filter(solicitud => solicitud.firma_jefe_in == '');
           this.solicitudPendienteAceptar = data.filter(solicitud => solicitud.status != 'Aceptado');
         }
 
         this.cardSolicitud =  this.solicitudes[0];
-        console.log(this.cardSolicitud);
+        // console.log(this.cardSolicitud);
         // const tipoSolicitud = this.cardSolicitud.motivo.includes('Permiso')? 'Permiso' : this.cardSolicitud.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
         // this.cardSolicitud = Object.assign({tipoSolicitud: tipoSolicitud}, this.cardSolicitud);
         
@@ -181,7 +182,7 @@ export class PanelSolicitudes {
             
             console.log('Se autorizó la firma de RI');
             this.spinerFirma = !this.spinerFirma;
-            this.cargarSolicitudes(this.user[0].Tipo);
+            this.cargarSolicitudes(this.user[0].emp_tipo);
            
           }
          },
@@ -201,29 +202,37 @@ export class PanelSolicitudes {
     var dias_u: number = 0;
     var dias_ant: number = 0;
     var periodo: string = '';
+    var correo: string = '';
 
-    if(this.cardSolicitud.Dias_disponibles_p2 != 0 || this.cardSolicitud.Dias_disponibles_p2 == this.cardSolicitud.cuantos_dias.toString()){
-      dias_d = parseInt(this.cardSolicitud.Dias_disponibles_p2) - parseInt(this.cardSolicitud.cuantos_dias);
-      dias_u = parseInt(this.cardSolicitud.Dias_ocupados_p2) + parseInt(this.cardSolicitud.cuantos_dias);
-      periodo = 'anterior';
-    }
-    if(this.cardSolicitud.Dias_disponibles_p2 == 0){
-      dias_d = parseInt(this.cardSolicitud.Dias_disponibles) - parseInt(this.cardSolicitud.cuantos_dias);
-      dias_u = parseInt(this.cardSolicitud.Dias_ocupados) + parseInt(this.cardSolicitud.cuantos_dias);
-      periodo = 'actual';
-    }
-    if(parseInt(this.cardSolicitud.Dias_disponibles_p2) < parseInt(this.cardSolicitud.cuantos_dias)){
-      dias_ant = parseInt(this.cardSolicitud.Dias_disponibles_p2) - parseInt(this.cardSolicitud.cuantos_dias);
-      // console.log(dias_ant);
-      const num_restar = Math.abs(dias_ant);
-      dias_d = parseInt(this.cardSolicitud.Dias_disponibles) + dias_ant;//el signo (+) es para que reste y no sume ya que dias_ant es negativo
-      dias_u = parseInt(this.cardSolicitud.Dias_ocupados) - dias_ant;//el signo (-) es para que sume y no reste ya que dias_ant es negativo
-      periodo = 'ambos';
-    }
+   
+    dias_d = this.cardSolicitud.Saldo - parseInt(this.cardSolicitud.cuantos_dias);
+    dias_u = this.cardSolicitud.Vacaciones_tomadas + parseInt(this.cardSolicitud.cuantos_dias);
+    periodo = this.cardSolicitud.Periodo;
+    correo = this.cardSolicitud.emp_mail;
+    
+    console.log(this.cardSolicitud, dias_d, dias_u);
+    // if(this.cardSolicitud.Dias_disponibles_p2 != 0 || this.cardSolicitud.Dias_disponibles_p2 == this.cardSolicitud.cuantos_dias.toString()){
+    //   dias_d = parseInt(this.cardSolicitud.Dias_disponibles_p2) - parseInt(this.cardSolicitud.cuantos_dias);
+    //   dias_u = parseInt(this.cardSolicitud.Dias_ocupados_p2) + parseInt(this.cardSolicitud.cuantos_dias);
+    //   periodo = 'anterior';
+    // }
+    // if(this.cardSolicitud.Dias_disponibles_p2 == 0){
+    //   dias_d = parseInt(this.cardSolicitud.Dias_disponibles) - parseInt(this.cardSolicitud.cuantos_dias);
+    //   dias_u = parseInt(this.cardSolicitud.Dias_ocupados) + parseInt(this.cardSolicitud.cuantos_dias);
+    //   periodo = 'actual';
+    // }
+    // if(parseInt(this.cardSolicitud.Dias_disponibles_p2) < parseInt(this.cardSolicitud.cuantos_dias)){
+    //   dias_ant = parseInt(this.cardSolicitud.Dias_disponibles_p2) - parseInt(this.cardSolicitud.cuantos_dias);
+    //   // console.log(dias_ant);
+    //   const num_restar = Math.abs(dias_ant);
+    //   dias_d = parseInt(this.cardSolicitud.Dias_disponibles) + dias_ant;//el signo (+) es para que reste y no sume ya que dias_ant es negativo
+    //   dias_u = parseInt(this.cardSolicitud.Dias_ocupados) - dias_ant;//el signo (-) es para que sume y no reste ya que dias_ant es negativo
+    //   periodo = 'ambos';
+    // }
     
     console.log(dias_d, dias_u);
 
-    this.api.aprobar(id, accion, dias_d, dias_u, clave, periodo).subscribe(
+    this.api.aprobar(id, accion, dias_d, dias_u, clave, periodo, correo).subscribe(
       (response) => {
           if(response == true){
             const modalElement = document.getElementById('modal');
@@ -233,7 +242,7 @@ export class PanelSolicitudes {
               (window as any).bootstrap.Modal.getInstance(modalElement).hide();
               this.spinerBandera = !this.spinerBandera;
             }
-            this.cargarSolicitudes(this.user[0].Tipo);
+            this.cargarSolicitudes(this.user[0].emp_tipo);
             this.firmaCheck = false;
             this.miCheckboxRI.nativeElement.checked = false;
           }
@@ -245,145 +254,8 @@ export class PanelSolicitudes {
   }
 
   firmarTodoRI(){
-
-    // Dias_vacaciones: '12',
-    // Dias_disponibles: '12',
-    // Dias_ocupados: '0',
-    // Dias_vacaciones_p2: '12',
-    // Dias_disponibles_p2: '4',
-    // Dias_ocupados_p2: '8',
-    // cuantos_dias: '1',
-
-
+    
    this.spinerFirma = !this.spinerFirma;
-
-// -------------------------------------------------------------------------------------------------------------------------->
-
-// const resultadoAgrupado = this.solicitudes.reduce((acumulador: any, item: any) => {
-//   const clave = item.Clave;
-//   if (!acumulador[clave]) {
-//     acumulador[clave] = [];
-//   }
-//   acumulador[clave].push(item);
-//   return acumulador;
-// }, {} as Record<string, []>);
-
-// console.log(resultadoAgrupado);
-
-// Función que agrupa, procesa y aplana el arreglo
-function procesarSolicitudes(solicitudes: any[]) {
-  // 1. Agrupar los objetos por la propiedad 'Clave'
-  const gruposPorClave = new Map();
-  solicitudes.forEach(solicitud => {
-    if (!gruposPorClave.has(solicitud.Clave)) {
-      gruposPorClave.set(solicitud.Clave, []);
-    }
-    gruposPorClave.get(solicitud.Clave).push(solicitud);
-  });
-
-  // 2. Procesar cada grupo de forma independiente
-  gruposPorClave.forEach(grupo => {
-    // Tomar los valores iniciales del primer elemento del grupo
-    let diasRestantesP2 = grupo[0].Dias_disponibles_p2;
-    let diasRestantes = grupo[0].Dias_disponibles;
-    
-    // Iterar sobre los elementos del grupo para aplicar la lógica
-    for (const solicitud of grupo) {
-    const cuantos_dias_a_restar = solicitud.cuantos_dias;
-    let dias_pendientes = cuantos_dias_a_restar;
-
-    // Lógica para Dias_disponibles_p2
-    // Si hay días disponibles en p2, restamos de ahí
-    if (diasRestantesP2 > 0) {
-      const resta_p2 = Math.min(diasRestantesP2, dias_pendientes);
-      diasRestantesP2 -= resta_p2;
-      dias_pendientes -= resta_p2;
-    }
-
-    // Lógica para Dias_disponibles (solo si Dias_disponibles_p2 ya es 0)
-    // Si todavía quedan días por restar y p2 ya se agotó, restamos de Dias_disponibles
-    if (dias_pendientes > 0 && diasRestantes > 0) {
-      const resta_normal = Math.min(diasRestantes, dias_pendientes);
-      diasRestantes -= resta_normal;
-      dias_pendientes -= resta_normal;
-    }
-
-    // Si no hay más días disponibles, los siguientes elementos tendrán 0
-    if (diasRestantes <= 0) {
-      diasRestantes = 0;
-    }
-    
-    if (diasRestantesP2 <= 0) {
-      diasRestantesP2 = 0;
-    }
-
-    // Actualiza los valores en el elemento actual del arreglo
-    solicitud.Dias_disponibles_p2 = diasRestantesP2;
-    solicitud.Dias_disponibles = diasRestantes;
-    solicitud.Dias_ocupados_p2 = parseInt(solicitud.Dias_vacaciones_p2) - solicitud.Dias_disponibles_p2;
-    solicitud.Dias_ocupados = parseInt(solicitud.Dias_vacaciones) - solicitud.Dias_disponibles;
-    }
-  });
-
-  // 3. Aplanar los grupos de vuelta a un solo arreglo
-  const resultadoFinal = Array.from(gruposPorClave.values()).flat();
-  return resultadoFinal;
-}
-
-const resultado = procesarSolicitudes(this.solicitudes);
-// console.log(resultado);
-
-
-
-  // ------------------------------------------------------------------------------------------------------------------->
-
-  // // Variables de estado para llevar la cuenta de los días restantes
-  // // Inicializamos con los valores del primer elemento
-  // let diasRestantesP2 = this.solicitudes[0].Dias_disponibles_p2;
-  // let diasRestantes = this.solicitudes[0].Dias_disponibles;
-
-  // // Bucle para iterar y actualizar el arreglo en su lugar
-  // for (let i = 0; i < this.solicitudes.length; i++) {
-  //   const cuantos_dias_a_restar = this.solicitudes[i].cuantos_dias;
-  //   let dias_pendientes = cuantos_dias_a_restar;
-
-  //   // Lógica para Dias_disponibles_p2
-  //   // Si hay días disponibles en p2, restamos de ahí
-  //   if (diasRestantesP2 > 0) {
-  //     const resta_p2 = Math.min(diasRestantesP2, dias_pendientes);
-  //     diasRestantesP2 -= resta_p2;
-  //     dias_pendientes -= resta_p2;
-  //   }
-
-  //   // Lógica para Dias_disponibles (solo si Dias_disponibles_p2 ya es 0)
-  //   // Si todavía quedan días por restar y p2 ya se agotó, restamos de Dias_disponibles
-  //   if (dias_pendientes > 0 && diasRestantes > 0) {
-  //     const resta_normal = Math.min(diasRestantes, dias_pendientes);
-  //     diasRestantes -= resta_normal;
-  //     dias_pendientes -= resta_normal;
-  //   }
-
-  //   // Si no hay más días disponibles, los siguientes elementos tendrán 0
-  //   if (diasRestantes <= 0) {
-  //     diasRestantes = 0;
-  //   }
-    
-  //   if (diasRestantesP2 <= 0) {
-  //     diasRestantesP2 = 0;
-  //   }
-
-  //   // Actualiza los valores en el elemento actual del arreglo
-  //   this.solicitudes[i].Dias_disponibles_p2 = diasRestantesP2;
-  //   this.solicitudes[i].Dias_disponibles = diasRestantes;
-  //   this.solicitudes[i].Dias_ocupados_p2 = parseInt(this.solicitudes[i].Dias_vacaciones_p2) - this.solicitudes[i].Dias_disponibles_p2;
-  //   this.solicitudes[i].Dias_ocupados = parseInt(this.solicitudes[i].Dias_vacaciones) - this.solicitudes[i].Dias_disponibles;
-  // }
-  
-
-// Ahora el arreglo 'this.solicitudes' ha sido modificado
-// console.log(this.solicitudes);
-
-
 // -------------------------------------------------------------------------------------------------------------------------->
 
    this.api.firmarTodasRI(this.solicitudes).subscribe(
@@ -395,7 +267,7 @@ const resultado = procesarSolicitudes(this.solicitudes);
                 // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
                 (window as any).bootstrap.Modal.getInstance(modalElement).hide();
                 this.spinerFirma = !this.spinerFirma;
-                this.cargarSolicitudes(this.user[0].Tipo);
+                this.cargarSolicitudes(this.user[0].emp_tipo);
               }
             }
 
@@ -422,7 +294,7 @@ const resultado = procesarSolicitudes(this.solicitudes);
               (window as any).bootstrap.Modal.getInstance(modalElement).hide();
               this.spinerBandera = !this.spinerBandera;
             }
-            this.cargarSolicitudes(this.user[0].Tipo);
+            this.cargarSolicitudes(this.user[0].emp_tipo);
             // this.miCheckboxJI.nativeElement.checked = false;
           }
          },
@@ -482,15 +354,18 @@ const resultado = procesarSolicitudes(this.solicitudes);
   // }
 
   accion(id: number, accion: number){
+    console.log(accion);
     if(accion == 0){
       this.spinerBandera = !this.spinerBandera;
     }
-    const dias_d = parseInt(this.solicitudes[0].Dias_disponibles) - parseInt(this.solicitudes[0].cuantos_dias);
-    const dias_u = parseInt(this.solicitudes[0].Dias_ocupados) + parseInt(this.solicitudes[0].cuantos_dias);
+    const dias_d = this.solicitudes[0].Saldo - parseInt(this.solicitudes[0].cuantos_dias);
+    const dias_u = this.solicitudes[0].Vacaciones_tomadas + parseInt(this.solicitudes[0].cuantos_dias);
     const clave = this.solicitudes[0].Clave;
+    const correo = this.solicitudes[0].emp_mail;
+    const periodo = this.solicitudes[0].Periodo;
     
 
-    this.api.aprobar(id, accion, dias_d, dias_u, clave).subscribe(
+    this.api.aprobar(id, accion, dias_d, dias_u, clave, periodo, correo).subscribe(
       (response) => {
           if(response == true){
 
@@ -505,7 +380,7 @@ const resultado = procesarSolicitudes(this.solicitudes);
               }
             }
        
-            this.cargarSolicitudes(this.user[0].Tipo);
+            this.cargarSolicitudes(this.user[0].emp_tipo);
             this.firmaCheck = false;
             this.miCheckboxRI.nativeElement.checked = false;
           }
@@ -525,8 +400,8 @@ const resultado = procesarSolicitudes(this.solicitudes);
     }
     this.spinerBandera = !this.spinerBandera;
     this.fecha = this.obtenerFechaDeHoy();
-    this.fecha_hoy = this.fecha.substring(0,13);
-    this.ano_hoy = this.fecha.substring(19,21);
+    this.fecha_hoy = this.fecha.substring(0,15);
+    this.ano_hoy = this.fecha.substring(21,23);
     this.solicitudForm.value.fecha = this.fecha_hoy + ' del 20' + this.ano_hoy;
 
     this.api.generarInhabil(this.solicitudForm.value).subscribe(
@@ -593,7 +468,7 @@ const resultado = procesarSolicitudes(this.solicitudes);
                     if(accion == 0){
                       this.spinerDelete = !this.spinerDelete;
                     }
-                this.cargarSolicitudes(this.user[0].Tipo);
+                this.cargarSolicitudes(this.user[0].emp_tipo);
               }
             }
 
@@ -617,7 +492,7 @@ const resultado = procesarSolicitudes(this.solicitudes);
                   // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
                   (window as any).bootstrap.Modal.getInstance(modalElement).hide();
                   this.spinerFirma = !this.spinerFirma;
-                  this.cargarSolicitudes(this.user[0].Tipo);
+                  this.cargarSolicitudes(this.user[0].emp_tipo);
                 }
               }
 

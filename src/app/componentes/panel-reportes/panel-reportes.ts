@@ -88,10 +88,10 @@ export class PanelReportes {
       this.solicitudes.map((ele: any)=> {
         const solicitud = {
           Clave: ele.Clave,
-          Nombre: ele.Nombre_completo,
+          Nombre: ele.Nombre,
           Departamento: ele.Departamento,
-          Puesto: ele.Puesto,
-          Fecha_de_ingreso: ele.Fecha_de_alta,
+          // Puesto: ele.Puesto,
+          Fecha_de_ingreso: ele.Fecha_ingreso,
           Estatus: ele.Estatus,
           Fecha_solicitud: ele.fecha_solicitud,
           Por_cuantos_dias: ele.cuantos_dias,
@@ -152,13 +152,13 @@ export class PanelReportes {
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.key === 'Enter') {
-      this.consultar(this.user[0].Tipo);
+      this.consultar(this.user[0].emp_tipo);
     }
   }
 
   onKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter') {
-      this.consultar(this.user[0].Tipo); // Llama a la función del botón al presionar Enter
+      this.consultar(this.user[0].emp_tipo); // Llama a la función del botón al presionar Enter
     }
   }
 
@@ -222,7 +222,7 @@ export class PanelReportes {
 
   obtenerFechaAlta(fechaISO: string): string {
     const fecha = new Date(fechaISO);
-    const dia = fecha.getDate()+1;
+    const dia = fecha.getDate();
     const mes = fecha.toLocaleString('default', { month: 'long' });
     const año = fecha.getFullYear();
 
@@ -252,6 +252,8 @@ export class PanelReportes {
     // console.log(solicitud);
     // const tipoSolicitud = solicitud.motivo.includes('Permiso')? 'Permiso' : solicitud.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
     // solicitud.motivo = tipoSolicitud == 'Vacaciones'? solicitud.motivo.substring(12,100) : tipoSolicitud == 'Permiso'? solicitud.motivo.substring(9,100) : tipoSolicitud == 'Pago tiempo por tiempo'? solicitud.motivo.substring(24,100) : solicitud.motivo;
+    const nom_emp = solicitud.nombre;
+    const num_emp = solicitud.clave;
 
     const cgs = solicitud.con_sueldo == true? 'X' : '';
     const sgs = solicitud.sin_sueldo == true? 'X' : '';
@@ -266,6 +268,12 @@ export class PanelReportes {
     const statusR = solicitud.status != 'Rechazado'? '' : 'X';
 
     const rel = solicitud.status == 'Completado'? 'Autorizó' : '';
+
+    const dias = solicitud.Fecha_ingreso.substring(0,2);
+    const mes = solicitud.Fecha_ingreso.substring(3,5);
+    const año = solicitud.Fecha_ingreso.substring(6,10);
+    const formatoFecha = mes+'/'+dias+'/'+año;
+    // console.log(solicitud.Fecha_ingreso, formatoFecha);
     
     const docDefinition = {
       content: [
@@ -319,12 +327,12 @@ export class PanelReportes {
           columns: [
             {
               width: '50%',
-              text: 'Fecha de ingreso: ' + ' ' + this.obtenerFechaAlta(solicitud.Fecha_de_alta),
+              text: 'Fecha de ingreso: ' + ' ' + this.obtenerFechaAlta(formatoFecha),
               style: 'parrafo'
             },
             {
               width: '25%',
-              text: 'Años Cump: ' + ' ' + this.loginServices.obtenerAnosCumplidos(this.formatoFecha(solicitud.Fecha_de_alta)),
+              text: 'Años Cump: ' + ' ' + this.loginServices.obtenerAnosCumplidos(this.formatoFecha(solicitud.Fecha_ingreso)),
               style: 'parrafo'
             },
             {
@@ -348,7 +356,7 @@ export class PanelReportes {
             },
             {
               width: '25%',
-              text: 'Centro de Costos: ' + ' ' + solicitud.C_costos,
+              text: 'Centro de Costos: ' + ' ' + solicitud.Depto,
               style: 'parrafoVacio'
             },
           ],
@@ -623,7 +631,7 @@ export class PanelReportes {
     };
       //pdfMake.createPdf(docDefinition).open(); // Abre el PDF en una nueva ventana
       const pdf = await this.loadAndPrintPDF();
-      pdf.createPdf(docDefinition).download('solicitud-autorizacion-permiso.pdf'); // Descarga el PDF
+      pdf.createPdf(docDefinition).download(num_emp+'_'+nom_emp+'.pdf'); // Descarga el PDF
   }
 
 }

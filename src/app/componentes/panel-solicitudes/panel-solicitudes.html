@@ -264,7 +264,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 d-flex justify-content-center">
-                    <p class="text-email">{{this.user[0].Nombre}} {{this.user[0].Apellido_paterno}}</p>
+                    <p class="text-email">{{this.user[0].emp_nom}} {{this.user[0].Apellido_paterno}}</p>
                 </div>
             </div>
             <div class="row">
@@ -273,7 +273,7 @@
                         <li class="menu-lista" (click)="cambiarDash()"><i class="bi bi-app-indicator"></i> Dashbord</li>
                         <!-- <li class="menu-lista" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-todas'"><i class="bi bi-pencil-square"></i> Firmar Todas</li> -->
                         <li class="menu-lista" (click)="cambiarReporte()"><i class="bi bi-file-earmark-spreadsheet"></i> Reportes</li>
-                        <li *ngIf="this.user[0].Tipo == 'RI'" (click)="cambiarDia()" class="menu-lista"><i class="bi bi-calendar-check"></i> Día Inhábil</li>
+                        <li *ngIf="this.user[0].emp_tipo == 'RI'" (click)="cambiarDia()" class="menu-lista"><i class="bi bi-calendar-check"></i> Día Inhábil</li>
                         <li class="menu-lista" (click)="abrirAlerta()"><i class="bi bi-door-closed"></i> Cerrar Sesión</li>
                         <!-- <li class="menu-lista"><i class="bi bi-bell-fill"></i> notification</li>
                         <li class="menu-lista"><i class="bi bi-geo-alt-fill"></i> location</li>
@@ -330,8 +330,8 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <h6 class="card-title">{{this.cardSolicitud.nombre}}</h6>
-                                <span class="card-text-subtitle">Departamento: {{this.cardSolicitud.Departamento}}</span><br>
-                                <span class="card-text-subtitle">Puesto: {{this.cardSolicitud.Puesto}}</span>
+                                <span class="card-text-subtitle">Departamento: {{this.cardSolicitud.departamento}}</span><br>
+                                <!-- <span class="card-text-subtitle">Puesto: {{this.cardSolicitud.Puesto}}</span> -->
                                 <div class="row mt-2">
                                     <div class="col-lg-1 col-md-1 col-sm-1"></div>
                                     <div class="col-lg-3 col-md-3 col-sm-3">
@@ -399,8 +399,7 @@
                                                 </label>
                                             </div>
                                         </li>
-                                        <li class="list-group-item" style="font-weight: bold; line-height: 1lvh;"><span style="font-size: small;"> 2024 Días ocupados: {{this.cardSolicitud.Dias_ocupados_p2}} de {{this.cardSolicitud.Dias_vacaciones_p2}} días</span></li>
-                                        <li class="list-group-item" style="font-weight: bold; line-height: 1lvh;"><span style="font-size: small;"> 2025 Días ocupados: {{this.cardSolicitud.Dias_ocupados}} de {{this.cardSolicitud.Dias_vacaciones}} días</span></li>
+                                        <li class="list-group-item mt-1" style="font-weight: bold; line-height: 1lvh;"><span style="font-size: small;"> Periodo {{this.cardSolicitud.Periodo}}: {{this.cardSolicitud.Saldo}} días disponibles</span></li>
                                     </ul>
                                 </div>
                                 <div class="row mt-2">
@@ -410,11 +409,11 @@
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Firmar
                                         </button>
-                                        <button *ngIf="this.user[0].Tipo == 'JI'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
+                                        <button *ngIf="this.user[0].emp_tipo == 'JI'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Firmar
                                         </button>
-                                        <!-- <button *ngIf="this.user[0].Tipo == 'G'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
+                                        <!-- <button *ngIf="this.user[0].emp_tipo == 'G'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Firmar
                                         </button> -->
@@ -461,9 +460,9 @@
                         <tbody>
                             <tr *ngFor="let persona of ausentes; let i = index">
                             <th scope="row">{{i+1}}</th>
-                            <td>{{persona.Nombre_completo}}</td>
+                            <td style="font-size: small;">{{persona.Nombre}}</td>
                             <td>{{persona.cuantos_dias}}</td>
-                            <td>{{persona.fecha_apartir}} al {{persona.fecha_hasta}}</td>
+                            <td style="font-size: small;">{{persona.fecha_apartir}} al {{persona.fecha_hasta}}</td>
                             <td><span class="badge rounded-pill bg-warning">{{persona.status}}</span></td>
                             </tr>
                         </tbody>
@@ -567,9 +566,9 @@
             <span class="loader"></span>
         </div>
         <div class="modal-footer d-flex justify-content-center" *ngIf="this.cardSolicitud">
-            <button *ngIf="this.cardSolicitud.status == 'Aceptado' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaRelaciones(this.cardSolicitud.id, 1, this.cardSolicitud.Clave)">Firmar</button>
-            <button *ngIf="this.user[0].Tipo == 'JI' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaJefe(this.cardSolicitud)">Firmar</button>
-            <!-- <button *ngIf="this.user[0].Tipo == 'G' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaGerente(this.cardSolicitud)">Firmar</button> -->
+            <button *ngIf="this.cardSolicitud.status == 'Aceptado' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaRelaciones(this.cardSolicitud.id, 1, this.cardSolicitud.clave)">Firmar</button>
+            <button *ngIf="this.user[0].emp_tipo == 'JI' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaJefe(this.cardSolicitud)">Firmar</button>
+            <!-- <button *ngIf="this.user[0].emp_tipo == 'G' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaGerente(this.cardSolicitud)">Firmar</button> -->
             <button *ngIf="spinerBandera == false" type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
         </div>
         </div>
@@ -663,12 +662,12 @@
         </div>
         <div class="modal-footer d-flex justify-content-center" *ngIf="this.cardSolicitud">
             <!-- <button *ngIf="this.cardSolicitud.status == 'Aceptado' && spinerFirma == false" type="button" class="btn btn-outline-success" (click)="firmaRelaciones(this.cardSolicitud.id, 1, this.cardSolicitud.Clave)">Firmar</button> -->
-            <button *ngIf="this.user[0].Tipo == 'RI' && spinerFirma == false && spinerDelete == false && this.solicitudPendienteAceptar.length != 0" type="button" class="btn btn-outline-success" (click)="aceptarTodo()">Aceptar Todas</button>
-            <button *ngIf="this.user[0].Tipo == 'RI' && spinerFirma == false && spinerDelete == false && this.solicitudPendienteAceptar.length == 0" type="button" class="btn btn-outline-success" (click)="firmarTodoRI()">Firmar Todas</button>
-            <button *ngIf="this.user[0].Tipo == 'JI' && spinerFirma == false && spinerDelete == false && this.solicitudPendienteAceptar.length == 0" type="button" class="btn btn-outline-success" (click)="firmarTodo(1)">Firmar Todas</button>
-            <!-- <button *ngIf="this.user[0].Tipo == 'G' && spinerFirma == false && spinerDelete == false && this.solicitudPendienteAceptar.length == 0" type="button" class="btn btn-outline-success" (click)="firmarTodoGerente()">Firmar Todas</button> -->
-            <button *ngIf="(this.user[0].Tipo == 'JI' || this.user[0].Tipo == 'RI' || this.user[0].Tipo == 'G') && spinerFirma == false && spinerDelete == false" type="button" class="btn btn-outline-danger" (click)="firmarTodo(0)">Rechazar Todas</button>
-            <!-- <button *ngIf="this.user[0].Tipo == 'G' && spinerFirma == false && spinerDelete == false" type="button" class="btn btn-outline-success" (click)="firmaGerente(this.cardSolicitud)">Firmar</button> -->
+            <button *ngIf="this.user[0].emp_tipo == 'RI' && spinerFirma == false && spinerDelete == false && this.solicitudPendienteAceptar.length != 0" type="button" class="btn btn-outline-success" (click)="aceptarTodo()">Aceptar Todas</button>
+            <button *ngIf="this.user[0].emp_tipo == 'RI' && spinerFirma == false && spinerDelete == false && this.solicitudPendienteAceptar.length == 0" type="button" class="btn btn-outline-success" (click)="firmarTodoRI()">Firmar Todas</button>
+            <button *ngIf="this.user[0].emp_tipo == 'JI' && spinerFirma == false && spinerDelete == false && this.solicitudPendienteAceptar.length == 0" type="button" class="btn btn-outline-success" (click)="firmarTodo(1)">Firmar Todas</button>
+            <!-- <button *ngIf="this.user[0].emp_tipo == 'G' && spinerFirma == false && spinerDelete == false && this.solicitudPendienteAceptar.length == 0" type="button" class="btn btn-outline-success" (click)="firmarTodoGerente()">Firmar Todas</button> -->
+            <button *ngIf="(this.user[0].emp_tipo == 'JI' || this.user[0].emp_tipo == 'RI' || this.user[0].emp_tipo == 'G') && spinerFirma == false && spinerDelete == false" type="button" class="btn btn-outline-danger" (click)="firmarTodo(0)">Rechazar Todas</button>
+            <!-- <button *ngIf="this.user[0].emp_tipo == 'G' && spinerFirma == false && spinerDelete == false" type="button" class="btn btn-outline-success" (click)="firmaGerente(this.cardSolicitud)">Firmar</button> -->
             <button *ngIf="spinerFirma == false && spinerDelete == false" type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
         </div>
         </div>

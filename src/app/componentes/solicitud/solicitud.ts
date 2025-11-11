@@ -43,6 +43,7 @@ export class Form {
   fecha: any = '';
   ano_hoy: string = '';
   fechaAlta: any = '';
+  fecha_ingreso: any = '';
   cumplidos: number = 0;
   dias_diponibles: number = 0;
 
@@ -55,6 +56,10 @@ export class Form {
   spinerBandera: boolean = false;
 
   solicitudesUsuario: any[] = [];
+
+  // periodo: string = '';
+  // saldo: number = 0;
+  // tomadas: number = 0;
 
   // regex: string = '^del \d{1,2} al \d{1,2} de [A-Z][a-z]+$';
 
@@ -94,7 +99,10 @@ export class Form {
       // motivo: ['', [Validators.required,]],// Validators.minLength(10)
       motivo: ['', [Validators.required]],
       firma: ['', [Validators.required]],
-      clave: ['', []]
+      clave: ['', []],
+      Periodo: ['', []],
+      Genera: ['', []],
+      Jefe: ['', []]
     });
 
     this.solicitudFormRI = this.fb.group({
@@ -136,32 +144,31 @@ export class Form {
     this.checkLeyenda = 'Autorizar';
     this.selectOption = 'Selecciona una opción';
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
-    if(this.user[0].Tipo == 'S' && this.user[0].Tipo_Dep == 'Ref'){
-     this.cargarColaboradores(this.user[0].Tipo, this.user[0].Tipo_Dep);
+    if(this.user[0].emp_tipo == 'S'){
+     this.cargarColaboradores(this.user[0].emp_tipo, this.user[0].Tipo_Dep);
+     this.consultarHistorialColaboradores(this.user[0].Clave);
     }
-    if(this.user[0].Tipo == 'RIA'){
-     this.cargarColaboradores(this.user[0].Tipo, this.user[0].Tipo_Dep);
+    if(this.user[0].emp_tipo == 'RIA'){
+     this.cargarColaboradores(this.user[0].emp_tipo, this.user[0].Tipo_Dep);
     }
 
-    if(this.user[0].Tipo == 'C'){
+    if(this.user[0].emp_tipo == 'C'){
      this.consultarHistorial(this.user[0].Clave);
     }
 
   
     this.fecha = this.obtenerFechaDeHoy();
-    this.fecha_hoy = this.fecha.substring(0,13);
-    this.ano_hoy = this.fecha.substring(19,21);
+    this.fecha_hoy = this.fecha.substring(0,15);
+    this.ano_hoy = this.fecha.substring(21,23);
     this.periodo_anterior = parseInt(this.fecha.substring(17,21)) - 1;
-    this.fechaAlta = this.obtenerFechaAlta(this.user[0].Fecha_de_alta);
-    this.obtenerAnosCumplidos(this.fechaAlta);
-    if(parseInt(this.user[0].Dias_disponibles_p2) != 0){
-      this.dias_diponibles = parseInt(this.user[0].Dias_disponibles) + parseInt(this.user[0].Dias_disponibles_p2)
-    //   this.dias_diponibles = parseInt(this.user[0].Dias_vacaciones);
-    // }else{
-      
-    }
-    if(parseInt(this.user[0].Dias_disponibles_p2) == 0){
-      this.dias_diponibles = parseInt(this.user[0].Dias_disponibles)
+    this.fechaAlta = this.formatoFecha(this.user[0].emp_fechin);
+    this.fecha_ingreso = this.obtenerFechaAlta(this.user[0].emp_fechin);
+    this.cumplidos = this.user[0].Años;
+    this.dias_diponibles = this.user[0].Saldo;
+
+    
+    if(this.user[0].Dias_a_disfrutar == '' || this.user[0].Dias_a_disfrutar == null){
+      this.user[0].Dias_a_disfrutar = '0';
     }
     
   }
@@ -192,7 +199,7 @@ export class Form {
     this.api.getCoAsociados(tipo, tipo_dep).subscribe(data => {
         
         this.colaboradores = data;
-        const opcion = {Nombre_completo: 'Selecciona colaborador'}
+        const opcion = {emp_nom: 'Selecciona colaborador'}
         this.colaboradores.unshift(opcion);
     });
 
@@ -201,9 +208,10 @@ export class Form {
   datosCo(event: Event): void {
 
     const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
+    console.log(selectElement);
     const selectedValue = selectElement.value;
-
-    if(selectedValue == 'Selecciona colaborador'){
+    console.log(selectedValue);
+    if(selectedValue == ''){
         this.fecha_co_hoy = '';
         this.ano_co_actual = '';
         this.nombre_co = '';
@@ -215,24 +223,24 @@ export class Form {
         this.banderaDias = true;
     }else{
       this.banderaDias = false;
-        this.colaborador = this.colaboradores.filter(ele => ele.Nombre_completo == selectedValue);
+        this.colaborador = this.colaboradores.filter(ele => ele.emp_cve+ele.Periodo == selectedValue);
         
-        this.fecha_co_hoy = this.obtenerFechaDeHoy().substring(0,13);
+        this.fecha_co_hoy = this.obtenerFechaDeHoy().substring(0,15);
         this.ano_co_actual = this.ano_hoy;
-        this.nombre_co = this.colaborador[0].Nombre_completo;
-        this.fecha_co_ingreso =  this.obtenerFechaAlta(this.colaborador[0].Fecha_de_alta);;
-        this.anos_co_cumplidos = this.obtenerAnosCumplidos(this.formatoFecha(this.colaborador[0].Fecha_de_alta));
-        this.no_tarjeta_co = this.colaborador[0].Clave;
-        this.dep_co = this.colaborador[0].Departamento;
-        this.centro_co = this.colaborador[0].C_costos;
+        this.nombre_co = selectedValue != '' ? this.colaborador[0].emp_nom : '';
+        this.fecha_co_ingreso =  this.obtenerFechaAlta(this.colaborador[0].emp_fechin);
+        this.anos_co_cumplidos = this.colaborador[0].Años;
+        this.no_tarjeta_co = this.colaborador[0].emp_cve;
+        this.dep_co = this.colaborador[0].Descripcion;
+        this.centro_co = this.colaborador[0].dep_id;
         
-        if(parseInt(this.colaborador[0].Dias_disponibles_p2) != 0){
-          this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles) + parseInt(this.colaborador[0].Dias_disponibles_p2)
-        }
-       if(parseInt(this.colaborador[0].Dias_disponibles_p2) == 0){
-          this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles)
-       }
-        // this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles);
+      //   if(parseInt(this.colaborador[0].Dias_disponibles_p2) != 0){
+      //     this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles) + parseInt(this.colaborador[0].Dias_disponibles_p2)
+      //   }
+      //  if(parseInt(this.colaborador[0].Dias_disponibles_p2) == 0){
+      //     this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles)
+      //  }
+      this.dias_diponibles = this.colaborador[0].Saldo;
     }
   }
 
@@ -272,7 +280,7 @@ export class Form {
   obtenerAnosCumplidos(fecha_alta: string){
     const fechaHoy = this.formatCustomDate();
     const fechaAlta = fecha_alta;
-   
+    // console.log(fechaHoy, fecha_alta);
     const diaH = parseInt(fechaHoy.substring(0,2));
     const mesH = parseInt(fechaHoy.substring(3,5));
     const añoH = parseInt(fechaHoy.substring(6,10));
@@ -294,7 +302,7 @@ export class Form {
     if(añoA == añoH){
       this.cumplidos = 0;
     }
-
+    // console.log(this.cumplidos);
     return this.cumplidos;
 
   }
@@ -328,10 +336,10 @@ export class Form {
       if(this.alertSuccess){
         this.alertSuccess = false;
 
-        if(this.user[0].Tipo == 'C'){
+        if(this.user[0].emp_tipo == 'C'){
            this.cerrarSesion(1);
         }
-        if(this.user[0].Tipo == 'S' || this.user[0].Tipo == 'RIA'){
+        if(this.user[0].emp_tipo == 'S' || this.user[0].emp_tipo == 'RIA'){
           window.location.reload();
         }
 
@@ -392,18 +400,25 @@ export class Form {
     this.solicitudForm.value.firma = this.solicitudForm.value.firma.toString();
 
     this.solicitudForm.value.fecha = this.fecha_hoy + ' del 20' + this.ano_hoy;
-    this.solicitudForm.value.nombre = this.user[0].Tipo == 'S'? this.nombre_co : this.user[0].Tipo == 'RIA'? this.nombre_co : this.user[0].Nombre_completo;
-    this.solicitudForm.value.fechaIngreso = this.user[0].Tipo == 'S'? this.fecha_co_ingreso : this.user[0].Tipo == 'RIA'? this.fecha_co_ingreso : this.fechaAlta;
+    this.solicitudForm.value.nombre = this.user[0].emp_tipo == 'S'? this.nombre_co : this.user[0].emp_tipo == 'RIA'? this.nombre_co : this.user[0].emp_nom;
+    this.solicitudForm.value.fechaIngreso = this.user[0].emp_tipo == 'S'? this.fecha_co_ingreso : this.user[0].emp_tipo == 'RIA'? this.fecha_co_ingreso : this.fechaAlta;
     this.solicitudForm.value.añosCumplidos = this.cumplidos;
-    this.solicitudForm.value.noTarjeta = this.user[0].No_Tarjeta;
-    this.solicitudForm.value.depto = this.user[0].Tipo == 'S'? this.dep_co : this.user[0].Tipo == 'RIA'? this.dep_co : this.user[0].Departamento;
-    this.solicitudForm.value.cCostos = this.user[0].Centro_costos;
+    // this.solicitudForm.value.noTarjeta = this.user[0].emp_cve;
+    this.solicitudForm.value.noTarjeta = this.user[0].emp_tipo == 'S'? this.no_tarjeta_co : this.user[0].emp_cve;
+    this.solicitudForm.value.depto = this.user[0].emp_tipo == 'S'? this.dep_co : this.user[0].emp_tipo == 'RIA'? this.dep_co : this.user[0].Departamento;
+    this.solicitudForm.value.cCostos = this.user[0].dep_id;
     this.solicitudForm.value.fechaApartir = this.converetirFecha(this.solicitudForm.value.fechaApartir);
     this.solicitudForm.value.fechaHasta = this.converetirFecha(this.solicitudForm.value.fechaHasta);
-    this.solicitudForm.value.clave = this.user[0].Tipo == 'S'? this.no_tarjeta_co : this.user[0].Tipo == 'RIA'? this.no_tarjeta_co : this.user[0].Clave;
+    this.solicitudForm.value.clave = this.user[0].emp_tipo == 'S'? this.no_tarjeta_co : this.user[0].emp_tipo == 'RIA'? this.no_tarjeta_co : this.user[0].Clave;
 
     this.solicitudForm.value.motivo = this.solicitudForm.value.motivo;
     this.solicitudForm.value.tipo_solicitud = this.opcionselect;
+
+    this.solicitudForm.value.Periodo = this.user[0].emp_tipo == 'S'? this.colaborador[0].Periodo : this.user[0].Periodo;
+    this.solicitudForm.value.Genera = this.user[0].emp_tipo == 'S'? this.user[0].emp_cve : this.user[0].emp_cve;
+    
+    this.solicitudForm.value.Jefe = this.user[0].emp_tipo == 'S'? this.colaborador[0].emp_reldep : this.user[0].emp_reldep;
+
 
     this.api.form(this.solicitudForm.value).subscribe(
       (response) => {
@@ -511,10 +526,77 @@ export class Form {
     solicitud.isRotated = !solicitud.isRotated;
   }
 
-  recuperarHistorial(){
-    const solicitudesGuardadas = localStorage.getItem('misSolicitudes');
+  recuperarHistorial(periodo: string){
+    console.log(periodo);
+    const solicitudesGuardadas = this.user[0].emp_tipo == 'C'? localStorage.getItem('misSolicitudes') : localStorage.getItem('solicitudesColaboradores');
     const solicitudes: any[] = solicitudesGuardadas ? JSON.parse(solicitudesGuardadas) : [];
-    this.solicitudesUsuario = solicitudes;
+    console.log(solicitudes);
+    this.solicitudesUsuario = solicitudes.filter((ele: any) =>ele.periodo === periodo);
+    console.log(this.solicitudesUsuario);
+  }
+
+  // datosPeriodoSelect(): void {
+
+  //   const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
+  //   console.log(selectElement);
+  //   const selectedValue = selectElement.value;
+  //   console.log(selectedValue);
+  //   if(selectedValue == ''){
+  //       this.fecha_co_hoy = '';
+  //       this.ano_co_actual = '';
+  //       this.nombre_co = '';
+  //       this.fecha_co_ingreso =  '';
+  //       this.anos_co_cumplidos = 0;
+  //       this.no_tarjeta_co = '';
+  //       this.dep_co = '';
+  //       this.centro_co = '';
+  //       this.banderaDias = true;
+  //   }else{
+  //       this.banderaDias = false;
+  //       this.colaborador = this.colaboradores.filter(ele => ele.emp_cve+ele.Periodo == selectedValue);
+        
+  //       this.fecha_co_hoy = this.obtenerFechaDeHoy().substring(0,15);
+  //       this.ano_co_actual = this.ano_hoy;
+  //       this.nombre_co = selectedValue != '' ? this.colaborador[0].emp_nom : '';
+  //       this.fecha_co_ingreso =  this.obtenerFechaAlta(this.colaborador[0].emp_fechin);
+  //       this.anos_co_cumplidos = this.obtenerAnosCumplidos(this.formatoFecha(this.colaborador[0].emp_fechin));
+  //       this.no_tarjeta_co = this.colaborador[0].emp_cve;
+  //       this.dep_co = this.colaborador[0].Descripcion;
+  //       this.centro_co = this.colaborador[0].dep_id;
+        
+  //       this.dias_diponibles = parseInt(this.colaborador[0].Saldo);
+  //   }
+  // }
+
+  consultarHistorialColaboradores(clave: number){
+    this.api.getHistorialColaboradotres(clave).subscribe(
+      (response) => {
+        this.solicitudesUsuario = response;
+        this.solicitudesUsuario = this.solicitudesUsuario.map((ele: any)=>{
+          ele.fecha_apartir = this.convertirFecha(ele.fecha_apartir);
+          ele.fecha_hasta = this.convertirFecha(ele.fecha_hasta);
+          return ele;
+        });
+        const newKey = "isRotated";
+        const newValue = false;
+
+        this.solicitudesUsuario.forEach(obj => {
+          obj[newKey] = newValue;
+        });
+        console.log(this.solicitudesUsuario);
+
+        // 1. Convierte el arreglo a JSON
+        const arregloJSON = JSON.stringify(this.solicitudesUsuario);
+
+        // 2. Guarda en localStorage
+        localStorage.setItem('solicitudesColaboradores', arregloJSON);
+         },
+         (error) => {
+           console.error('Error al obtener datos:', error);
+         }
+
+    );
+
   }
 
 }

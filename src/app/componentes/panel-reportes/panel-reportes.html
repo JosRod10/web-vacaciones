@@ -9,14 +9,15 @@
                     <div class="row" *ngIf="datosColaborador">
 
                         <div class="col-lg-5 col-md-5 col-sm-12 d-flex justify-content-end">
-                            <p *ngIf="this.nDias != 0">{{this.datosColaborador[0].Nombre_completo}}:</p>
+                            <p *ngIf="this.nDias != 0">{{this.datosColaborador[0].Nombre}}:</p>&nbsp;
+                            <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-secondary">PERIODO: {{this.datosColaborador[0].Periodo}}</span></p>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-12 d-flex justify-content-center">
-                            <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-warning">DIAS DE VACACIONES: {{this.datosColaborador[0].Dias_vacaciones}}</span></p>&nbsp;
-                            <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-danger">DIAS OCUPADOS: {{this.datosColaborador[0].Dias_ocupados}}</span></p>
+                            <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-warning">DIAS DE VACACIONES: {{this.datosColaborador[0].Dias_a_disfrutar}}</span></p>&nbsp;
+                            <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-danger">DIAS OCUPADOS: {{this.datosColaborador[0].Vacaciones_tomadas}}</span></p>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-start">
-                            <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-primary">DIAS DISPONIBLES: {{this.datosColaborador[0].Dias_disponibles}}</span></p>&nbsp;
+                            <p *ngIf="this.nDias != 0"><span class="badge rounded-pill bg-primary">DIAS DISPONIBLES: {{this.datosColaborador[0].Saldo}}</span></p>&nbsp;
                             <p *ngIf="this.nDias != 0"><span (click)="descargarExcel()" style="cursor: pointer;" class="badge rounded-pill bg-success"><i class="bi bi-file-earmark-spreadsheet"></i> DESCARGAR EXCEL</span></p>&nbsp;
                         </div>
 
@@ -44,35 +45,35 @@
                         <div class="col-lg-3 col-md-3 col-sm-12">
                             <select (change)="valorSelectDep($event)" class="form-select" aria-label="Default select example">
                                 <option selected>Selecciona departamento</option>
-                                <option *ngIf="user[0].Tipo == 'RI' || user[0].Tipo == 'JI' || user[0].Tipo == 'G'" value="ALMACEN">ALMACEN</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="CERAMICA">CERAMICA</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="COMPRAS">COMPRAS</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="CONTABILIDAD">CONTABILIDAD</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="CONTROL DE CALIDAD">CONTROL DE CALIDAD</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="CONTROL DE PRODUCCION">CONTROL DE PRODUCCION</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="CREDITO Y COBRANZAS">CREDITO Y COBRANZAS</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="DESARROLLO DE ABRASIVOS">DESARROLLO DE ABRASIVOS</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="EMBARQUES Y EMPAQUES">EMBARQUES Y EMPAQUES</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="ESPECIALIDADES REFRACTARIAS">ESPECIALIDADES REFRACTARIAS</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="GERENCIA EJECUTIVOS">GERENCIA EJECUTIVOS</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="HORNOS">HORNOS</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="ING.NVO.PROYECTOS">ING.NVO.PROYECTOS</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="ING.NVO.PROYECTOS REFRACTARIOS">ING.NVO.PROYECTOS REFRACTARIOS</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="MANTENIMIENTO">MANTENIMIENTO</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA CDMX">OFICINA CDMX</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA GUADALAJARA">OFICINA GUADALAJARA</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA MONTERREY">OFICINA MONTERREY</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA PUEBLA">OFICINA PUEBLA</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="OFICINA QUERETARO">OFICINA QUERETARO</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="PUNTAS MONTADAS">PUNTAS MONTADAS</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="REFRACTARIOS">REFRACTARIOS</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="RELACIONES INDUSTRIALES">RELACIONES INDUSTRIALES</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="SHELLACK">SHELLACK</option>
-                                <option *ngIf="user[0].Tipo == 'RI' || user[0].Tipo == 'JI' || user[0].Tipo == 'G'" value="SISTEMAS DE INFORMACION">SISTEMAS DE INFORMACION</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="TECNICO">TECNICO</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="TERMINADO">TERMINADO</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="VENTAS REFRACTARIOS">VENTAS REFRACTARIOS</option>
-                                <option *ngIf="user[0].Tipo == 'RI'" value="VENTAS TOLUCA">VENTAS TOLUCA</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI' || user[0].emp_tipo == 'JI' || user[0].emp_tipo == 'G'" value="ALMACEN">ALMACEN</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="CERAMICA">CERAMICA</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="COMPRAS">COMPRAS</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="CONTABILIDAD">CONTABILIDAD</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="CONTROL DE CALIDAD">CONTROL DE CALIDAD</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="CONTROL DE PRODUCCION">CONTROL DE PRODUCCION</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="CREDITO Y COBRANZAS">CREDITO Y COBRANZAS</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="DESARROLLO DE ABRASIVOS">DESARROLLO DE ABRASIVOS</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="EMBARQUES Y EMPAQUES">EMBARQUES Y EMPAQUES</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="ESPECIALIDADES REFRACTARIAS">ESPECIALIDADES REFRACTARIAS</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="GERENCIA EJECUTIVOS">GERENCIA EJECUTIVOS</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="HORNOS">HORNOS</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="ING.NVO.PROYECTOS">ING.NVO.PROYECTOS</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="ING.NVO.PROYECTOS REFRACTARIOS">ING.NVO.PROYECTOS REFRACTARIOS</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="MANTENIMIENTO">MANTENIMIENTO</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="OFICINA CDMX">OFICINA CDMX</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="OFICINA GUADALAJARA">OFICINA GUADALAJARA</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="OFICINA MONTERREY">OFICINA MONTERREY</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="OFICINA PUEBLA">OFICINA PUEBLA</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="OFICINA QUERETARO">OFICINA QUERETARO</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="PUNTAS MONTADAS">PUNTAS MONTADAS</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="REFRACTARIOS">REFRACTARIOS</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="RELACIONES INDUSTRIALES">RELACIONES INDUSTRIALES</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="SHELLACK">SHELLACK</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI' || user[0].emp_tipo == 'JI' || user[0].emp_tipo == 'G'" value="SISTEMAS DE INFORMACION">SISTEMAS DE INFORMACION</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="TECNICO">TECNICO</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="TERMINADO">TERMINADO</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="VENTAS REFRACTARIOS">VENTAS REFRACTARIOS</option>
+                                <option *ngIf="user[0].emp_tipo == 'RI'" value="VENTAS TOLUCA">VENTAS TOLUCA</option>
                             </select>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-12">
@@ -107,7 +108,7 @@
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
                                 <input (keydown)="onKeydown($event)" type="text" class="form-control" formControlName="criterio" placeholder="Consultar" aria-label="Username" aria-describedby="basic-addon1">
-                                <button class="btn btn-secondary" (click)="consultar(user[0].Tipo)">Consultar</button>
+                                <button class="btn btn-secondary" (click)="consultar(user[0].emp_tipo)">Consultar</button>
                             </div>
                         </div>
                     </div>        
@@ -136,7 +137,7 @@
                         <tbody>
                             <tr (click)="datos(solicitud)" *ngFor="let solicitud of solicitudes; let i = index">
                             <th scope="row">{{i+1}}</th>
-                            <td style="font-size: small;">{{solicitud.Nombre_completo}}</td>
+                            <td style="font-size: small;">{{solicitud.Nombre}}</td>
                             <td style="font-size: small;">{{solicitud.Departamento}}</td>
                             <td style="font-size: small;"><span class="badge rounded-pill bg-secondary">{{solicitud.tipo_solicitud}}</span></td>
                             <td style="font-size: small;">{{solicitud.fecha_solicitud}}</td>

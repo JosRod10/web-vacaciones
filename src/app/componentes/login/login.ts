@@ -41,19 +41,32 @@ export class Login {
   error = '';
   hidePassword = true;
   loginForm: FormGroup;
+  // registroForm: FormGroup;
   user: User;
   items: any[] = [];
   alerta: boolean = false;
+
+  banderaLogin: boolean = true;
+  banderaRegistro: boolean = false;
  
   constructor(private fb: FormBuilder, private api: ApiServicio, private authService: LoginServices, private router: Router, private dialog: MatDialog, private http: HttpClient) {
     this.loginForm = this.fb.group({
       user: ['', [Validators.required]],
       pass: ['', [Validators.required, Validators.minLength(6)]],
     });
+
     this.user = {
       user: '',
       pass: ''
     }
+
+    // this.registroForm = this.fb.group({
+    //   num: ['', [Validators.required]],
+    //   correo: ['', [Validators.required]],
+    //   contrasena: ['', [Validators.required, Validators.minLength(6)]],
+    //   con_contrasena: ['', [Validators.required, Validators.minLength(6)]],
+
+    // })
   }
 
   onSubmit() {
@@ -159,13 +172,13 @@ export class Login {
           const token = response.token;
           if (token) {
             this.authService.login(token, data);
-            if(data[0].Tipo == 'C'){
+            if(data[0].emp_tipo == 'C'){
                 this.router.navigate(['solicitud']);
             }
-            if(data[0].Tipo == 'RI' || data[0].Tipo == 'JI' || data[0].Tipo == 'G'){
+            if(data[0].emp_tipo == 'RI' || data[0].emp_tipo == 'JI' || data[0].emp_tipo == 'G'){
                 this.router.navigate(['panel-solicitud']);
             }
-            if(data[0].Tipo == 'S' || data[0].Tipo == 'RIA'){
+            if(data[0].emp_tipo == 'S' || data[0].emp_tipo == 'RIA'){
                 this.router.navigate(['solicitud']);
             }
           }
@@ -190,6 +203,20 @@ export class Login {
       );
     
   }
+
+  // banderaRegistrar(){
+  //   this.banderaLogin = false;
+  //   this.banderaRegistro = true;
+  // }
+
+  // banderaLoginActivar(){
+  //   this.banderaLogin = true;
+  //   this.banderaRegistro = false;
+  // }
+
+  // registrarUsuario(){
+
+  // }
 
 }
 

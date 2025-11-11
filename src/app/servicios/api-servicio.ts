@@ -33,8 +33,8 @@ export class ApiServicio {
     return this.http.post<any[]>(`${this.apiUrl}/solicitudes`, {tipo});
   }
 
-  aprobar(id: number, accion: number, dias_d: number, dias_u: number, clave: number, periodo?: string): Observable<any>{
-    return this.http.post<any>(`${this.apiUrl}/aprobar`, {id, accion, dias_d, dias_u, clave, periodo});
+  aprobar(id: number, accion: number, dias_d: number, dias_u: number, clave: number, periodo?: string, correo?: string): Observable<any>{
+    return this.http.post<any>(`${this.apiUrl}/aprobar`, {id, accion, dias_d, dias_u, clave, periodo, correo});
   }
 
   consultaReporteSolicitud(departamento: string, anio: string, mes: string, criterio: any, tipo: string): Observable<any> {
@@ -64,6 +64,11 @@ export class ApiServicio {
   getHistorial(clave: number): Observable<any> {
     // console.log("Entra");
     return this.http.post<any>(`${this.apiUrl}/colaboradorHistorial`, {clave});
+  }
+
+  getHistorialColaboradotres(clave: number): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/colaboradoresHistorial`, {clave});
   }
 
   generarInhabil(item: any): Observable<any> {
