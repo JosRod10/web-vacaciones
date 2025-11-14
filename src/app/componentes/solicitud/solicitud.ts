@@ -46,6 +46,7 @@ export class Form {
   fecha_ingreso: any = '';
   cumplidos: number = 0;
   dias_diponibles: number = 0;
+  dias_diponibles_colaborador: number = 0;
 
   fechaConversionApartir: string = '';
 
@@ -56,6 +57,8 @@ export class Form {
   spinerBandera: boolean = false;
 
   solicitudesUsuario: any[] = [];
+
+  criterio: string = '';
 
   // periodo: string = '';
   // saldo: number = 0;
@@ -146,10 +149,13 @@ export class Form {
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
     if(this.user[0].emp_tipo == 'S'){
      this.cargarColaboradores(this.user[0].emp_tipo, this.user[0].Tipo_Dep);
+    //  console.log(this.user[0].Clave)
      this.consultarHistorialColaboradores(this.user[0].Clave);
     }
     if(this.user[0].emp_tipo == 'RIA'){
      this.cargarColaboradores(this.user[0].emp_tipo, this.user[0].Tipo_Dep);
+          this.consultarHistorialColaboradores(this.user[0].Clave);
+
     }
 
     if(this.user[0].emp_tipo == 'C'){
@@ -201,9 +207,15 @@ export class Form {
         this.colaboradores = data;
         const opcion = {emp_nom: 'Selecciona colaborador'}
         this.colaboradores.unshift(opcion);
+        this.colaboradores = this.colaboradores.sort((a, b) => b.emp_cve - a.emp_cve);
     });
 
   };
+
+  buscarColaborador(numero: string){
+    this.colaborador = this.colaboradores.filter(ele => ele.emp_cve == numero);
+
+  }
 
   datosCo(event: Event): void {
 
@@ -240,18 +252,40 @@ export class Form {
       //  if(parseInt(this.colaborador[0].Dias_disponibles_p2) == 0){
       //     this.dias_diponibles = parseInt(this.colaborador[0].Dias_disponibles)
       //  }
-      this.dias_diponibles = this.colaborador[0].Saldo;
+      this.dias_diponibles_colaborador = this.colaborador[0].Saldo;
     }
   }
 
-  obtenerFechaAlta(fechaISO: string): string {
-    const fecha = new Date(fechaISO);
-    const dia = fecha.getDate()+1;
-    const mes = fecha.toLocaleString('default', { month: 'long' });
-    const año = fecha.getFullYear();
+  // obtenerFechaAlta(fechaISO: string): string {
+  //   const fecha = new Date(fechaISO);
+  //   const dia = fecha.getDate()+1;
+  //   const mes = fecha.toLocaleString('default', { month: 'long' });
+  //   const año = fecha.getFullYear();
 
-    return `${dia} de ${mes} del ${año}`;
-  }
+  //   return `${dia} de ${mes} del ${año}`;
+  // }
+
+  obtenerFechaAlta(fechaISO: string): string {
+  // Aseguramos que la fecha se interprete en la zona horaria local como el inicio del día
+  // agregando una hora de inicio local, o construyéndola por partes.
+  // Usaremos una construcción manual para mayor fiabilidad con el formato YYYY-MM-DD.
+
+  const partes = fechaISO.split('-');
+  const año = parseInt(partes[0], 10);
+  // Los meses en JavaScript van de 0 (enero) a 11 (diciembre), por lo que restamos 1.
+  const mesIndex = parseInt(partes[1], 10) - 1;
+  const dia = parseInt(partes[2], 10);
+
+  // Creamos la fecha usando new Date(año, mes, dia) para usar la zona horaria local por defecto
+  const fecha = new Date(año, mesIndex, dia);
+
+  // Ahora formateamos la fecha correctamente. No necesitamos sumar días.
+  const diaFormateado = fecha.getDate();
+  const mesFormateado = fecha.toLocaleString('default', { month: 'long' });
+  const añoFormateado = fecha.getFullYear();
+
+  return `${diaFormateado} de ${mesFormateado} del ${añoFormateado}`;
+}
 
   formatoFecha(fecha: string){
     var date = new Date(fecha);
@@ -404,17 +438,17 @@ export class Form {
     this.solicitudForm.value.fechaIngreso = this.user[0].emp_tipo == 'S'? this.fecha_co_ingreso : this.user[0].emp_tipo == 'RIA'? this.fecha_co_ingreso : this.fechaAlta;
     this.solicitudForm.value.añosCumplidos = this.cumplidos;
     // this.solicitudForm.value.noTarjeta = this.user[0].emp_cve;
-    this.solicitudForm.value.noTarjeta = this.user[0].emp_tipo == 'S'? this.no_tarjeta_co : this.user[0].emp_cve;
+    this.solicitudForm.value.noTarjeta = this.user[0].emp_tipo == 'S'? this.no_tarjeta_co :this.user[0].emp_tipo == 'RIA'? this.colaborador[0].emp_cve : this.user[0].emp_cve;
     this.solicitudForm.value.depto = this.user[0].emp_tipo == 'S'? this.dep_co : this.user[0].emp_tipo == 'RIA'? this.dep_co : this.user[0].Departamento;
     this.solicitudForm.value.cCostos = this.user[0].dep_id;
     this.solicitudForm.value.fechaApartir = this.converetirFecha(this.solicitudForm.value.fechaApartir);
     this.solicitudForm.value.fechaHasta = this.converetirFecha(this.solicitudForm.value.fechaHasta);
-    this.solicitudForm.value.clave = this.user[0].emp_tipo == 'S'? this.no_tarjeta_co : this.user[0].emp_tipo == 'RIA'? this.no_tarjeta_co : this.user[0].Clave;
+    this.solicitudForm.value.clave = this.user[0].emp_tipo == 'S'? this.no_tarjeta_co : this.user[0].emp_tipo == 'RIA'? this.colaborador[0].emp_cve : this.user[0].Clave;
 
     this.solicitudForm.value.motivo = this.solicitudForm.value.motivo;
     this.solicitudForm.value.tipo_solicitud = this.opcionselect;
 
-    this.solicitudForm.value.Periodo = this.user[0].emp_tipo == 'S'? this.colaborador[0].Periodo : this.user[0].Periodo;
+    this.solicitudForm.value.Periodo = this.user[0].emp_tipo == 'S'? this.colaborador[0].Periodo : this.user[0].emp_tipo == 'RIA'? this.colaborador[0].Periodo : this.user[0].Periodo;
     this.solicitudForm.value.Genera = this.user[0].emp_tipo == 'S'? this.user[0].emp_cve : this.user[0].emp_cve;
     
     this.solicitudForm.value.Jefe = this.user[0].emp_tipo == 'S'? this.colaborador[0].emp_reldep : this.user[0].emp_reldep;

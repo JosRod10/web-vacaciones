@@ -131,7 +131,7 @@
                             <th scope="col">Periodo</th>
                             <!-- <th scope="col">Motivo</th> -->
                             <th scope="col">Status</th>
-                            <th scope="col">Descargar</th>
+                            <th *ngIf="this.user[0].emp_tipo == 'RI'" scope="col">Descargar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -146,7 +146,7 @@
                             <!-- <td style="font-size: small;">{{solicitud.motivo}}</td> -->
                             <!-- <td>{{solicitud.status}}</td> -->
                             <td style="font-size: small;"><span class="badge rounded-pill bg-light" style="color: #000;">{{solicitud.status}}</span></td>
-                            <td><button class="btn btn-light descargar" (click)="generatePDFWithPdfMake(solicitud)"><i class="bi bi-download"></i></button></td>
+                            <td *ngIf="this.user[0].emp_tipo == 'RI'"><button class="btn btn-light descargar" (click)="generatePDFWithPdfMake(solicitud)"><i class="bi bi-download"></i></button></td>
                             <!-- <td><span class="badge rounded-pill bg-warning">{{solicitud.status}}</span></td> -->
                             </tr>
                         </tbody>

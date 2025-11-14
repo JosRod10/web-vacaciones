@@ -221,13 +221,26 @@ export class PanelReportes {
   }
 
   obtenerFechaAlta(fechaISO: string): string {
-    const fecha = new Date(fechaISO);
-    const dia = fecha.getDate();
-    const mes = fecha.toLocaleString('default', { month: 'long' });
-    const año = fecha.getFullYear();
+  // Aseguramos que la fecha se interprete en la zona horaria local como el inicio del día
+  // agregando una hora de inicio local, o construyéndola por partes.
+  // Usaremos una construcción manual para mayor fiabilidad con el formato YYYY-MM-DD.
 
-    return `${dia} de ${mes} del ${año}`;
-  }
+  const partes = fechaISO.split('-');
+  const año = parseInt(partes[0], 10);
+  // Los meses en JavaScript van de 0 (enero) a 11 (diciembre), por lo que restamos 1.
+  const mesIndex = parseInt(partes[1], 10) - 1;
+  const dia = parseInt(partes[2], 10);
+
+  // Creamos la fecha usando new Date(año, mes, dia) para usar la zona horaria local por defecto
+  const fecha = new Date(año, mesIndex, dia);
+
+  // Ahora formateamos la fecha correctamente. No necesitamos sumar días.
+  const diaFormateado = fecha.getDate();
+  const mesFormateado = fecha.toLocaleString('default', { month: 'long' });
+  const añoFormateado = fecha.getFullYear();
+
+  return `${diaFormateado} de ${mesFormateado} del ${añoFormateado}`;
+}
 
   formatoFecha(fecha: string){
     var date = new Date(fecha);
@@ -269,10 +282,10 @@ export class PanelReportes {
 
     const rel = solicitud.status == 'Completado'? 'Autorizó' : '';
 
-    const dias = solicitud.Fecha_ingreso.substring(0,2);
-    const mes = solicitud.Fecha_ingreso.substring(3,5);
-    const año = solicitud.Fecha_ingreso.substring(6,10);
-    const formatoFecha = mes+'/'+dias+'/'+año;
+    // const dias = solicitud.Fecha_ingreso.substring(0,2);
+    // const mes = solicitud.Fecha_ingreso.substring(3,5);
+    // const año = solicitud.Fecha_ingreso.substring(6,10);
+    // const formatoFecha = mes+'/'+dias+'/'+año;
     // console.log(solicitud.Fecha_ingreso, formatoFecha);
     
     const docDefinition = {
@@ -327,16 +340,16 @@ export class PanelReportes {
           columns: [
             {
               width: '50%',
-              text: 'Fecha de ingreso: ' + ' ' + this.obtenerFechaAlta(formatoFecha),
+              text: 'Fecha de ingreso: ' + ' ' + this.obtenerFechaAlta(solicitud.Fecha_ingreso),
               style: 'parrafo'
             },
             {
-              width: '25%',
-              text: 'Años Cump: ' + ' ' + this.loginServices.obtenerAnosCumplidos(this.formatoFecha(solicitud.Fecha_ingreso)),
+              width: '20%',
+              text: 'Años Cump: ' + ' ' + solicitud.Años,
               style: 'parrafo'
             },
             {
-              width: '25%',
+              width: '30%',
               text: 'No. Empleado: ' + ' ' + solicitud.clave,
               style: 'parrafo'
             },
