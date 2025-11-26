@@ -499,18 +499,18 @@
                                 <span class="input-group-text">a partir del&nbsp;
                                     <label *ngIf="isInvalid('fechaApartir')"  style="color: red; font-size: small;">( campo obligatorio* )</label>
                                 </span>
-                                <input class="form-control" matInput [matDatepicker]="inicioPicker" formControlName="fechaApartir"/>
+                                <input class="form-control" matInput [matDatepicker]="inicioPicker" [matDatepickerFilter]="filtroFecha" formControlName="fechaApartir"/>
                                 <span><mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle></span>
-                                <mat-datepicker #inicioPicker panelClass="calendario"></mat-datepicker>
+                                <mat-datepicker #inicioPicker [dateClass]="dateClass" panelClass="calendario"></mat-datepicker>
                             </div>
 
                             <div class="input-group mb-1">
                                 <span class="input-group-text" id="basic-addon1">al día&nbsp;
                                     <label *ngIf="isInvalid('fechaHasta')"  style="color: red; font-size: small;">( Campo obligatorio* )</label>
                                 </span>
-                                <input class="form-control" matInput [matDatepicker]="finPicker" formControlName="fechaHasta"/>
+                                <input class="form-control" matInput [matDatepicker]="finPicker" [matDatepickerFilter]="filtroFecha" formControlName="fechaHasta"/>
                                 <span><mat-datepicker-toggle matSuffix [for]="finPicker"></mat-datepicker-toggle></span>
-                                <mat-datepicker #finPicker panelClass="calendario"></mat-datepicker>                        
+                                <mat-datepicker #finPicker [dateClass]="dateClass" panelClass="calendario"></mat-datepicker>                        
                                 <!-- <span class="input-group-text">inclusive</span> -->
                             </div>
 

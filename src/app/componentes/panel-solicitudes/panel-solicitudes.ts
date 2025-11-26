@@ -14,6 +14,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Form } from '../solicitud/solicitud';
+import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-panel-solicitudes',
@@ -24,6 +25,45 @@ import { Form } from '../solicitud/solicitud';
   styleUrl: './panel-solicitudes.css'
 })
 export class PanelSolicitudes {
+
+  fechasDeshabilitadas: Date[] = [
+    new Date(2025, 10, 17), // 17 de Noviembre de 2025
+    new Date(2025, 11, 24), // 24 de Diciembre de 2025
+    new Date(2025, 11, 25), // 25 de Diciembre de 2025
+    new Date(2026, 0, 1), // 25 de Diciembre de 2025
+    // ... más fechas
+  ];
+
+  // Función para deshabilitar las fechas (Método 1)
+  filtroFecha = (d: Date | null): boolean => {
+    const date = d || new Date();
+    // Retorna TRUE si la fecha NO está en la lista de fechasDeshabilitadas
+    return !this.fechasDeshabilitadas.some(disabledDate =>
+      date.getFullYear() === disabledDate.getFullYear() &&
+      date.getMonth() === disabledDate.getMonth() &&
+      date.getDate() === disabledDate.getDate()
+    );
+  };
+
+  // Función para aplicar clases CSS a las fechas
+  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
+    if (view === 'month') {
+      const date = cellDate || new Date();
+      const isDisabled = this.fechasDeshabilitadas.some(disabledDate =>
+        date.getFullYear() === disabledDate.getFullYear() &&
+        date.getMonth() === disabledDate.getMonth() &&
+        date.getDate() === disabledDate.getDate()
+      );
+
+      // Aplica la clase 'fecha-deshabilitada' si está deshabilitada
+      return {
+        'fecha-deshabilitada': isDisabled
+      };
+    }
+    return {};
+  };
+
+
   @ViewChild('miCheckboxRI') miCheckboxRI!: ElementRef;
   @ViewChild('miCheckboxJI') miCheckboxJI!: ElementRef;
   @ViewChild('miCheckboxG') miCheckboxG!: ElementRef;
