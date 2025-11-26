@@ -1,5 +1,5 @@
 <div class="p-4 fade-in-slow">
-    <div class="container-fluid contenedor shadow" *ngIf="user[0].emp_tipo == 'C'">
+    <div class="container-fluid contenedor shadow" *ngIf="user[0].emp_tipo == 'C' || user[0].emp_tipo == 'JI'  || user[0].emp_tipo == 'RI'">
         <div class="container-fluid box">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-12 d-flex justify-content-start">
@@ -18,8 +18,8 @@
                      </select>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12 d-flex justify-content-end"  (click)="abrirAlerta()" style="cursor: pointer;">
-                   <p>{{this.user[0].emp_nom}}</p>&nbsp;&nbsp;
-                   <i class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i>
+                   <p *ngIf="user[0].emp_tipo == 'C'">{{this.user[0].emp_nom}}</p>&nbsp;&nbsp;
+                   <i *ngIf="user[0].emp_tipo == 'C'" class="bi bi-person-circle" style="font-size: 3.5vh; margin-top: -1vh;"></i>
                 </div>
             </div>
         </div>
@@ -140,18 +140,20 @@
                         <span class="input-group-text">días, a partir del&nbsp;
                             <label *ngIf="isInvalid('fechaApartir')" style="color: red; font-size: small;">( campo obligatorio* )</label>
                         </span>
-                            <input class="form-control" matInput [matDatepicker]="inicioPicker" formControlName="fechaApartir"/>
+                            <input class="form-control" matInput [matDatepicker]="inicioPicker" [matDatepickerFilter]="filtroFecha" formControlName="fechaApartir"/>
                             <span><mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle></span>
-                            <mat-datepicker #inicioPicker panelClass="calendario"></mat-datepicker>
+                            <mat-datepicker #inicioPicker [dateClass]="dateClass" panelClass="calendario"></mat-datepicker>
                     </div>
+
+
 
                     <div class="input-group mb-1">
                         <span class="input-group-text" id="basic-addon1">al día&nbsp;
                             <label *ngIf="isInvalid('fechaHasta')" style="color: red; font-size: small;">( Campo obligatorio* )</label>
                         </span>
-                            <input class="form-control" matInput [matDatepicker]="finPicker" formControlName="fechaHasta"/>
+                            <input class="form-control" matInput [matDatepicker]="finPicker" [matDatepickerFilter]="filtroFecha" formControlName="fechaHasta"/>
                             <span><mat-datepicker-toggle matSuffix [for]="finPicker"></mat-datepicker-toggle></span>
-                            <mat-datepicker #finPicker panelClass="calendario"></mat-datepicker>                        
+                            <mat-datepicker #finPicker [dateClass]="dateClass" panelClass="calendario"></mat-datepicker>                        
                             <span class="input-group-text">inclusive</span>
                     </div>
 

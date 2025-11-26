@@ -273,6 +273,7 @@
                         <li class="menu-lista" (click)="cambiarDash()"><i class="bi bi-app-indicator"></i> Dashbord</li>
                         <!-- <li class="menu-lista" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-todas'"><i class="bi bi-pencil-square"></i> Firmar Todas</li> -->
                         <li class="menu-lista" (click)="cambiarReporte()"><i class="bi bi-file-earmark-spreadsheet"></i> Reportes</li>
+                        <li class="menu-lista" (click)="cambiarSolicitud()"><i class="bi bi-file-text"></i> Solicitud</li>
                         <li *ngIf="this.user[0].emp_tipo == 'RI'" (click)="cambiarDia()" class="menu-lista"><i class="bi bi-calendar-check"></i> Día Inhábil</li>
                         <li class="menu-lista" (click)="abrirAlerta()"><i class="bi bi-door-closed"></i> Cerrar Sesión</li>
                         <!-- <li class="menu-lista"><i class="bi bi-bell-fill"></i> notification</li>
@@ -331,7 +332,7 @@
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <h6 class="card-title">{{this.cardSolicitud.nombre}}</h6>
                                 <span class="card-text-subtitle">Departamento: {{this.cardSolicitud.departamento}}</span><br>
-                                <!-- <span class="card-text-subtitle">Puesto: {{this.cardSolicitud.Puesto}}</span> -->
+                                <span class="card-text-subtitle">Puesto: {{this.cardSolicitud.emp_puesto}}</span>
                                 <div class="row mt-2">
                                     <div class="col-lg-1 col-md-1 col-sm-1"></div>
                                     <div class="col-lg-3 col-md-3 col-sm-3">
@@ -473,6 +474,10 @@
 
         <div class="col-lg-10" *ngIf="banderaReporte == true">
             <app-panel-reportes></app-panel-reportes>
+        </div>
+
+        <div class="col-lg-10" *ngIf="banderaSolicitud == true">
+            <app-form></app-form>
         </div>
     
         

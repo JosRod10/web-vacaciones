@@ -13,12 +13,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Form } from '../solicitud/solicitud';
 
 @Component({
   selector: 'app-panel-solicitudes',
   standalone: true,
   imports: [CommonModule, PanelReportes, MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, 
-    MatGridListModule, MatIconModule, ReactiveFormsModule, FormsModule],
+    MatGridListModule, MatIconModule, ReactiveFormsModule, FormsModule, Form],
   templateUrl: './panel-solicitudes.html',
   styleUrl: './panel-solicitudes.css'
 })
@@ -40,6 +41,7 @@ export class PanelSolicitudes {
   
   banderaDash: boolean = true;
   banderaReporte: boolean = false;
+  banderaSolicitud: boolean = false;
   banderaDia: boolean = false;
 
   solicitudForm: FormGroup;
@@ -70,7 +72,7 @@ export class PanelSolicitudes {
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
-    this.cargarSolicitudes(this.user[0].emp_tipo);
+    this.cargarSolicitudes(this.user[0].emp_tipo, this.user[0].emp_reldep);
     
   }
 
@@ -102,19 +104,29 @@ export class PanelSolicitudes {
   cambiarDash(){
     this.banderaDash = true;
     this.banderaReporte = false;
+    this.banderaSolicitud = false;
     this.banderaDia = false;
-    this.cargarSolicitudes(this.user[0].emp_tipo);
+    this.cargarSolicitudes(this.user[0].emp_tipo, this.user[0].emp_reldep);
   }
 
   cambiarReporte(){
     this.banderaReporte = true;
     this.banderaDash = false;
+    this.banderaSolicitud = false;
     this.banderaDia = false;
   }
 
+  cambiarSolicitud(){
+    this.banderaSolicitud = true;
+    this.banderaReporte = false;
+    this.banderaDash = false;
+    this.banderaDia = false;
+  }
+  
   cambiarDia(){
     this.banderaDia = true;
     this.banderaReporte = false;
+    this.banderaSolicitud = false;
     this.banderaDash = false;
   }
 
@@ -142,8 +154,8 @@ export class PanelSolicitudes {
     return fechaFormateada
   }
 
-  cargarSolicitudes(tipo: string){
-    this.api.getSolicitudes(tipo).subscribe(data => {
+  cargarSolicitudes(tipo: string, rel_dep: string){
+    this.api.getSolicitudes(tipo, rel_dep).subscribe(data => {
       // console.log(data);
         this.solicitudes = data.filter(solicitud => solicitud.status != 'Ausente');
         // console.log(this.solicitudes);
@@ -182,7 +194,7 @@ export class PanelSolicitudes {
             
             console.log('Se autorizó la firma de RI');
             this.spinerFirma = !this.spinerFirma;
-            this.cargarSolicitudes(this.user[0].emp_tipo);
+            this.cargarSolicitudes(this.user[0].emp_tipo, this.user[0].emp_reldep);
            
           }
          },
@@ -203,12 +215,16 @@ export class PanelSolicitudes {
     var dias_ant: number = 0;
     var periodo: string = '';
     var correo: string = '';
+    var nombre: string = '';
+    var genera: string = '';
 
    
     dias_d = this.cardSolicitud.Saldo - parseInt(this.cardSolicitud.cuantos_dias);
     dias_u = this.cardSolicitud.Vacaciones_tomadas + parseInt(this.cardSolicitud.cuantos_dias);
     periodo = this.cardSolicitud.Periodo;
     correo = this.cardSolicitud.emp_mail;
+    nombre = this.cardSolicitud.Nombre;
+    genera = this.cardSolicitud.genera;
     
     console.log(this.cardSolicitud, dias_d, dias_u);
     // if(this.cardSolicitud.Dias_disponibles_p2 != 0 || this.cardSolicitud.Dias_disponibles_p2 == this.cardSolicitud.cuantos_dias.toString()){
@@ -232,7 +248,7 @@ export class PanelSolicitudes {
     
     console.log(dias_d, dias_u);
 
-    this.api.aprobar(id, accion, dias_d, dias_u, clave, periodo, correo).subscribe(
+    this.api.aprobar(id, accion, dias_d, dias_u, clave, periodo, correo, nombre, genera).subscribe(
       (response) => {
           if(response == true){
             const modalElement = document.getElementById('modal');
@@ -242,7 +258,7 @@ export class PanelSolicitudes {
               (window as any).bootstrap.Modal.getInstance(modalElement).hide();
               this.spinerBandera = !this.spinerBandera;
             }
-            this.cargarSolicitudes(this.user[0].emp_tipo);
+            this.cargarSolicitudes(this.user[0].emp_tipo, this.user[0].emp_reldep);
             this.firmaCheck = false;
             this.miCheckboxRI.nativeElement.checked = false;
           }
@@ -267,7 +283,7 @@ export class PanelSolicitudes {
                 // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
                 (window as any).bootstrap.Modal.getInstance(modalElement).hide();
                 this.spinerFirma = !this.spinerFirma;
-                this.cargarSolicitudes(this.user[0].emp_tipo);
+                this.cargarSolicitudes(this.user[0].emp_tipo, this.user[0].emp_reldep);
               }
             }
 
@@ -294,7 +310,7 @@ export class PanelSolicitudes {
               (window as any).bootstrap.Modal.getInstance(modalElement).hide();
               this.spinerBandera = !this.spinerBandera;
             }
-            this.cargarSolicitudes(this.user[0].emp_tipo);
+            this.cargarSolicitudes(this.user[0].emp_tipo, this.user[0].emp_reldep);
             // this.miCheckboxJI.nativeElement.checked = false;
           }
          },
@@ -363,9 +379,11 @@ export class PanelSolicitudes {
     const clave = this.solicitudes[0].Clave;
     const correo = this.solicitudes[0].emp_mail;
     const periodo = this.solicitudes[0].Periodo;
+    const nombre = this.solicitudes[0].Nombre;
+    const genera = this.solicitudes[0].genera;
     
 
-    this.api.aprobar(id, accion, dias_d, dias_u, clave, periodo, correo).subscribe(
+    this.api.aprobar(id, accion, dias_d, dias_u, clave, periodo, correo, nombre, genera).subscribe(
       (response) => {
           if(response == true){
 
@@ -380,7 +398,7 @@ export class PanelSolicitudes {
               }
             }
        
-            this.cargarSolicitudes(this.user[0].emp_tipo);
+            this.cargarSolicitudes(this.user[0].emp_tipo, this.user[0].emp_reldep);
             this.firmaCheck = false;
             this.miCheckboxRI.nativeElement.checked = false;
           }
@@ -468,7 +486,7 @@ export class PanelSolicitudes {
                     if(accion == 0){
                       this.spinerDelete = !this.spinerDelete;
                     }
-                this.cargarSolicitudes(this.user[0].emp_tipo);
+                this.cargarSolicitudes(this.user[0].emp_tipo, this.user[0].emp_reldep);
               }
             }
 
@@ -492,7 +510,7 @@ export class PanelSolicitudes {
                   // Asegúrate de que Bootstrap esté correctamente incluido en tu proyecto
                   (window as any).bootstrap.Modal.getInstance(modalElement).hide();
                   this.spinerFirma = !this.spinerFirma;
-                  this.cargarSolicitudes(this.user[0].emp_tipo);
+                  this.cargarSolicitudes(this.user[0].emp_tipo, this.user[0].emp_reldep);
                 }
               }
 

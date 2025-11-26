@@ -29,17 +29,17 @@ export class ApiServicio {
     return this.http.post<any>(`${this.apiUrl}/form`, item);
   }
 
-  getSolicitudes(tipo: string): Observable<any[]> {
-    return this.http.post<any[]>(`${this.apiUrl}/solicitudes`, {tipo});
+  getSolicitudes(tipo: string, relacion: string): Observable<any[]> {
+    return this.http.post<any[]>(`${this.apiUrl}/solicitudes`, {tipo, relacion});
   }
 
-  aprobar(id: number, accion: number, dias_d: number, dias_u: number, clave: number, periodo?: string, correo?: string): Observable<any>{
-    return this.http.post<any>(`${this.apiUrl}/aprobar`, {id, accion, dias_d, dias_u, clave, periodo, correo});
+  aprobar(id: number, accion: number, dias_d: number, dias_u: number, clave: number, periodo?: string, correo?: string, nombre?: string, genera?: string): Observable<any>{
+    return this.http.post<any>(`${this.apiUrl}/aprobar`, {id, accion, dias_d, dias_u, clave, periodo, correo, nombre, genera});
   }
 
-  consultaReporteSolicitud(departamento: string, anio: string, mes: string, criterio: any, tipo: string): Observable<any> {
+  consultaReporteSolicitud(departamento: string, anio: string, mes: string, criterio: any, tipo: string, relacion: string): Observable<any> {
     // console.log("Entra");
-    return this.http.post<any>(`${this.apiUrl}/reporteSolicitud`, {departamento, anio, mes, criterio, tipo});
+    return this.http.post<any>(`${this.apiUrl}/reporteSolicitud`, {departamento, anio, mes, criterio, tipo, relacion});
   }
 
   firmaJefeInmediato(item: any): Observable<any> {
@@ -52,8 +52,8 @@ export class ApiServicio {
     return this.http.post<any>(`${this.apiUrl}/firma-gerente`, item);
   }
 
-  getCoAsociados(tipo: string, tipo_dep: string){
-        return this.http.post<any>(`${this.apiUrl}/colaboradores-asociados`, {tipo, tipo_dep});
+  getCoAsociados(clave: string, tipo: string, tipo_dep: string, depto: string){
+        return this.http.post<any>(`${this.apiUrl}/colaboradores-asociados`, {clave, tipo, tipo_dep, depto});
   }
 
   aceptarRI(id: number): Observable<any> {

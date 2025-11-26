@@ -9,3 +9,17 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* Asegúrate de que este CSS esté en un archivo de estilos global (styles.scss/css) */
+
+.fecha-deshabilitada .mat-calendar-body-cell-content {
+  background-color: rgb(4, 114, 26) !important; /* Pinta el fondo de verde */
+  color: white !important;           /* Asegura que el número de la fecha sea visible */
+  /* opacity: 0.5;                     Opcional: añade opacidad para indicar que está deshabilitada */
+}
+
+/* Opcional: Estilo para el estado deshabilitado por defecto de Material */
+.mat-calendar-body-disabled .mat-calendar-body-cell-content {
+  /* ... otros estilos por defecto si quieres ajustarlos */
+  text-decoration: line-through; /* Por ejemplo, tachar la fecha */
+}

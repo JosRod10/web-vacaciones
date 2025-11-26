@@ -164,3 +164,9 @@ mat-datepicker{
   transition: transform 0.3s ease;
   transform: rotate(180deg);
 }
+
+
+.example-custom-date-class {
+   background-color : naranja;
+   border-radius : 100% ;
+}

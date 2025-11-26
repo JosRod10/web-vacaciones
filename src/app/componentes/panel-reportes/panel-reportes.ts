@@ -165,7 +165,7 @@ export class PanelReportes {
   consultar(tipo: string){
      this.datosColaborador = [];
 
-    this.api.consultaReporteSolicitud(this.depto, this.anio, this.mes, this.consultaForm.value, tipo).subscribe(
+    this.api.consultaReporteSolicitud(this.depto, this.anio, this.mes, this.consultaForm.value, tipo, this.user[0].emp_reldep).subscribe(
       (response) => {
         const data =  response;
         this.solicitudes = data;

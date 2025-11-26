@@ -15,6 +15,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {MatIconModule} from '@angular/material/icon';
 import { Colaborador } from '../../interfaces/colaborador';
 import { LoginServices } from '../../servicios/login';
+import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 
 
 @Component({
@@ -27,6 +28,43 @@ import { LoginServices } from '../../servicios/login';
   styleUrl: './solicitud.css'
 })
 export class Form {
+
+  fechasDeshabilitadas: Date[] = [
+    new Date(2025, 10, 17), // 17 de Noviembre de 2025
+    new Date(2025, 11, 24), // 24 de Diciembre de 2025
+    new Date(2025, 11, 25), // 25 de Diciembre de 2025
+    new Date(2026, 0, 1), // 25 de Diciembre de 2025
+    // ... más fechas
+  ];
+
+  // Función para deshabilitar las fechas (Método 1)
+  filtroFecha = (d: Date | null): boolean => {
+    const date = d || new Date();
+    // Retorna TRUE si la fecha NO está en la lista de fechasDeshabilitadas
+    return !this.fechasDeshabilitadas.some(disabledDate =>
+      date.getFullYear() === disabledDate.getFullYear() &&
+      date.getMonth() === disabledDate.getMonth() &&
+      date.getDate() === disabledDate.getDate()
+    );
+  };
+
+  // Función para aplicar clases CSS a las fechas
+  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
+    if (view === 'month') {
+      const date = cellDate || new Date();
+      const isDisabled = this.fechasDeshabilitadas.some(disabledDate =>
+        date.getFullYear() === disabledDate.getFullYear() &&
+        date.getMonth() === disabledDate.getMonth() &&
+        date.getDate() === disabledDate.getDate()
+      );
+
+      // Aplica la clase 'fecha-deshabilitada' si está deshabilitada
+      return {
+        'fecha-deshabilitada': isDisabled
+      };
+    }
+    return {};
+  };
 
   @ViewChild('alerToast') alerToast!: ElementRef;
 
@@ -60,6 +98,10 @@ export class Form {
 
   criterio: string = '';
 
+  phoneNumber = '527292805288'; // Reemplaza con el número completo, incluyendo el código de país (sin símbolos ni el signo +)
+  message = 'RODRIGUEZ ALVAREZ JOSUE ABRAHAM a solicitado 1 día(s) a partir del 28 de noviembre de 2025 al 28 de noviembre de 2025 con goce de sueldo no sindicalizado.';
+  whatsappLink: string = '';
+
   // periodo: string = '';
   // saldo: number = 0;
   // tomadas: number = 0;
@@ -81,6 +123,15 @@ export class Form {
   ///////////////////////////////////////////////////////////////
 
   constructor(private fb: FormBuilder, private router: Router, private dialog: MatDialog, private api: ApiServicio, private authservice: LoginServices){
+    
+    // Codifica el mensaje para la URL
+    const encodedMessage = encodeURIComponent(this.message);
+    // Construye el enlace usando la estructura recomendada wa.me
+    // this.whatsappLink = `https://wa.me/[52][7292805288]?text=${encodedMessage}`;
+    // Codifica el mensaje para la URL
+    // Construye el enlace usando api.whatsapp.com/send
+    this.whatsappLink = `https://api.whatsapp.com/527292805288&text=${encodedMessage}`;
+    // https://wa.me/[código_país][número]?text=[mensaje_codificado]
 
     this.solicitudForm = this.fb.group({
       fecha: ['', [Validators.required]],
@@ -148,12 +199,12 @@ export class Form {
     this.selectOption = 'Selecciona una opción';
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
     if(this.user[0].emp_tipo == 'S'){
-     this.cargarColaboradores(this.user[0].emp_tipo, this.user[0].Tipo_Dep);
+     this.cargarColaboradores(this.user[0].emp_cve, this.user[0].emp_tipo, this.user[0].emp_reldep, this.user[0].Descripcion);
     //  console.log(this.user[0].Clave)
      this.consultarHistorialColaboradores(this.user[0].Clave);
     }
     if(this.user[0].emp_tipo == 'RIA'){
-     this.cargarColaboradores(this.user[0].emp_tipo, this.user[0].Tipo_Dep);
+     this.cargarColaboradores(this.user[0].emp_cve, this.user[0].emp_tipo, this.user[0].emp_reldep, this.user[0].Descripcion);
           this.consultarHistorialColaboradores(this.user[0].Clave);
 
     }
@@ -200,9 +251,9 @@ export class Form {
     return fecha.toLocaleDateString('es-ES', opciones);
   }
 
-  cargarColaboradores(tipo: string, tipo_dep: string){
+  cargarColaboradores(clave: string, tipo: string, tipo_dep: string, depto: string){
 
-    this.api.getCoAsociados(tipo, tipo_dep).subscribe(data => {
+    this.api.getCoAsociados(clave, tipo, tipo_dep, depto).subscribe(data => {
         
         this.colaboradores = data;
         const opcion = {emp_nom: 'Selecciona colaborador'}
@@ -373,7 +424,7 @@ export class Form {
         if(this.user[0].emp_tipo == 'C'){
            this.cerrarSesion(1);
         }
-        if(this.user[0].emp_tipo == 'S' || this.user[0].emp_tipo == 'RIA'){
+        if(this.user[0].emp_tipo == 'S' || this.user[0].emp_tipo == 'JI' || this.user[0].emp_tipo == 'RI'){
           window.location.reload();
         }
 
