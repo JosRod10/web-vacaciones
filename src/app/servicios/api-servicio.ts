@@ -96,4 +96,9 @@ export class ApiServicio {
     return this.http.post<any>(`${this.apiUrl}/firmar-todas-ri`, solicitudes);
   }
 
+  cambiarContrasena(item: any): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/editar-contrasena`, item);
+  }
+
 }

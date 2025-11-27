@@ -72,8 +72,16 @@
               </button>
             </div>
 
-            <!-- <div (click)="banderaRegistrar()" class="d-grid d-flex justify-content-center mt-2 enlace-registro">
-                <a>Registrarme</a>
+            <div class="row">
+              <div class="col-6 mt-2 enlace-registro d-flex justify-content-start"><a data-bs-toggle="modal" [attr.data-bs-target]="'#modal'">Cambiar contraseña</a></div>
+              <div class="col-6 mt-2 enlace-registro d-flex justify-content-end"><a style="text-decoration: none;" href="assets/Manual de Usuario Formato de Vacaciones.pdf" target="_blank" rel="noopener noreferrer">Manual de usuario</a></div>
+            </div>
+
+            <!-- <div class="d-grid d-flex justify-content-center mt-2 enlace-registro">
+                <a>Cambiar contraseña</a>
+            </div>
+            <div class="d-grid d-flex justify-content-center mt-2 enlace-registro">
+                <a>Manual de usuario</a>
             </div> -->
             
           </form>
@@ -83,6 +91,130 @@
     </div>
     
   </div>
+</div>
+
+<div class="modal" [id]="'modal'" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header d-flex justify-content-center">
+            <h3 style="font-weight: bold;" class="modal-title">Cambiar Contraseña</h3>
+        </div>
+        <div class="modal-body">
+
+          <form [formGroup]="contrasenaForm" (ngSubmit)="onSubmit()">
+            <!-- Usuario -->
+            <div class="mb-3">
+              <label for="no_emp" class="form-label">No.Empleado</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                <input
+                  type="text"
+                  id="no_emp"
+                  class="form-control"
+                  placeholder="Ejp: 000001"
+                  formControlName="no_emp"
+                  [ngClass]="{ 'is-invalid': contrasenaForm.get('no_emp')?.invalid && contrasenaForm.get('no_emp')?.touched }"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="!contrasenaForm.get('no_emp')?.hasError('required')">
+                El numero de empleado es obligatorio
+              </div>
+            </div>
+
+            <!-- Contraseña Actual -->
+            <div class="mb-3">
+              <label for="cont_act" class="form-label">Contraseña Actual</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input
+                  [type]="hidePassword ? 'password' : 'text'"
+                  id="cont_act"
+                  class="form-control"
+                  placeholder="Contraseña"
+                  formControlName="cont_act"
+                  [ngClass]="{ 'is-invalid': contrasenaForm.get('cont_act')?.invalid && contrasenaForm.get('cont_act')?.touched }"
+                />
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  (click)="hidePassword = !hidePassword"
+                  tabindex="-1"
+                >
+                  <i class="bi" [ngClass]="hidePassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback" *ngIf="contrasenaForm.get('cont_act')?.hasError('required')">
+                La contraseña es obligatoria
+              </div>
+              <div class="invalid-feedback" *ngIf="contrasenaForm.get('cont_act')?.hasError('minlength')">
+                Mínimo 6 caracteres
+              </div>
+            </div>
+            <div class="mb-3" *ngIf="contrasenaForm.get('cont_act')?.invalid && contrasenaForm.get('cont_act')?.touched">
+                <div class="alert-text">
+                  Minimo 6 caracteres en la contraseña
+                </div>
+            </div>
+
+            <!-- Nueva Contraseña -->
+            <div class="mb-3">
+              <label for="nu_cont" class="form-label">Nueva Contraseña</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input
+                  [type]="hidePassword ? 'password' : 'text'"
+                  id="nu_cont"
+                  class="form-control"
+                  placeholder="Contraseña"
+                  formControlName="nu_cont"
+                  [ngClass]="{ 'is-invalid': contrasenaForm.get('nu_cont')?.invalid && contrasenaForm.get('nu_cont')?.touched }"
+                />
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  (click)="hidePassword = !hidePassword"
+                  tabindex="-1"
+                >
+                  <i class="bi" [ngClass]="hidePassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback" *ngIf="contrasenaForm.get('nu_cont')?.hasError('required')">
+                La contraseña es obligatoria
+              </div>
+              <div class="invalid-feedback" *ngIf="contrasenaForm.get('nu_cont')?.hasError('minlength')">
+                Mínimo 6 caracteres
+              </div>
+            </div>
+            <div class="mb-3" *ngIf="contrasenaForm.get('nu_cont')?.invalid && contrasenaForm.get('nu_cont')?.touched">
+                <div class="alert-text">
+                  Minimo 6 caracteres en la contraseña
+                </div>
+            </div>
+          </form>
+
+
+        </div>
+        <!-- <div *ngIf="spinerBandera" class="modal-body d-flex justify-content-center">
+            <span class="loader"></span>
+        </div> -->
+        <div class="modal-footer d-flex justify-content-center">
+            <button (click)="cambiarContrasena()" class="btn btn-outline-success">Cambiar</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div style="z-index: 1060" class="alert alert-info d-flex align-items-center alert-pos" role="alert" *ngIf="alertaTrue" #alerToast>
+    <div>
+      <i class="bi bi-check-circle"></i>&nbsp;&nbsp;Contraseña modificada con éxito.
+    </div>
+</div>
+
+<div style="z-index: 1060" class="alert alert-danger d-flex align-items-center alert-pos" role="alert" *ngIf="alertaFalse" #alerToast>
+    <div>
+      <i class="bi bi-exclamation-triangle-fill"></i>&nbsp;&nbsp;Numero de empleado o contraseña actual erroneos.<br>Por favor valida los datos.
+    </div>
 </div>
 
 <!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////// -->

@@ -47,6 +47,7 @@
   font-size: small;
   color: rgb(4, 150, 7);
   cursor: pointer;
+  /* text-decoration: none; */
 }
 
 .enlace-registro:hover{

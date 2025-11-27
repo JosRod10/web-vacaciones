@@ -41,10 +41,13 @@ export class Login {
   error = '';
   hidePassword = true;
   loginForm: FormGroup;
+  contrasenaForm: FormGroup;
   // registroForm: FormGroup;
   user: User;
   items: any[] = [];
   alerta: boolean = false;
+  alertaTrue: boolean = false;
+  alertaFalse: boolean = false;
 
   banderaLogin: boolean = true;
   banderaRegistro: boolean = false;
@@ -59,6 +62,12 @@ export class Login {
       user: '',
       pass: ''
     }
+
+    this.contrasenaForm = this.fb.group({
+      no_emp: ['', [Validators.required]],
+      cont_act: ['', [Validators.required, Validators.minLength(6)]],
+      nu_cont: ['', [Validators.required, Validators.minLength(6)]],
+    });
 
     // this.registroForm = this.fb.group({
     //   num: ['', [Validators.required]],
@@ -217,6 +226,42 @@ export class Login {
   // registrarUsuario(){
 
   // }
+
+  cambiarContrasena(){
+    // console.log(this.contrasenaForm.value);
+    this.api.cambiarContrasena(this.contrasenaForm.value).subscribe(
+      (response)=>{
+        if(response == true){
+          console.log('Contraseña actualizada!!!');
+          
+          this.alertaTrue = true;
+          setTimeout(() => {
+            this.alertaTrue = false;
+            window.location.reload();
+          }, 4000); // 4000 milisegundos = 4 segundos
+        }
+        if(response == false){
+          console.log('Contraseña NO actualizada!!!');
+          this.alertaFalse = true;
+          setTimeout(() => {
+            this.alertaFalse = false;
+            this.vaciarFormulario();
+          }, 4000); // 4000 milisegundos = 4 segundos
+        }
+      },
+      (err)=>{
+        if(err){
+          console.log('Error al actualizar contraseña!!!');
+        }
+      }
+    )
+  }
+
+  vaciarFormulario(){
+    this.contrasenaForm.get('no_emp')?.setValue('');
+    this.contrasenaForm.get('cont_act')?.setValue('');
+    this.contrasenaForm.get('nu_cont')?.setValue('');
+  }
 
 }
 

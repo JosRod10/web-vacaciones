@@ -31,6 +31,7 @@ export class Form {
 
   fechasDeshabilitadas: Date[] = [
     new Date(2025, 10, 17), // 17 de Noviembre de 2025
+    new Date(2025, 11, 12), // 12 de Diciembre de 2025
     new Date(2025, 11, 24), // 24 de Diciembre de 2025
     new Date(2025, 11, 25), // 25 de Diciembre de 2025
     new Date(2026, 0, 1), // 25 de Diciembre de 2025
