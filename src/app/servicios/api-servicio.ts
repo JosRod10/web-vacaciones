@@ -101,4 +101,9 @@ export class ApiServicio {
     return this.http.post<any>(`${this.apiUrl}/editar-contrasena`, item);
   }
 
+  enviarCorreos(senal: string): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/enviar-correos`, senal);
+  }
+
 }

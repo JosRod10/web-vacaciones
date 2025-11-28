@@ -263,5 +263,25 @@ export class Login {
     this.contrasenaForm.get('nu_cont')?.setValue('');
   }
 
+  enviarCorreos(){
+    // console.log(this.contrasenaForm.value);
+    const senal: string = 'enviar';
+    this.api.enviarCorreos(senal).subscribe(
+      (response)=>{
+        if(response == true){
+          console.log('Correos enviados!!!');
+        }
+        if(response == false){
+          console.log('Correos NO enviados!!!');
+        }
+      },
+      (err)=>{
+        if(err){
+          console.log('Error al actualizar contraseña!!!');
+        }
+      }
+    )
+  }
+
 }
 

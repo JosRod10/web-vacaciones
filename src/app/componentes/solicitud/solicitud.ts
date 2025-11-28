@@ -30,11 +30,27 @@ import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 export class Form {
 
   fechasDeshabilitadas: Date[] = [
+    new Date(2025, 10, 1), // 17 de Noviembre de 2025
+    new Date(2025, 10, 12), // 17 de Noviembre de 2025
     new Date(2025, 10, 17), // 17 de Noviembre de 2025
     new Date(2025, 11, 12), // 12 de Diciembre de 2025
     new Date(2025, 11, 24), // 24 de Diciembre de 2025
     new Date(2025, 11, 25), // 25 de Diciembre de 2025
-    new Date(2026, 0, 1), // 25 de Diciembre de 2025
+    new Date(2026, 0, 1), // 1 de Enero de 2026
+    new Date(2026, 1, 2), // 2 de Febrero de 2026
+    new Date(2026, 2, 16), // 16 de Marzo de 2026
+    new Date(2026, 3, 2), // 2 de Abril de 2026 por la empresa
+    new Date(2026, 3, 3), // 3 de Abril de 2026 por la empresa
+    new Date(2026, 3, 4), // 4 de Abril de 2026 por la empresa
+    new Date(2026, 4, 1), // 1 de Mayo de 2026
+    new Date(2026, 4, 10), // 10 de Mayo de 2026 por la empresa
+    new Date(2026, 8, 16), // 16 de Septiembre de 2026
+    new Date(2026, 10, 1), // 1 de Noviembre de 2026 por la empresa
+    new Date(2026, 10, 2), // 2 de Noviembre de 2026 por la empresa
+    new Date(2026, 10, 16), // 16 de Noviembre de 2026
+    new Date(2026, 11, 12), // 12 de Diciembre de 2026 por la empresa
+    new Date(2026, 11, 24), // 24 de Diciembre de 2026 por la empresa
+    new Date(2026, 11, 25), // 25 de Diciembre de 2026
     // ... más fechas
   ];
 
