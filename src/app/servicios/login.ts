@@ -102,7 +102,7 @@ export class LoginServices {
     this.token = token;
     localStorage.setItem('authToken', token); // O en cookies para más seguridad
     localStorage.setItem('Usuario', JSON.stringify(user));
-    console.log('Token almacenado');
+    // console.log('Token almacenado');
   }
 
   logout() {
@@ -111,7 +111,7 @@ export class LoginServices {
     localStorage.removeItem('Usuario');
     localStorage.removeItem('misSolicitudes');
     // localStorage.removeItem('misObjetos');
-    console.log('Sesión cerrada');
+    // console.log('Sesión cerrada');
   }
 
   getToken(): string | null {

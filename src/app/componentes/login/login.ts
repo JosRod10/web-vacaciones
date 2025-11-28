@@ -232,7 +232,7 @@ export class Login {
     this.api.cambiarContrasena(this.contrasenaForm.value).subscribe(
       (response)=>{
         if(response == true){
-          console.log('Contraseña actualizada!!!');
+          // console.log('Contraseña actualizada!!!');
           
           this.alertaTrue = true;
           setTimeout(() => {
@@ -241,7 +241,7 @@ export class Login {
           }, 4000); // 4000 milisegundos = 4 segundos
         }
         if(response == false){
-          console.log('Contraseña NO actualizada!!!');
+          // console.log('Contraseña NO actualizada!!!');
           this.alertaFalse = true;
           setTimeout(() => {
             this.alertaFalse = false;

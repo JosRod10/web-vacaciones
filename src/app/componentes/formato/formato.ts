@@ -74,7 +74,7 @@ export class Formato {
   onSubmit() {
     this.solicitudForm.markAllAsTouched();
     if (this.solicitudForm.valid) {
-      console.log('Solicitud enviada:', this.solicitudForm.value);
+      // console.log('Solicitud enviada:', this.solicitudForm.value);
       // Aquí iría la lógica de envío (API, backend, etc.)
     }
   }

@@ -288,9 +288,9 @@ export class Form {
   datosCo(event: Event): void {
 
     const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
-    console.log(selectElement);
+    // console.log(selectElement);
     const selectedValue = selectElement.value;
-    console.log(selectedValue);
+    // console.log(selectedValue);
     if(selectedValue == ''){
         this.fecha_co_hoy = '';
         this.ano_co_actual = '';
@@ -415,7 +415,7 @@ export class Form {
   }
 
   onSubmit() {
-      console.log('Solicitud enviada:', this.solicitudForm.value);
+      // console.log('Solicitud enviada:', this.solicitudForm.value);
       // Aquí iría la lógica de envío (API, backend, etc.)
   }
 
@@ -596,7 +596,7 @@ export class Form {
         this.solicitudesUsuario.forEach(obj => {
           obj[newKey] = newValue;
         });
-        console.log(this.solicitudesUsuario);
+        // console.log(this.solicitudesUsuario);
 
         // 1. Convierte el arreglo a JSON
         const arregloJSON = JSON.stringify(this.solicitudesUsuario);
@@ -629,12 +629,12 @@ export class Form {
   }
 
   recuperarHistorial(periodo: string){
-    console.log(periodo);
+    // console.log(periodo);
     const solicitudesGuardadas = this.user[0].emp_tipo == 'C'? localStorage.getItem('misSolicitudes') : localStorage.getItem('solicitudesColaboradores');
     const solicitudes: any[] = solicitudesGuardadas ? JSON.parse(solicitudesGuardadas) : [];
-    console.log(solicitudes);
+    // console.log(solicitudes);
     this.solicitudesUsuario = solicitudes.filter((ele: any) =>ele.periodo === periodo);
-    console.log(this.solicitudesUsuario);
+    // console.log(this.solicitudesUsuario);
   }
 
   // datosPeriodoSelect(): void {
@@ -685,7 +685,7 @@ export class Form {
         this.solicitudesUsuario.forEach(obj => {
           obj[newKey] = newValue;
         });
-        console.log(this.solicitudesUsuario);
+        // console.log(this.solicitudesUsuario);
 
         // 1. Convierte el arreglo a JSON
         const arregloJSON = JSON.stringify(this.solicitudesUsuario);

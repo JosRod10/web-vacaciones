@@ -232,7 +232,7 @@ export class PanelSolicitudes {
       (response) => {
           if(response == true){
             
-            console.log('Se autorizó la firma de RI');
+            // console.log('Se autorizó la firma de RI');
             this.spinerFirma = !this.spinerFirma;
             this.cargarSolicitudes(this.user[0].emp_tipo, this.user[0].emp_reldep);
            
@@ -266,7 +266,7 @@ export class PanelSolicitudes {
     nombre = this.cardSolicitud.Nombre;
     genera = this.cardSolicitud.genera;
     
-    console.log(this.cardSolicitud, dias_d, dias_u);
+    // console.log(this.cardSolicitud, dias_d, dias_u);
     // if(this.cardSolicitud.Dias_disponibles_p2 != 0 || this.cardSolicitud.Dias_disponibles_p2 == this.cardSolicitud.cuantos_dias.toString()){
     //   dias_d = parseInt(this.cardSolicitud.Dias_disponibles_p2) - parseInt(this.cardSolicitud.cuantos_dias);
     //   dias_u = parseInt(this.cardSolicitud.Dias_ocupados_p2) + parseInt(this.cardSolicitud.cuantos_dias);
@@ -286,7 +286,7 @@ export class PanelSolicitudes {
     //   periodo = 'ambos';
     // }
     
-    console.log(dias_d, dias_u);
+    // console.log(dias_d, dias_u);
 
     this.api.aprobar(id, accion, dias_d, dias_u, clave, periodo, correo, nombre, genera).subscribe(
       (response) => {
@@ -410,7 +410,7 @@ export class PanelSolicitudes {
   // }
 
   accion(id: number, accion: number){
-    console.log(accion);
+    // console.log(accion);
     if(accion == 0){
       this.spinerBandera = !this.spinerBandera;
     }
