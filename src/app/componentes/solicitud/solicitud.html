@@ -177,7 +177,7 @@
                     <div class="input-group mb-1" *ngIf="this.opcionselect == 'Pago tiempo por tiempo'">
                         <span class="input-group-text">Motivo&nbsp;
                             <!-- <label *ngIf="isInvalid('motivo')" style="color: red; font-size: small;">( Campo obligatorio* )</label>               -->
-                            <label *ngIf="solicitudForm.controls['motivo'].invalid" style="color: red; font-size: small;">( Ingresa formato fecha valido )</label>
+                            <label *ngIf="solicitudForm.controls['motivo'].invalid" style="color: red; font-size: small;">( Ingresa formato valido )</label>
                         </span>
                         <textarea pattern="^El tiempo se pagara del \d{1,2} al \d{1,2} de [A-Z][a-z][a-z], \d{1,2} hr al dia+.*" class="form-control" aria-label="With textarea" formControlName="motivo" placeholder="Ejemplo: El tiempo se pagara del 27 al 31 de Oct, 1 hr al dia..."></textarea>
                     </div>

@@ -261,7 +261,7 @@ export class PanelSolicitudes {
     );
   }
 
-  firmaRelaciones(id: number, accion: number, clave: number){
+  firmaRelaciones(id: number, accion: number, clave: number, tipo: string){
     this.spinerBandera = !this.spinerBandera;
     // console.log(this.cardSolicitud.Dias_disponibles, this.cardSolicitud.cuantos_dias);
     // const dias_d = parseInt(this.cardSolicitud.Dias_disponibles) - parseInt(this.cardSolicitud.cuantos_dias);
@@ -275,9 +275,14 @@ export class PanelSolicitudes {
     var nombre: string = '';
     var genera: string = '';
 
-   
-    dias_d = this.cardSolicitud.Saldo - parseInt(this.cardSolicitud.cuantos_dias);
-    dias_u = this.cardSolicitud.Vacaciones_tomadas + parseInt(this.cardSolicitud.cuantos_dias);
+   if(tipo != 'Pago tiempo por tiempo'){
+      dias_d = this.cardSolicitud.Saldo - parseInt(this.cardSolicitud.cuantos_dias);
+      dias_u = this.cardSolicitud.Vacaciones_tomadas + parseInt(this.cardSolicitud.cuantos_dias);
+   }
+   if(tipo == 'Pago tiempo por tiempo'){
+      dias_d = this.cardSolicitud.Saldo;
+      dias_u = this.cardSolicitud.Vacaciones_tomadas;
+   }
     periodo = this.cardSolicitud.Periodo;
     correo = this.cardSolicitud.emp_mail;
     nombre = this.cardSolicitud.Nombre;
