@@ -273,7 +273,8 @@
                         <li class="menu-lista" (click)="cambiarDash()"><i class="bi bi-app-indicator"></i> Dashbord</li>
                         <!-- <li class="menu-lista" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-todas'"><i class="bi bi-pencil-square"></i> Firmar Todas</li> -->
                         <li class="menu-lista" (click)="cambiarReporte()"><i class="bi bi-file-earmark-spreadsheet"></i> Reportes</li>
-                        <li class="menu-lista" (click)="cambiarSolicitud()"><i class="bi bi-file-text"></i> Solicitud</li>
+                        <!-- <li *ngIf="this.user[0].emp_tipo == 'JI' && (this.user[0].emp_reldep != 'KAR' || this.user[0].emp_reldep != 'JCJ' || this.user[0].emp_reldep != 'BHTC')" class="menu-lista" (click)="cambiarSolicitud()"><i class="bi bi-file-text"></i> Solicitud</li> -->
+                        <li *ngIf="this.user[0].emp_tipo == 'JI' && (this.user[0].emp_reldep != 'KAR' && this.user[0].emp_reldep != 'JCJ' && this.user[0].emp_reldep != 'BHTC')" class="menu-lista" (click)="cambiarSolicitud()"><i class="bi bi-file-text"></i> Solicitud</li>
                         <li *ngIf="this.user[0].emp_tipo == 'RI'" (click)="cambiarDia()" class="menu-lista"><i class="bi bi-calendar-check"></i> Día Inhábil</li>
                         <li class="menu-lista" (click)="abrirAlerta()"><i class="bi bi-door-closed"></i> Cerrar Sesión</li>
                         <!-- <li class="menu-lista"><i class="bi bi-bell-fill"></i> notification</li>
@@ -307,7 +308,7 @@
         </div>
         <div class="col-lg-7 mt-1" *ngIf="banderaDash == true">
             <div class="row solicitud">
-                <div class="card mb-4 d-flex align-items-center justify-content-center" style="min-height: 35vh;" *ngIf="!this.solicitudes[0]">
+                <div class="card mb-4 d-flex align-items-center justify-content-center" style="min-height: 35vh;" *ngIf="!this.cardSolicitud">
                     <div class="spinner-grow mb-2" style="width: 3rem; height: 3rem;" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
@@ -315,9 +316,9 @@
                         <h5>Esperando recibir solicitud</h5>
                     </div>
                 </div>
-                <div class="card mb-1" style="min-height: 35vh;" *ngIf="this.solicitudes[0]">
+                <div class="card mb-1" style="min-height: 35vh;" *ngIf="this.cardSolicitud">
                     <div class="card-header">
-                        <div class="row" *ngIf="this.cardSolicitud">
+                        <div class="row">
                             <div class="col-lg-8 col-md-8 col-sm-12 d-flex justify-content-start align-items-center">
                                {{this.cardSolicitud.fecha_solicitud}}&nbsp;<span *ngIf="this.cardSolicitud.firma_interesado" class="badge rounded-pill bg-success">Interesado</span>&nbsp;<span *ngIf="this.cardSolicitud.firma_jefe_in" class="badge rounded-pill bg-success">Jefe inmediato</span>&nbsp;
                                <!-- <span *ngIf="this.cardSolicitud.firms_gerente" class="badge rounded-pill bg-success">Gerente</span> -->
