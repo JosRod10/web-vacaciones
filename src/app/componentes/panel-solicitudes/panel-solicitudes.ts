@@ -214,14 +214,16 @@ export class PanelSolicitudes {
   cargarSolicitudes(tipo: string, rel_dep: string){
     this.api.getSolicitudes(tipo, rel_dep).subscribe(data => {
       // console.log(data);
+      if(data){
         this.solicitudes = data.filter(solicitud => solicitud.status != 'Ausente');
+      
         // console.log(this.solicitudes);
         this.solicitudes = this.solicitudes.map((ele: any)=>{
           ele.fecha_apartir = this.convertirFecha(ele.fecha_apartir);
           ele.fecha_hasta = this.convertirFecha(ele.fecha_hasta);
           return ele;
         });
-        
+      
         this.ausentes = data.filter(solicitud => solicitud.status == 'Ausente');
         this.ausentes = this.ausentes.map((ele: any)=>{
           ele.fecha_apartir = this.convertirFecha(ele.fecha_apartir);
@@ -237,7 +239,7 @@ export class PanelSolicitudes {
         // console.log(this.cardSolicitud);
         // const tipoSolicitud = this.cardSolicitud.motivo.includes('Permiso')? 'Permiso' : this.cardSolicitud.motivo.includes('Pago tiempo por tiempo')? 'Pago tiempo por tiempo' : 'Vacaciones';
         // this.cardSolicitud = Object.assign({tipoSolicitud: tipoSolicitud}, this.cardSolicitud);
-        
+      }
         // this.cardSolicitud.motivo = tipoSolicitud == 'Vacaciones'? this.cardSolicitud.motivo.substring(12,500) : tipoSolicitud == 'Permiso'? this.cardSolicitud.motivo.substring(9,500) : tipoSolicitud == 'Pago tiempo por tiempo'? this.cardSolicitud.motivo.substring(24,500) : this.cardSolicitud.motivo;
 
     });

@@ -90,6 +90,7 @@ export class Form {
   alertSuccess: boolean = false;
   alertDanger: boolean = false;
   user: any;
+  userFor: any;
   items: any;
   solicitudForm: FormGroup;
   solicitudFormRI: FormGroup;
@@ -215,6 +216,11 @@ export class Form {
     this.checkLeyenda = 'Autorizar';
     this.selectOption = 'Selecciona una opción';
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
+    // this.user = this.user[this.user.length - 1];
+    // console.log('Ultimo elemento',this.user);
+    // this.userFor = this.user;
+    this.user = this.user.reverse();
+    // this.user = this.user.slice().reverse();
     if(this.user[0].emp_tipo == 'S'){
      this.cargarColaboradores(this.user[0].emp_cve, this.user[0].emp_tipo, this.user[0].emp_reldep, this.user[0].Descripcion);
     //  console.log(this.user[0].Clave)
@@ -239,6 +245,16 @@ export class Form {
     this.fecha_ingreso = this.obtenerFechaAlta(this.user[0].emp_fechin);
     this.cumplidos = this.user[0].Años;
     this.dias_diponibles = this.user[0].Saldo;
+
+    // if(this.user[0].Saldo && this.user[0].Saldo > 0 && !this.user[1].Saldo && !this.user[2]?.Saldo){
+    //   this.dias_diponibles = this.user[0].Saldo;
+    // }
+    // if(this.user[0].Saldo && this.user[0].Saldo > 0 && this.user[1].Saldo && this.user[1].Saldo > 0){
+    //   this.dias_diponibles = this.user[1].Saldo;
+    // }
+    // if(this.user[0].Saldo && this.user[0].Saldo > 0 && this.user[1].Saldo && this.user[1].Saldo > 0 && this.user[2]?.Saldo && this.user[2]?.Saldo > 0){
+    //   this.dias_diponibles = this.user[2].Saldo;
+    // }
 
     
     if(this.user[0].Dias_a_disfrutar == '' || this.user[0].Dias_a_disfrutar == null){

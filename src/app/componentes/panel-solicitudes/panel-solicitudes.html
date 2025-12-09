@@ -317,7 +317,7 @@
                 </div>
                 <div class="card mb-1" style="min-height: 35vh;" *ngIf="this.solicitudes[0]">
                     <div class="card-header">
-                        <div class="row">
+                        <div class="row" *ngIf="this.cardSolicitud">
                             <div class="col-lg-8 col-md-8 col-sm-12 d-flex justify-content-start align-items-center">
                                {{this.cardSolicitud.fecha_solicitud}}&nbsp;<span *ngIf="this.cardSolicitud.firma_interesado" class="badge rounded-pill bg-success">Interesado</span>&nbsp;<span *ngIf="this.cardSolicitud.firma_jefe_in" class="badge rounded-pill bg-success">Jefe inmediato</span>&nbsp;
                                <!-- <span *ngIf="this.cardSolicitud.firms_gerente" class="badge rounded-pill bg-success">Gerente</span> -->
