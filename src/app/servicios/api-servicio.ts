@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 })
 
 export class ApiServicio {
-  private apiUrl = 'http://localhost:3001'; // Backend Local
-  // private apiUrl = 'http://199.5.83.248:3001'; // Backend Servidor
+  // private apiUrl = 'http://localhost:3001'; // Backend Local
+  private apiUrl = 'http://199.5.83.248:3001'; // Backend Servidor
 
   constructor(private http: HttpClient) {}
 
