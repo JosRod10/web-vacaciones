@@ -16,7 +16,8 @@ import {MatIconModule} from '@angular/material/icon';
 import { Colaborador } from '../../interfaces/colaborador';
 import { LoginServices } from '../../servicios/login';
 import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
-
+import { NgClass } from '@angular/common';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-form',
@@ -140,7 +141,10 @@ export class Form {
   opcionselect: string = '';
   ///////////////////////////////////////////////////////////////
 
-  constructor(private fb: FormBuilder, private router: Router, private dialog: MatDialog, private api: ApiServicio, private authservice: LoginServices){
+  adelantar: boolean = false;
+  valorIngresado: boolean = false;
+
+  constructor(private cdr: ChangeDetectorRef, private fb: FormBuilder, private router: Router, private dialog: MatDialog, private api: ApiServicio, private authservice: LoginServices){
     
     // Codifica el mensaje para la URL
     const encodedMessage = encodeURIComponent(this.message);
@@ -165,9 +169,9 @@ export class Form {
       tPermiso3: ['', [Validators.required]],
       tPermiso4: ['', [Validators.required]],
       cDias: ['', [Validators.required]],
-      fechaApartir: ['', []],
-      fechaHasta: ['', []],
-      tipo_solicitud: ['', []],
+      fechaApartir: ['', [Validators.required]],
+      fechaHasta: ['', [Validators.required]],
+      tipo_solicitud: ['', [Validators.required]],
       // motivo: ['', [Validators.required,]],// Validators.minLength(10)
       motivo: ['', [Validators.required]],
       firma: ['', [Validators.required]],
@@ -213,6 +217,13 @@ export class Form {
   }
 
   ngOnInit(){
+
+    // Opcional: Suscríbete a valueChanges aquí si necesitas actualizar 'opcionselect' 
+    // para el *ngIf del motivo de manera reactiva.
+    this.solicitudForm.get('tipo_solicitud')?.valueChanges.subscribe(value => {
+      this.opcionselect = value;
+    });
+
     this.checkLeyenda = 'Autorizar';
     this.selectOption = 'Selecciona una opción';
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
@@ -226,6 +237,22 @@ export class Form {
     //  console.log(this.user[0].Clave)
      this.consultarHistorialColaboradores(this.user[0].Clave);
     }
+    // ****************************************************************************************+
+    if(this.user[0].emp_tipo == 'JI' && this.user[0].Clave == '300175'){
+     this.cargarColaboradores('300175', 'S', 'GLR', this.user[0].Descripcion);
+     this.consultarHistorialColaboradores(this.user[0].Clave);
+    }
+
+    if(this.user[0].emp_tipo == 'JI' && this.user[0].emp_cve == '300043'){
+     this.cargarColaboradores('300043', 'S', 'SCMG', this.user[0].Descripcion);
+     this.consultarHistorialColaboradores(this.user[0].Clave);
+    }
+
+    if(this.user[0].emp_tipo == 'JI' && this.user[0].emp_cve == '200267'){
+     this.cargarColaboradores('200267', 'S', 'GLR', this.user[0].Descripcion);
+     this.consultarHistorialColaboradores(this.user[0].Clave);
+    }
+    // ****************************************************************************************+
     if(this.user[0].emp_tipo == 'RIA'){
      this.cargarColaboradores(this.user[0].emp_cve, this.user[0].emp_tipo, this.user[0].emp_reldep, this.user[0].Descripcion);
           this.consultarHistorialColaboradores(this.user[0].Clave);
@@ -289,9 +316,10 @@ export class Form {
     this.api.getCoAsociados(clave, tipo, tipo_dep, depto).subscribe(data => {
         
         this.colaboradores = data;
-        const opcion = {emp_nom: 'Selecciona colaborador'}
-        this.colaboradores.unshift(opcion);
+        // const opcion = {emp_nom: 'Selecciona colaborador'}
+        // this.colaboradores.unshift(opcion);
         this.colaboradores = this.colaboradores.sort((a, b) => b.emp_cve - a.emp_cve);
+        this.cdr.detectChanges(); // Fuerza la actualización del DOM
     });
 
   };
@@ -505,12 +533,12 @@ export class Form {
     return hoy.toLocaleDateString('es-ES', opciones);
   }
 
-  valorSelect(event: Event): void {
+  // valorSelect(event: Event): void {
 
-    const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
-    this.opcionselect = selectElement.value == 'Selecciona una opción'? '' : selectElement.value;
+  //   const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
+  //   this.opcionselect = selectElement.value == 'Selecciona una opción'? '' : selectElement.value;
      
-  }
+  // }
 
   enviar(){
     this.spinerBandera = !this.spinerBandera;
@@ -518,24 +546,24 @@ export class Form {
     this.solicitudForm.value.firma = this.solicitudForm.value.firma.toString();
 
     this.solicitudForm.value.fecha = this.fecha_hoy + ' del 20' + this.ano_hoy;
-    this.solicitudForm.value.nombre = this.user[0].emp_tipo == 'S'? this.nombre_co : this.user[0].emp_tipo == 'RIA'? this.nombre_co : this.user[0].emp_nom;
-    this.solicitudForm.value.fechaIngreso = this.user[0].emp_tipo == 'S'? this.fecha_co_ingreso : this.user[0].emp_tipo == 'RIA'? this.fecha_co_ingreso : this.fechaAlta;
+    this.solicitudForm.value.nombre = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.nombre_co : this.user[0].emp_tipo == 'S'? this.nombre_co : this.user[0].emp_tipo == 'RIA'? this.nombre_co : this.user[0].emp_nom;
+    this.solicitudForm.value.fechaIngreso = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.fecha_co_ingreso  : this.user[0].emp_tipo == 'S'? this.fecha_co_ingreso : this.user[0].emp_tipo == 'RIA'? this.fecha_co_ingreso : this.fechaAlta;
     this.solicitudForm.value.añosCumplidos = this.cumplidos;
     // this.solicitudForm.value.noTarjeta = this.user[0].emp_cve;
-    this.solicitudForm.value.noTarjeta = this.user[0].emp_tipo == 'S'? this.no_tarjeta_co :this.user[0].emp_tipo == 'RIA'? this.colaborador[0].emp_cve : this.user[0].emp_cve;
-    this.solicitudForm.value.depto = this.user[0].emp_tipo == 'S'? this.dep_co : this.user[0].emp_tipo == 'RIA'? this.dep_co : this.user[0].Departamento;
+    this.solicitudForm.value.noTarjeta = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.no_tarjeta_co : this.user[0].emp_tipo == 'S'? this.no_tarjeta_co :this.user[0].emp_tipo == 'RIA'? this.colaborador[0].emp_cve : this.user[0].emp_cve;
+    this.solicitudForm.value.depto = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.dep_co : this.user[0].emp_tipo == 'S'? this.dep_co : this.user[0].emp_tipo == 'RIA'? this.dep_co : this.user[0].Departamento;
     this.solicitudForm.value.cCostos = this.user[0].dep_id;
     this.solicitudForm.value.fechaApartir = this.converetirFecha(this.solicitudForm.value.fechaApartir);
     this.solicitudForm.value.fechaHasta = this.converetirFecha(this.solicitudForm.value.fechaHasta);
-    this.solicitudForm.value.clave = this.user[0].emp_tipo == 'S'? this.no_tarjeta_co : this.user[0].emp_tipo == 'RIA'? this.colaborador[0].emp_cve : this.user[0].Clave;
+    this.solicitudForm.value.clave = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.no_tarjeta_co : this.user[0].emp_tipo == 'S'? this.no_tarjeta_co : this.user[0].emp_tipo == 'RIA'? this.colaborador[0].emp_cve : this.user[0].Clave;
 
     this.solicitudForm.value.motivo = this.solicitudForm.value.motivo;
     this.solicitudForm.value.tipo_solicitud = this.opcionselect;
 
-    this.solicitudForm.value.Periodo = this.user[0].emp_tipo == 'S'? this.colaborador[0].Periodo : this.user[0].emp_tipo == 'RIA'? this.colaborador[0].Periodo : this.user[0].Periodo;
-    this.solicitudForm.value.Genera = this.user[0].emp_tipo == 'S'? this.user[0].emp_cve : this.user[0].emp_cve;
+    this.solicitudForm.value.Periodo = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.colaborador[0].Periodo : this.user[0].emp_tipo == 'S'? this.colaborador[0].Periodo : this.user[0].emp_tipo == 'RIA'? this.colaborador[0].Periodo : this.user[0].Periodo;
+    this.solicitudForm.value.Genera = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.user[0].emp_cve : this.user[0].emp_tipo == 'S'? this.user[0].emp_cve : this.user[0].emp_cve;
     
-    this.solicitudForm.value.Jefe = this.user[0].emp_tipo == 'S'? this.colaborador[0].emp_reldep : this.user[0].emp_reldep;
+    this.solicitudForm.value.Jefe = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.colaborador[0].emp_reldep : this.user[0].emp_tipo == 'S'? this.colaborador[0].emp_reldep : this.user[0].emp_reldep;
 
 
     this.api.form(this.solicitudForm.value).subscribe(
@@ -717,4 +745,89 @@ export class Form {
 
   }
 
+  // ********************************************************************************************************
+    cambiarMensaje(event: any): void {
+    const isChecked = event.target.checked;
+    
+    if (isChecked) {
+      // Cuando se firma (activa el checkbox), marcamos todos los campos como inválidos/tocados
+      this.markAllFieldsAsTouchedAndDirty(this.solicitudForm);
+
+      if (this.solicitudForm.invalid) {
+        // alert('Por favor, completa todos los campos obligatorios antes de firmar.');
+        // Opcional: si quieres obligar a completar los campos antes de firmar
+        // this.solicitudForm.get('firma')?.setValue(false); 
+      }
+    } else {
+      // Lógica si se desactiva la firma
+    }
+  }
+
+  // Función de utilidad para marcar todos los controles del formulario
+  private markAllFieldsAsTouchedAndDirty(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(field => {
+      const control = formGroup.get(field);
+      control?.markAsTouched({ onlySelf: true });
+      control?.markAsDirty({ onlySelf: true });
+      // Si tienes grupos anidados, también se deben marcar
+      if (control instanceof FormGroup) {
+        this.markAllFieldsAsTouchedAndDirty(control);
+      }
+    });
+  }
+  
+  // Función auxiliar para usar en la plantilla y verificar si un campo es inválido
+  // isInvalid(controlName: string): boolean {
+  //   const control = this.solicitudForm.get(controlName);
+  //   return !!(control && control.invalid && (control.dirty || control.touched));
+  // }
+
+  /**
+ * Verifica si los 4 campos de permiso están vacíos/inválidos a la vez.
+ * Esto sirve para mostrar un solo mensaje de error general.
+ */
+  areAllTPermisosInvalid(): boolean {
+    // Asegúrate de que todos los controles existan
+    const t1 = this.solicitudForm.get('tPermiso1');
+    const t2 = this.solicitudForm.get('tPermiso2');
+    const t3 = this.solicitudForm.get('tPermiso3');
+    const t4 = this.solicitudForm.get('tPermiso4');
+
+    // Retorna verdadero (true) si todos son inválidos (no seleccionados) Y han sido tocados/sucios.
+    // Tu función isInvalid ya maneja dirty/touched, así que solo usamos esa función si quieres reutilizarla, 
+    // o podemos verificar los valores directamente aquí.
+
+    // Usando tu función isInvalid (que comprueba touched/dirty):
+    // return this.isInvalid('tPermiso1') && this.isInvalid('tPermiso2') && this.isInvalid('tPermiso3') && this.isInvalid('tPermiso4');
+
+    // Una forma más directa si solo quieres saber si están vacíos al momento de la firma:
+    const allControls = [t1, t2, t3, t4];
+    const allEmpty = allControls.every(c => c && !c.value);
+    const anyTouched = allControls.some(c => c && (c.touched || c.dirty));
+
+    return allEmpty && anyTouched;
+  }
+  // ********************************************************************************************************
+  adelantarDias(){
+    this.adelantar = !this.adelantar;
+  }
+
+  adelantarCancelar(){
+    this.adelantar = !this.adelantar;
+    this.solicitudForm.get('cDias')?.setValue('');
+  }
+
+  // Método que se ejecuta con cada cambio en el input
+  onInputChange(event: Event): void {
+    const valorDelInput = (event.target as HTMLInputElement).value;
+    
+    // Si el valor está vacío o solo contiene espacios, la variable se pone en false
+    this.valorIngresado = valorDelInput.trim().length > 0;
+    this.adelantar = false;
+    // Opcional: ver el estado en la consola
+  }
+
+  // ****************************************************************************************************************
+
+  // ****************************************************************************************************************
 }

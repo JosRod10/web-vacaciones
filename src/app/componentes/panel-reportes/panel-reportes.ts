@@ -277,7 +277,7 @@ export class PanelReportes {
     const ji = solicitud.firma_jefe_in != ''? 'Autorizó' : '';
     const g = solicitud.firms_gerente != ''? 'Autorizó' : '';
 
-    const statusA = solicitud.status == 'Aceptado'? 'X' : solicitud.status == 'Completado'? 'X' : '';
+    const statusA = solicitud.status == 'Revizada'? 'X' : solicitud.status == 'Aceptado'? 'X' : '';
     const statusR = solicitud.status != 'Rechazado'? '' : 'X';
 
     const rel = solicitud.status == 'Completado'? 'Autorizó' : '';

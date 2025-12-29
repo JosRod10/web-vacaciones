@@ -170,3 +170,56 @@ mat-datepicker{
    background-color : naranja;
    border-radius : 100% ;
 }
+
+/* Esto ya debería estar cubierto por Bootstrap, pero es para referencia */
+.form-control.is-invalid,
+.form-select.is-invalid,
+.input-group-text.is-invalid {
+  border-color: #dc3545; /* Rojo de Bootstrap */
+}
+
+/* Estilo para los labels de los checkboxes o grupos de inputs si es necesario */
+.btn-outline-success.is-invalid {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.alert-class{
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.alert-class-border{
+  border-color: #dc3545;
+}
+
+.adelantar{
+  color: #000;
+  font-size: small; 
+  cursor: pointer;
+  border: 1px solid rgb(4, 114, 26);
+  padding: 3px;
+  border-radius: 0px 5px 5px 0px;
+}
+
+.adelantar:hover{
+  color: rgb(4, 114, 26);
+}
+
+.adelantar-cancelar{
+  color: #000;
+  font-size: small; 
+  cursor: pointer;
+  border: 1px solid #dc3545;
+  padding: 3px;
+  border-radius: 0px 5px 5px 0px;
+}
+
+.adelantar-cancelar:hover{
+  color: #dc3545;
+}
+
+/* ************************************************************************************** */
+
+
+/* ************************************************************************************** */

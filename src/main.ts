@@ -11,9 +11,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { PanelReportes } from './app/componentes/panel-reportes/panel-reportes';
 import { AuthGuard } from './app/guards/autenticacion-guard';
 import { withHashLocation } from '@angular/router';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 bootstrapApplication(App, {
-  providers: [
+  providers: [{provide: MAT_DATE_LOCALE, useValue: 'es-Mx'},
     // provideMatDialogRef(),
     provideHttpClient(withFetch()),
     provideRouter([

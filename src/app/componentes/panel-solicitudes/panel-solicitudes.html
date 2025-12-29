@@ -274,7 +274,8 @@
                         <!-- <li class="menu-lista" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-todas'"><i class="bi bi-pencil-square"></i> Firmar Todas</li> -->
                         <li class="menu-lista" (click)="cambiarReporte()"><i class="bi bi-file-earmark-spreadsheet"></i> Reportes</li>
                         <!-- <li *ngIf="this.user[0].emp_tipo == 'JI' && (this.user[0].emp_reldep != 'KAR' || this.user[0].emp_reldep != 'JCJ' || this.user[0].emp_reldep != 'BHTC')" class="menu-lista" (click)="cambiarSolicitud()"><i class="bi bi-file-text"></i> Solicitud</li> -->
-                        <li *ngIf="this.user[0].emp_tipo == 'JI' && (this.user[0].emp_reldep != 'KAR' && this.user[0].emp_reldep != 'JCJ' && this.user[0].emp_reldep != 'BHTC')" class="menu-lista" (click)="cambiarSolicitud()"><i class="bi bi-file-text"></i> Solicitud</li>
+                        <li *ngIf="this.user[0].emp_tipo == 'JI' && (this.user[0].emp_reldep != 'KAR' && this.user[0].emp_reldep != 'JCJ' && this.user[0].emp_reldep != 'BHTC' && this.user[0].emp_reldep != 'JAAC')" class="menu-lista" (click)="cambiarSolicitud()"><i class="bi bi-file-text"></i> Solicitud</li>
+                        <li *ngIf="this.user[0].emp_tipo == 'JI' && (this.user[0].emp_reldep == 'KAR' || this.user[0].emp_reldep == 'JCJ' || this.user[0].emp_reldep == 'BHTC')" class="menu-lista" (click)="crearSolicitud()"><i class="bi bi-file-text"></i>G. Solicitud</li>
                         <li *ngIf="this.user[0].emp_tipo == 'RI'" (click)="cambiarDia()" class="menu-lista"><i class="bi bi-calendar-check"></i> Día Inhábil</li>
                         <li class="menu-lista" (click)="abrirAlerta()"><i class="bi bi-door-closed"></i> Cerrar Sesión</li>
                         <!-- <li class="menu-lista"><i class="bi bi-bell-fill"></i> notification</li>
@@ -320,7 +321,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-lg-8 col-md-8 col-sm-12 d-flex justify-content-start align-items-center">
-                               {{this.cardSolicitud.fecha_solicitud}}&nbsp;<span *ngIf="this.cardSolicitud.firma_interesado" class="badge rounded-pill bg-success">Interesado</span>&nbsp;<span *ngIf="this.cardSolicitud.firma_jefe_in" class="badge rounded-pill bg-success">Jefe inmediato</span>&nbsp;
+                               {{this.cardSolicitud.fecha_solicitud}}&nbsp;<span *ngIf="this.cardSolicitud.firma_interesado !='' && this.cardSolicitud.firma_jefe_in == ''" class="badge rounded-pill bg-success">Pend. X Jefe Inm.</span>&nbsp;<span *ngIf="this.cardSolicitud.firma_jefe_in != '' && this.cardSolicitud.firma_interesado !=''" class="badge rounded-pill bg-success">Pend. X R.H.</span>&nbsp;
                                <!-- <span *ngIf="this.cardSolicitud.firms_gerente" class="badge rounded-pill bg-success">Gerente</span> -->
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-end align-items-center">
@@ -407,7 +408,7 @@
                                 <div class="row mt-2">
                                     <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-end">
                                         <span *ngIf="this.spinerFirma" class="loader-firm"></span>
-                                        <button *ngIf="this.cardSolicitud.status == 'Aceptado'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
+                                        <button *ngIf="this.cardSolicitud.status == 'Revizada'" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'" type="button" class="btn btn-outline-success"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Firmar
                                         </button>
@@ -419,7 +420,7 @@
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Firmar
                                         </button> -->
-                                        <button *ngIf="this.cardSolicitud.firma_interesado != '' && this.cardSolicitud.firma_jefe_in != '' && this.firmaCheck == false && this.cardSolicitud.status != 'Aceptado'" type="button" class="btn btn-outline-success" (click)="activarFirma(this.cardSolicitud.id)"
+                                        <button *ngIf="this.cardSolicitud.firma_interesado != '' && this.cardSolicitud.firma_jefe_in != '' && this.firmaCheck == false && this.cardSolicitud.status != 'Revizada'" type="button" class="btn btn-outline-success" (click)="activarFirma(this.cardSolicitud.id)"
                                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-right: 1em;">
                                         <i class="bi bi-check-lg"></i> Aceptado
                                         </button>
@@ -478,6 +479,10 @@
         </div>
 
         <div class="col-lg-10" *ngIf="banderaSolicitud == true">
+            <app-form></app-form>
+        </div>
+
+        <div class="col-lg-10" *ngIf="banderaCrearSolicitud == true">
             <app-form></app-form>
         </div>
     
@@ -572,7 +577,7 @@
             <span class="loader"></span>
         </div>
         <div class="modal-footer d-flex justify-content-center" *ngIf="this.cardSolicitud">
-            <button *ngIf="this.cardSolicitud.status == 'Aceptado' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaRelaciones(this.cardSolicitud.id, 1, this.cardSolicitud.clave, this.cardSolicitud.tipo_solicitud)">Firmar</button>
+            <button *ngIf="this.cardSolicitud.status == 'Revizada' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaRelaciones(this.cardSolicitud.id, 1, this.cardSolicitud.clave, this.cardSolicitud.tipo_solicitud)">Firmar</button>
             <button *ngIf="this.user[0].emp_tipo == 'JI' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaJefe(this.cardSolicitud)">Firmar</button>
             <!-- <button *ngIf="this.user[0].emp_tipo == 'G' && spinerBandera == false" type="button" class="btn btn-outline-success" (click)="firmaGerente(this.cardSolicitud)">Firmar</button> -->
             <button *ngIf="spinerBandera == false" type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>

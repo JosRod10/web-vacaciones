@@ -99,6 +99,7 @@ export class PanelSolicitudes {
   banderaDash: boolean = true;
   banderaReporte: boolean = false;
   banderaSolicitud: boolean = false;
+  banderaCrearSolicitud: boolean = false;
   banderaDia: boolean = false;
 
   solicitudForm: FormGroup;
@@ -162,6 +163,7 @@ export class PanelSolicitudes {
     this.banderaDash = true;
     this.banderaReporte = false;
     this.banderaSolicitud = false;
+    this.banderaCrearSolicitud = false;
     this.banderaDia = false;
     this.cargarSolicitudes(this.user[0].emp_tipo, this.user[0].emp_reldep);
   }
@@ -170,11 +172,21 @@ export class PanelSolicitudes {
     this.banderaReporte = true;
     this.banderaDash = false;
     this.banderaSolicitud = false;
+    this.banderaCrearSolicitud = false;
     this.banderaDia = false;
   }
 
   cambiarSolicitud(){
     this.banderaSolicitud = true;
+    this.banderaReporte = false;
+    this.banderaDash = false;
+    this.banderaCrearSolicitud = false;
+    this.banderaDia = false;
+  }
+
+  crearSolicitud(){
+    this.banderaCrearSolicitud = true;
+    this.banderaSolicitud = false;
     this.banderaReporte = false;
     this.banderaDash = false;
     this.banderaDia = false;
@@ -184,6 +196,7 @@ export class PanelSolicitudes {
     this.banderaDia = true;
     this.banderaReporte = false;
     this.banderaSolicitud = false;
+    this.banderaCrearSolicitud = false;
     this.banderaDash = false;
   }
 
@@ -232,7 +245,7 @@ export class PanelSolicitudes {
         });
         if(this.user[0].emp_tipo == 'RI'){
           this.solicitudPendienteJefe = data.filter(solicitud => solicitud.firma_jefe_in == '');
-          this.solicitudPendienteAceptar = data.filter(solicitud => solicitud.status != 'Aceptado');
+          this.solicitudPendienteAceptar = data.filter(solicitud => solicitud.status == 'Aceptado');
         }
 
         this.cardSolicitud =  this.solicitudes[0];
