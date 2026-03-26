@@ -15,16 +15,22 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Form } from '../solicitud/solicitud';
 import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
+import { PanelControlVac } from '../panel-control-vac/panel-control-vac';
+import { MatDatepicker } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-panel-solicitudes',
   standalone: true,
-  imports: [CommonModule, PanelReportes, MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, 
+  imports: [CommonModule, PanelReportes, PanelControlVac, MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, 
     MatGridListModule, MatIconModule, ReactiveFormsModule, FormsModule, Form],
   templateUrl: './panel-solicitudes.html',
   styleUrl: './panel-solicitudes.css'
 })
 export class PanelSolicitudes {
+
+  @ViewChild('inicioPicker') picker!: MatDatepicker<Date>;
+  selectedDates: Date[] = [];
+  fechasOrdenadas: any[] = [];
 
   fechasDeshabilitadas: Date[] = [
     new Date(2025, 10, 1), // 1 de Noviembre de 2025
@@ -63,22 +69,22 @@ export class PanelSolicitudes {
   };
 
   // Función para aplicar clases CSS a las fechas
-  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
-    if (view === 'month') {
-      const date = cellDate || new Date();
-      const isDisabled = this.fechasDeshabilitadas.some(disabledDate =>
-        date.getFullYear() === disabledDate.getFullYear() &&
-        date.getMonth() === disabledDate.getMonth() &&
-        date.getDate() === disabledDate.getDate()
-      );
+  // dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
+  //   if (view === 'month') {
+  //     const date = cellDate || new Date();
+  //     const isDisabled = this.fechasDeshabilitadas.some(disabledDate =>
+  //       date.getFullYear() === disabledDate.getFullYear() &&
+  //       date.getMonth() === disabledDate.getMonth() &&
+  //       date.getDate() === disabledDate.getDate()
+  //     );
 
-      // Aplica la clase 'fecha-deshabilitada' si está deshabilitada
-      return {
-        'fecha-deshabilitada': isDisabled
-      };
-    }
-    return {};
-  };
+  //     // Aplica la clase 'fecha-deshabilitada' si está deshabilitada
+  //     return {
+  //       'fecha-deshabilitada': isDisabled
+  //     };
+  //   }
+  //   return {};
+  // };
 
 
   @ViewChild('miCheckboxRI') miCheckboxRI!: ElementRef;
@@ -98,6 +104,7 @@ export class PanelSolicitudes {
   
   banderaDash: boolean = true;
   banderaReporte: boolean = false;
+  banderaControl: boolean = false;
   banderaSolicitud: boolean = false;
   banderaCrearSolicitud: boolean = false;
   banderaDia: boolean = false;
@@ -114,6 +121,8 @@ export class PanelSolicitudes {
 
   solicitudPendienteJefe: any[] = [];
   solicitudPendienteAceptar: any[] = [];
+
+  colaboradores: any[] = [];
 
   constructor(private api: ApiServicio, private dialog: MatDialog, private router: Router, private fb: FormBuilder){
 
@@ -162,6 +171,7 @@ export class PanelSolicitudes {
   cambiarDash(){
     this.banderaDash = true;
     this.banderaReporte = false;
+    this.banderaControl = false;
     this.banderaSolicitud = false;
     this.banderaCrearSolicitud = false;
     this.banderaDia = false;
@@ -171,6 +181,16 @@ export class PanelSolicitudes {
   cambiarReporte(){
     this.banderaReporte = true;
     this.banderaDash = false;
+    this.banderaControl = false;
+    this.banderaSolicitud = false;
+    this.banderaCrearSolicitud = false;
+    this.banderaDia = false;
+  }
+
+    cambiarControl(){
+    this.banderaControl = true;
+    this.banderaReporte = false;
+    this.banderaDash = false;
     this.banderaSolicitud = false;
     this.banderaCrearSolicitud = false;
     this.banderaDia = false;
@@ -179,6 +199,7 @@ export class PanelSolicitudes {
   cambiarSolicitud(){
     this.banderaSolicitud = true;
     this.banderaReporte = false;
+    this.banderaControl = false;
     this.banderaDash = false;
     this.banderaCrearSolicitud = false;
     this.banderaDia = false;
@@ -188,6 +209,7 @@ export class PanelSolicitudes {
     this.banderaCrearSolicitud = true;
     this.banderaSolicitud = false;
     this.banderaReporte = false;
+    this.banderaControl = false;
     this.banderaDash = false;
     this.banderaDia = false;
   }
@@ -195,10 +217,131 @@ export class PanelSolicitudes {
   cambiarDia(){
     this.banderaDia = true;
     this.banderaReporte = false;
+    this.banderaControl = false;
     this.banderaSolicitud = false;
     this.banderaCrearSolicitud = false;
     this.banderaDash = false;
+    this.consultaGeneralControlVacaciones();
   }
+
+  consultaGeneralControlVacaciones(){
+    this.api.consultarControl().subscribe(
+      (res)=>{
+          this.colaboradores = res;
+      },
+      (err)=>{
+          console.log('Error al cargar lista de colaboradores: ',err);
+      }
+    )
+  }
+
+  // +++++++++++++++++++++++++ Seleccion en lista de colaboradores con Día Inhabil +++++++++++++++++++++++++++++++++++
+  // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  seleccionados: any[] = [];
+  contador: number = 0;
+
+  toggleSeleccion(colab: any, event: any) {
+    const checked = event.target.checked;
+    
+    if (checked) {
+      this.seleccionados.push(colab);
+      console.log(this.seleccionados)
+    } else {
+        this.seleccionados = this.seleccionados.filter(s => !(s.Clave === colab.Clave && s.Periodo === colab.Periodo));
+      console.log(this.seleccionados)
+    }
+    this.actualizarContador();
+  }
+
+  seleccionarTodos(event: any) {
+    const checked = event.target.checked;
+    if (checked) {
+      // Clonamos el arreglo para evitar referencias directas
+      this.seleccionados = [...this.colaboradores];
+    } else {
+      this.seleccionados = [];
+    }
+    this.actualizarContador();
+  }
+
+  private actualizarContador() {
+    this.contador = this.seleccionados.length;
+  }
+
+  isSeleccionado(clave: string, periodo: string): boolean {
+    return this.seleccionados.some(c => c.Clave === clave && c.Periodo === periodo);
+  }
+
+  onDateChange(event: any): void {
+  const date = event.value;
+  if (!date) return;
+
+  // Normalizamos la fecha a medianoche para una comparación exacta
+  const selectedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  
+  const index = this.selectedDates.findIndex(d => 
+    d.getTime() === selectedDate.getTime()
+  );
+
+  if (index >= 0) {
+    // ELIMINAR: Si ya estaba en el arreglo, la quitamos
+    this.selectedDates.splice(index, 1);
+    // console.log(this.selectedDates);
+    this.fechasOrdenadas = this.ordenarYFormatearFechas(this.selectedDates);
+    // console.log(this.fechasOrdenadas);
+  } else {
+    // AGREGAR: Si no estaba, la incluimos
+    this.selectedDates.push(selectedDate);
+    // console.log(this.selectedDates);
+    this.fechasOrdenadas = this.ordenarYFormatearFechas(this.selectedDates);
+    // console.log(this.fechasOrdenadas);
+  }
+
+  // 1. Forzar cambio de referencia para que Angular detecte cambios
+  this.selectedDates = [...this.selectedDates];
+
+  // 2. Limpiar el input para permitir volver a seleccionar la misma fecha inmediatamente
+  this.solicitudForm.get('fechaApartir')?.setValue(null, { emitEvent: false });
+
+  // 3. REFRESCO VISUAL INMEDIATO:
+  // Accedemos a la instancia del calendario dentro del picker para forzar el repintado
+  const calendarInstance = (this.picker as any)._componentRef?.instance._calendar;
+  if (calendarInstance) {
+    calendarInstance.updateTodaysDate(); // Esto vuelve a ejecutar dateClass y quita/pone el CSS
+  }
+
+  // Mantener el panel abierto
+  setTimeout(() => this.picker.open());
+}
+
+  ordenarYFormatearFechas(fechas: Date[]): string[] {
+  return fechas
+    // 1. Ordenar cronológicamente (de menor a mayor)
+    .sort((a, b) => a.getTime() - b.getTime())
+    // 2. Transformar a formato "YYYY-MM-DD"
+    .map(fecha => {
+      const anio = fecha.getFullYear();
+      // getMonth() es 0-indexado, sumamos 1 y rellenamos con '0' a la izquierda
+      const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+      const dia = fecha.getDate().toString().padStart(2, '0');
+      
+      return `${anio}-${mes}-${dia}`;
+    });
+  }
+
+    // Tu función combinada de antes
+  dateClass = (cellDate: Date) => {
+    const isSelected = this.selectedDates.some(d => d.getTime() === cellDate.getTime());
+    const isDisabled = this.fechasDeshabilitadas.some(d => d.getTime() === cellDate.getTime());
+
+    return {
+      'custom-selected-date': isSelected,
+      'fecha-deshabilitada': isDisabled
+    };
+  };
+
+  // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   abrirPanelReportes(){
     this.router.navigate(['/reportes']);
@@ -245,7 +388,7 @@ export class PanelSolicitudes {
         });
         if(this.user[0].emp_tipo == 'RI'){
           this.solicitudPendienteJefe = data.filter(solicitud => solicitud.firma_jefe_in == '');
-          this.solicitudPendienteAceptar = data.filter(solicitud => solicitud.status == 'Aceptado');
+          this.solicitudPendienteAceptar = data.filter(solicitud => solicitud.status == 'Pend. X Jefe Inm.');
         }
 
         this.cardSolicitud =  this.solicitudes[0];
@@ -290,11 +433,10 @@ export class PanelSolicitudes {
     var nombre: string = '';
     var genera: string = '';
 
-   if(tipo != 'Pago tiempo por tiempo'){
+   if(tipo == 'Vacaciones'){
       dias_d = this.cardSolicitud.Saldo - parseInt(this.cardSolicitud.cuantos_dias);
       dias_u = this.cardSolicitud.Vacaciones_tomadas + parseInt(this.cardSolicitud.cuantos_dias);
-   }
-   if(tipo == 'Pago tiempo por tiempo'){
+   }else{
       dias_d = this.cardSolicitud.Saldo;
       dias_u = this.cardSolicitud.Vacaciones_tomadas;
    }
@@ -497,13 +639,18 @@ export class PanelSolicitudes {
     this.fecha = this.obtenerFechaDeHoy();
     this.fecha_hoy = this.fecha.substring(0,15);
     this.ano_hoy = this.fecha.substring(21,23);
-    this.solicitudForm.value.fecha = this.fecha_hoy + ' del 20' + this.ano_hoy;
+    this.solicitudForm.value.cDias = this.fechasOrdenadas.length;
+    this.solicitudForm.value.fecha = this.fecha;
+    this.solicitudForm.value.fechaApartir = this.fechasOrdenadas[0];
+    this.solicitudForm.value.fechaHasta = this.fechasOrdenadas.length == 1 ? this.fechasOrdenadas[0] : this.fechasOrdenadas.length > 1 ? this.fechasOrdenadas[this.fechasOrdenadas.length - 1] : this.fechasOrdenadas[0];
 
-    this.api.generarInhabil(this.solicitudForm.value).subscribe(
+
+    this.api.generarInhabil(this.solicitudForm.value, this.seleccionados).subscribe(
       (response)=>{
         if(response == true){
           this.spinerBandera = !this.spinerBandera;
           this.vaciarFormulario();
+          this.actualizarContador();
           this.alertSuccess = !this.alertSuccess;
           this.alertDanger = false;
           this.cerrarAlerta();
@@ -523,6 +670,8 @@ export class PanelSolicitudes {
     this.solicitudForm.get('fechaApartir')?.setValue('');
     this.solicitudForm.get('fechaHasta')?.setValue('');
     this.solicitudForm.get('motivo')?.setValue('');
+    this.selectedDates = [];
+    this.seleccionados = [];
   }
 
   isInvalid(field: string): boolean {

@@ -1,5 +1,5 @@
 <div class="p-4 fade-in-slow">
-    <div class="container-fluid contenedor shadow" *ngIf="user[0].emp_tipo == 'C' || (user[0].emp_tipo == 'JI' && (user[0].Clave != 300175 && user[0].Clave != 300043 && user[0].Clave != 200267)) || (user[0].emp_tipo == 'JI' && (user[0].Clave != 0300175 && user[0].Clave != 300043 && user[0].Clave != 200267)) || (user[0].emp_tipo == 'JI' && (user[0].Clave != 0300175 && user[0].Clave != 300043 && user[0].Clave != 200267))  || user[0].emp_tipo == 'RI'">
+    <div class="container-fluid contenedor shadow" *ngIf="user[0].emp_tipo == 'C' || (user[0].emp_tipo == 'JI' && (user[0].Clave != 300175 && user[0].Clave != 300043 && user[0].Clave != 200267 && user[0].Clave != 300300 && user[0].Clave != 300233 && user[0].Clave != 200005 && user[0].Clave != 300284 && user[0].Clave != 300050)) || (user[0].emp_tipo == 'JI' && (user[0].Clave != 0300175 && user[0].Clave != 300043 && user[0].Clave != 200267 && user[0].Clave != 300300 && user[0].Clave != 300233 && user[0].Clave != 200005 && user[0].Clave != 300284 && user[0].Clave != 300050)) || (user[0].emp_tipo == 'JI' && (user[0].Clave != 0300175 && user[0].Clave != 300043 && user[0].Clave != 200267 && user[0].Clave != 300300 && user[0].Clave != 300233 && user[0].Clave != 200005 && user[0].Clave != 300284 && user[0].Clave != 300050)) || user[0].emp_tipo == 'RI'">
         <div class="container-fluid box">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-12 d-flex justify-content-start">
@@ -47,7 +47,7 @@
                 
                     <div class="col-lg-4 d-flex justify-content-center" *ngFor="let usuario of user">
                         <button class="btn btn-success rounded-pill mt-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-                            <a (click)="recuperarHistorial(usuario.Periodo)" data-bs-toggle="tooltip" data-bs-placement="right" title="Mi Historial">Periodo {{usuario.Periodo}}: {{usuario.Saldo}} días disponibles</a>
+                            <a (click)="recuperarHistorial(usuario.Periodo, usuario.Clave)" data-bs-toggle="tooltip" data-bs-placement="right" title="Mi Historial">Periodo {{usuario.Periodo}}: {{usuario.Saldo}} días disponibles</a>
                         </button>
                     </div>
                 
@@ -62,9 +62,9 @@
 
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">Fecha</span>
-                        <input type="text" class="form-control" [value] ="this.fecha_hoy" disabled aria-label="Username">
-                        <span class="input-group-text">del 20</span>
-                        <input type="text" class="form-control" [value] ="this.ano_hoy" disabled aria-label="Server">
+                        <input type="text" class="form-control" [value] ="this.fecha" disabled aria-label="Username">
+                        <!-- <span class="input-group-text">del 20</span>
+                        <input type="text" class="form-control" [value] ="this.ano_hoy" disabled aria-label="Server"> -->
                     </div>
 
                     <div class="input-group">
@@ -136,31 +136,66 @@
                         <span class="input-group-text" id="basic-addon1" [class.alert-class]="isInvalid('cDias')">Por&nbsp;
                             <!-- <label *ngIf="isInvalid('cDias')" style="color: red; font-size: small;">( Campo obligatorio* )</label> -->
                             <!-- <label *ngIf="this.solicitudForm.get('cDias')?.value > this.dias_diponibles" style="color: red; font-size: small;">(  Días No disponibles* )</label> -->
-                            <label *ngIf="this.solicitudForm.get('cDias')?.value > this.dias_diponibles && !this.adelantar" style="color: red; font-size: small;">(  Días No disponibles* )</label>&nbsp;&nbsp;
-                            <label *ngIf="this.solicitudForm.get('cDias')?.value > this.dias_diponibles && !this.adelantar" class="adelantar" (click)="adelantarDias()" >Adelantar días</label>
-                            <label *ngIf="this.solicitudForm.get('cDias')?.value > this.dias_diponibles && this.adelantar" class="adelantar-cancelar" (click)="adelantarCancelar()" >Cancelar</label>
+                            <label *ngIf="this.fechasOrdenadas.length > this.dias_diponibles && !this.adelantar" style="color: red; font-size: small;">(  Días No disponibles* )</label>&nbsp;&nbsp;
+                            <label *ngIf="this.fechasOrdenadas.length > this.dias_diponibles && !this.adelantar" class="adelantar" (click)="adelantarDias()" >Adelantar días</label>
+                            <label *ngIf="this.fechasOrdenadas.length > this.dias_diponibles && this.adelantar" class="adelantar-cancelar" (click)="adelantarCancelar()" >Cancelar</label>
                         </span>
-                        <input (input)="onInputChange($event)" type="text" class="form-control" formControlName="cDias" placeholder="10" aria-label="Username">
-                        <span class="input-group-text" [class.alert-class]="isInvalid('fechaApartir')">días, a partir del&nbsp;
+                        <!-- <input (input)="onInputChange($event)" type="text" class="form-control" formControlName="cDias" placeholder="0" aria-label="Username"> -->
+                        <input [readonly]="true" type="text" class="form-control" formControlName="cDias" placeholder="0" aria-label="Username" [value]="this.fechasOrdenadas.length">
+                        <!-- <span class="input-group-text" [class.alert-class]="isInvalid('fechaApartir')">días, a partir del&nbsp; -->
+                        <span class="input-group-text" [class.alert-class]="isInvalid('fechaApartir')">Selecciona tu(s) fecha(s):&nbsp;
                             <!-- <label *ngIf="isInvalid('fechaApartir')" style="color: red; font-size: small;">( campo obligatorio* )</label> -->
                         </span>
-                            <input class="form-control" matInput [matDatepicker]="inicioPicker" [matDatepickerFilter]="filtroFecha" formControlName="fechaApartir"/>
+                            <!-- <input class="form-control" matInput [matDatepicker]="inicioPicker" [matDatepickerFilter]="filtroFecha" formControlName="fechaApartir"/>
                             <span [class.alert-class]="isInvalid('fechaApartir')"><mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle></span>
-                            <mat-datepicker #inicioPicker [dateClass]="dateClass" panelClass="calendario"></mat-datepicker>
+                            <mat-datepicker #inicioPicker [dateClass]="dateClass" panelClass="calendario"></mat-datepicker> -->
+                      
+                        <input 
+                        style="display: none;" 
+                        class="form-control" 
+                        matInput 
+                        [matDatepicker]="inicioPicker" 
+                        [matDatepickerFilter]="filtroFecha" 
+                        formControlName="fechaApartir"
+                        (dateChange)="onDateChange($event)"
+                        placeholder="Seleccione múltiples fechas"
+                        />
+
+                        <span [class.alert-class]="isInvalid('fechaApartir')">
+                        <mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle>
+                        </span>
+
+                        <mat-datepicker 
+                        touchUi
+                        #inicioPicker 
+                        [dateClass]="dateClass" 
+                        panelClass="calendario">
+                        </mat-datepicker><br>
+
+                        <!-- Opcional: Mostrar resumen de fechas debajo -->
+                        <!-- <div *ngIf="selectedDates.length > 0">
+                        Seleccionadas: {{ selectedDates.length }} fechas.
+                        Fecha(s): {{ selectedDates}}
+                        </div> -->
+
 
                     </div>
-
-
-
-                    <div class="input-group mb-1">
-                        <span class="input-group-text" id="basic-addon1" [class.alert-class]="isInvalid('fechaHasta')">al día&nbsp;
-                            <!-- <label *ngIf="isInvalid('fechaHasta')" style="color: red; font-size: small;">( Campo obligatorio* )</label> -->
+                       <div class="fechas-container mb-1">
+                        <span *ngFor="let fecha of selectedDates" class="fecha-item">
+                            {{ fecha | date:'dd/MM/yyyy' }}
                         </span>
+                        </div>
+
+
+                    <!-- <div class="input-group mb-1">
+                        <span class="input-group-text" id="basic-addon1" [class.alert-class]="isInvalid('fechaHasta')">al día&nbsp; -->
+                            <!-- <label *ngIf="isInvalid('fechaHasta')" style="color: red; font-size: small;">( Campo obligatorio* )</label> -->
+                        <!-- </span>
                             <input class="form-control" matInput [matDatepicker]="finPicker" [matDatepickerFilter]="filtroFecha" formControlName="fechaHasta"/>
                             <span [class.alert-class]="isInvalid('fechaHasta')"><mat-datepicker-toggle matSuffix [for]="finPicker"></mat-datepicker-toggle></span>
                             <mat-datepicker #finPicker [dateClass]="dateClass" panelClass="calendario"></mat-datepicker>                        
                             <span class="input-group-text" [class.alert-class]="isInvalid('fechaHasta')">inclusive</span>
-                    </div>
+                    </div> -->
 
                     <div class="input-group mb-1">
                         <!-- <select (change)="valorSelect($event)" class="form-select form-select-md" aria-label=".form-select-sm example" [class.alert-class-border]="isInvalid('tipo_solicitud')"> -->
@@ -215,10 +250,10 @@
             <div class="col-lg-5 col-sm-12"></div>
             <div class="col-lg-2 col-sm-12">
                 <div class="container-fluid d-flex justify-content-center" style="margin-top: 1vh;">
-                    <button *ngIf="!this.adelantar && this.spinerBandera == false && this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.solicitudForm.get('cDias')?.value <= this.dias_diponibles && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true) && solicitudForm.controls['motivo'].valid && this.user[0].Dias_disponibles != 0" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
-                    <button *ngIf="this.spinerBandera == false && this.opcionselect == '' || this.solicitudForm.value.firma == 0 || this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || (this.solicitudForm.get('cDias')?.value > this.dias_diponibles && !this.adelantar) || (this.solicitudForm.value.tPermiso1 == false && this.solicitudForm.value.tPermiso2 == false && this.solicitudForm.value.tPermiso3 == false && this.solicitudForm.value.tPermiso4 == false) || solicitudForm.controls['motivo'].invalid || this.user[0].Dias_disponibles == 0" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
+                    <button *ngIf="!this.adelantar && this.spinerBandera == false && this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.fechasOrdenadas.length != 0 && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.fechasOrdenadas.length <= this.dias_diponibles && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true) && solicitudForm.controls['motivo'].valid && this.user[0].Dias_disponibles != 0" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
+                    <button *ngIf="this.spinerBandera == false && this.opcionselect == '' || this.solicitudForm.value.firma == 0 || this.fechasOrdenadas.length === 0 || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || (this.fechasOrdenadas.length > this.dias_diponibles && !this.adelantar) || (this.solicitudForm.value.tPermiso1 == false && this.solicitudForm.value.tPermiso2 == false && this.solicitudForm.value.tPermiso3 == false && this.solicitudForm.value.tPermiso4 == false) || solicitudForm.controls['motivo'].invalid || this.user[0].Dias_disponibles == 0" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
                     
-                    <button *ngIf="this.adelantar && this.spinerBandera == false && this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true) && solicitudForm.controls['motivo'].valid && this.user[0].Dias_disponibles != 0" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
+                    <button *ngIf="this.adelantar && this.spinerBandera == false && this.opcionselect != '' && this.solicitudForm.value.firma != 0  && this.fechasOrdenadas.length != 0 && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true) && solicitudForm.controls['motivo'].valid && this.user[0].Dias_disponibles != 0" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
                     <!-- <div class="text-center" *ngIf="spinerBandera">
                         <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                             <span class="visually-hidden">Loading...</span>
@@ -232,7 +267,7 @@
         
     </div>
 
-    <div class="container-fluid contenedor shadow" *ngIf="user[0].emp_tipo == 'S' || (user[0].emp_tipo == 'JI' && user[0].Clave == '300175') || (user[0].emp_tipo == 'JI' && user[0].Clave == 300043) || (user[0].emp_tipo == 'JI' && user[0].Clave == 200267)">
+    <div class="container-fluid contenedor shadow" *ngIf="user[0].emp_tipo == 'S' || (user[0].emp_tipo == 'JI' && user[0].Clave == '300050') || (user[0].emp_tipo == 'JI' && user[0].Clave == '300175') || (user[0].emp_tipo == 'JI' && user[0].Clave == 300043) || (user[0].emp_tipo == 'JI' && user[0].Clave == 200267) || (user[0].emp_tipo == 'JI' && user[0].Clave == 300300) || (user[0].emp_tipo == 'JI' && user[0].Clave == 300233) || (user[0].emp_tipo == 'JI' && user[0].Clave == 200005) || (user[0].emp_tipo == 'JI' && user[0].Clave == 300284)">
         <div class="container-fluid box">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-12 d-flex justify-content-start">
@@ -267,7 +302,7 @@
             <div class="row">
                 <div class="col-lg-12" *ngIf="this.colaborador[0] && this.banderaDias == false">
                     <button class="btn btn-success rounded-pill mt-1" type="button"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-                        <a (click)="recuperarHistorial(this.colaborador[0].Periodo)" data-bs-toggle="tooltip" data-bs-placement="right" title="Mi Historial"> Periodo {{this.colaborador[0].Periodo}}: {{this.colaborador[0].Saldo}} días disponibles</a>
+                        <a (click)="recuperarHistorial(this.colaborador[0].Periodo, this.colaborador[0].Clave)" data-bs-toggle="tooltip" data-bs-placement="right" title="Mi Historial"> Periodo {{this.colaborador[0].Periodo}}: {{this.colaborador[0].Saldo}} días disponibles</a>
                     </button>
                 </div>
                 <!-- <div class="col-lg-6" *ngIf="this.colaborador[0] && this.banderaDias == false">
@@ -291,9 +326,9 @@
 
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">Fecha</span>
-                        <input type="text" class="form-control" [value] ="this.fecha_co_hoy" disabled aria-label="Username">
-                        <span class="input-group-text">del 20</span>
-                        <input type="text" class="form-control" [value] ="this.ano_co_actual" disabled aria-label="Server">
+                        <input type="text" class="form-control" [value] ="this.fecha" disabled aria-label="Username">
+                        <!-- <span class="input-group-text">del 20</span>
+                        <input type="text" class="form-control" [value] ="this.ano_co_actual" disabled aria-label="Server"> -->
                     </div>
 
                     <div class="input-group">
@@ -357,28 +392,64 @@
                         <span class="input-group-text" id="basic-addon1" [class.alert-class]="isInvalid('cDias')">Por&nbsp;
                             <!-- <label *ngIf="isInvalid('cDias')" style="color: red; font-size: small;">( Campo obligatorio* )</label> -->
                             <!-- <label *ngIf="this.solicitudForm.get('cDias')?.value > this.dias_diponibles_colaborador" style="color: red; font-size: small;">(  Días No disponibles* )</label> -->
-                            <label *ngIf="this.solicitudForm.get('cDias')?.value > this.dias_diponibles_colaborador && !this.adelantar" style="color: red; font-size: small;">(  Días No disponibles* )</label>&nbsp;&nbsp;
-                            <label *ngIf="this.solicitudForm.get('cDias')?.value > this.dias_diponibles_colaborador && !this.adelantar" class="adelantar" (click)="adelantarDias()" >Adelantar días</label>
-                            <label *ngIf="this.solicitudForm.get('cDias')?.value > this.dias_diponibles_colaborador && this.adelantar" class="adelantar-cancelar" (click)="adelantarCancelar()" >Cancelar</label>
+                            <label *ngIf="this.fechasOrdenadas.length > this.dias_diponibles_colaborador && !this.adelantar" style="color: red; font-size: small;">(  Días No disponibles* )</label>&nbsp;&nbsp;
+                            <label *ngIf="this.fechasOrdenadas.length > this.dias_diponibles_colaborador && !this.adelantar" class="adelantar" (click)="adelantarDias()" >Adelantar días</label>
+                            <label *ngIf="this.fechasOrdenadas.length > this.dias_diponibles_colaborador && this.adelantar" class="adelantar-cancelar" (click)="adelantarCancelar()" >Cancelar</label>
                         </span>
-                        <input (input)="onInputChange($event)" type="text" class="form-control" formControlName="cDias" placeholder="10" aria-label="Username">
-                        <span class="input-group-text" [class.alert-class]="isInvalid('fechaApartir')">días, a partir del&nbsp;
+                        <!-- <input (input)="onInputChange($event)" type="text" class="form-control" formControlName="cDias" placeholder="10" aria-label="Username"> -->
+                        <input [readonly]="true" type="text" class="form-control" formControlName="cDias" placeholder="10" aria-label="Username" [value]="this.fechasOrdenadas.length">
+                        <span class="input-group-text" [class.alert-class]="isInvalid('fechaApartir')">Selecciona tu(s) fecha(s):&nbsp;
                             <!-- <label *ngIf="isInvalid('fechaApartir')" style="color: red; font-size: small;">( campo obligatorio* )</label> -->
                         </span>
-                            <input class="form-control" matInput [matDatepicker]="inicioPicker" [matDatepickerFilter]="filtroFecha" formControlName="fechaApartir"/>
+                            <!-- <input class="form-control" matInput [matDatepicker]="inicioPicker" [matDatepickerFilter]="filtroFecha" formControlName="fechaApartir"/>
                             <span [class.alert-class]="isInvalid('fechaApartir')"><mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle></span>
-                            <mat-datepicker #inicioPicker [dateClass]="dateClass" panelClass="calendario"></mat-datepicker>
-                    </div>
+                            <mat-datepicker #inicioPicker [dateClass]="dateClass" panelClass="calendario"></mat-datepicker> -->
+                                                   <input 
+                        style="display: none;" 
+                        class="form-control" 
+                        matInput 
+                        [matDatepicker]="inicioPicker" 
+                        [matDatepickerFilter]="filtroFecha" 
+                        formControlName="fechaApartir"
+                        (dateChange)="onDateChange($event)"
+                        placeholder="Seleccione múltiples fechas"
+                        />
 
-                    <div class="input-group mb-1">
-                        <span class="input-group-text" id="basic-addon1" [class.alert-class]="isInvalid('fechaHasta')">al día&nbsp;
-                            <!-- <label *ngIf="isInvalid('fechaHasta')" style="color: red; font-size: small;">( Campo obligatorio* )</label> -->
+                        <span [class.alert-class]="isInvalid('fechaApartir')">
+                        <mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle>
                         </span>
+
+                        <mat-datepicker 
+                        touchUi
+                        #inicioPicker 
+                        [dateClass]="dateClass" 
+                        panelClass="calendario">
+                        </mat-datepicker><br>
+
+                        <!-- Opcional: Mostrar resumen de fechas debajo -->
+                        <!-- <div *ngIf="selectedDates.length > 0">
+                        Seleccionadas: {{ selectedDates.length }} fechas.
+                        Fecha(s): {{ selectedDates}}
+                        </div> -->
+
+
+                    </div>
+                       <div class="fechas-container mb-1">
+                        <span *ngFor="let fecha of selectedDates" class="fecha-item">
+                            {{ fecha | date:'dd/MM/yyyy' }}
+                        </span>
+                        </div>
+                    <!-- ******************************************************************+ -->
+
+                    <!-- <div class="input-group mb-1">
+                        <span class="input-group-text" id="basic-addon1" [class.alert-class]="isInvalid('fechaHasta')">al día&nbsp; -->
+                            <!-- <label *ngIf="isInvalid('fechaHasta')" style="color: red; font-size: small;">( Campo obligatorio* )</label> -->
+                        <!-- </span>
                             <input class="form-control" matInput [matDatepicker]="finPicker" [matDatepickerFilter]="filtroFecha" formControlName="fechaHasta"/>
                             <span [class.alert-class]="isInvalid('fechaHasta')"><mat-datepicker-toggle matSuffix [for]="finPicker"></mat-datepicker-toggle></span>
                             <mat-datepicker #finPicker [dateClass]="dateClass" panelClass="calendario"></mat-datepicker>                        
                             <span class="input-group-text" [class.alert-class]="isInvalid('fechaHasta')">inclusive</span>
-                    </div>
+                    </div> -->
 
                     <div class="input-group mb-1">
                         <select formControlName="tipo_solicitud" class="form-select form-select-md" aria-label=".form-select-sm example" [class.alert-class]="isInvalid('tipo_solicitud')">
@@ -428,10 +499,10 @@
             <div class="col-lg-5 col-sm-12"></div>
             <div class="col-lg-2 col-sm-12">
                 <div class="container-fluid d-flex justify-content-center" style="margin-top: 1vh;">
-                    <button *ngIf="!this.adelantar && this.spinerBandera == false && this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.solicitudForm.get('cDias')?.value <= this.dias_diponibles_colaborador && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true) && solicitudForm.controls['motivo'].valid && this.colaborador[0].Dias_disponibles != 0" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
-                    <button *ngIf="this.spinerBandera == false && this.opcionselect == '' || this.solicitudForm.value.firma == 0 || this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || (this.solicitudForm.get('cDias')?.value > this.dias_diponibles_colaborador && !this.adelantar) || (this.solicitudForm.value.tPermiso1 == false && this.solicitudForm.value.tPermiso2 == false && this.solicitudForm.value.tPermiso3 == false && this.solicitudForm.value.tPermiso4 == false) || solicitudForm.controls['motivo'].invalid || this.colaborador[0].Dias_disponibles == 0" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
+                    <button *ngIf="!this.adelantar && this.spinerBandera == false && this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.fechasOrdenadas.length != 0 && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && this.fechasOrdenadas.length <= this.dias_diponibles_colaborador && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true) && solicitudForm.controls['motivo'].valid && this.colaborador[0].Dias_disponibles != 0" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
+                    <button *ngIf="this.spinerBandera == false && this.opcionselect == '' || this.solicitudForm.value.firma == 0 || this.fechasOrdenadas.length === 0 || this.solicitudForm.value.tPermiso == '' || this.solicitudForm.value.tPermiso == 'Selecciona una opción' || this.solicitudForm.value.motivo == '' || (this.fechasOrdenadas.length > this.dias_diponibles_colaborador && !this.adelantar) || (this.solicitudForm.value.tPermiso1 == false && this.solicitudForm.value.tPermiso2 == false && this.solicitudForm.value.tPermiso3 == false && this.solicitudForm.value.tPermiso4 == false) || solicitudForm.controls['motivo'].invalid || this.colaborador[0].Dias_disponibles == 0" disabled class="btn btn-secondary w-100" type="button">Enviar</button>
                     
-                    <button *ngIf="this.adelantar && this.spinerBandera == false && this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true) && solicitudForm.controls['motivo'].valid && this.user[0].Dias_disponibles != 0" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
+                    <button *ngIf="this.adelantar && this.spinerBandera == false && this.opcionselect != '' && this.solicitudForm.value.firma != 0 && this.fechasOrdenadas.length != 0 && this.solicitudForm.value.tPermiso != '' && this.solicitudForm.value.tPermiso != 'Selecciona una opción'  && this.solicitudForm.value.motivo != '' && (this.solicitudForm.value.tPermiso1 == true || this.solicitudForm.value.tPermiso2 == true || this.solicitudForm.value.tPermiso3 == true || this.solicitudForm.value.tPermiso4 == true) && solicitudForm.controls['motivo'].valid && this.user[0].Dias_disponibles != 0" class="btn btn-success w-100" type="button" (click)="enviar()">Enviar</button>
                     <!-- <div class="text-center" *ngIf="spinerBandera">
                         <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                             <span class="visually-hidden">Loading...</span>
@@ -448,6 +519,11 @@
     <div class="alert alert-success d-flex align-items-center alert-pos" role="alert" *ngIf="alertSuccess" #alerToast>
         <div>
            <i class="bi bi-check-circle"></i>&nbsp;&nbsp;Se ha enviado la solicitud. Espera la respuesta.
+        </div>
+    </div>
+    <div class="alert alert-info d-flex align-items-center alert-pos" role="alert" *ngIf="alertInfo" #alerToast>
+        <div>
+           <i class="bi bi-check-circle"></i>&nbsp;&nbsp;Ya tienes una solicitud activa para estas fechas. Modifica tu selección.
         </div>
     </div>
     <div class="alert alert-danger d-flex align-items-center alert-pos" role="alert" *ngIf="alertDanger" #alerToast>

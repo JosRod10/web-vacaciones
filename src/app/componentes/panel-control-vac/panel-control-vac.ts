@@ -7,23 +7,15 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } 
 import { ApiServicio } from '../../servicios/api-servicio';
 import * as XLSX from 'xlsx';
 import { LoginServices } from '../../servicios/login';
-// import pdfMake from 'pdfmake/build/pdfmake';
-// import pdfFonts from 'pdfmake/build/vfs_fonts';
-// (pdfMake as any).vfs = pdfFonts;
-// (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
-
-
-
 
 @Component({
-  selector: 'app-panel-reportes',
+  selector: 'app-panel-control-vac',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './panel-reportes.html',
-  styleUrl: './panel-reportes.css'
+  templateUrl: './panel-control-vac.html',
+  styleUrl: './panel-control-vac.css',
 })
-export class PanelReportes {
+export class PanelControlVac {
 
   user: any;
   consultaForm: FormGroup
@@ -33,8 +25,10 @@ export class PanelReportes {
   reporte_solicitudes: any[] = [];
 
   depto: string = '';
-  anio: string = '';
+  periodo: string = '';
   mes: string = '';
+  signo: string = '';
+  contrato: string = '';
 
   datosColaborador: any[] = [];
   fecha: any;;
@@ -50,9 +44,9 @@ export class PanelReportes {
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('Usuario') || '{}');
-    // if(this.user[0].Clave == 300233 || this.user[0].Clave == 300300){
-    //    this.consultarControl();
-    // }
+    if(this.user[0].Clave == 300233 || this.user[0].Clave == 300300){
+       this.consultarControl();
+    }
   }
 
    obtenerFechaDeHoy(): string {
@@ -140,10 +134,24 @@ export class PanelReportes {
      
   }
 
+  valorSelectSaldo(event: Event): void {
+
+    const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
+    this.signo = selectElement.value == 'Saldo' ? '' : selectElement.value;
+     
+  }
+
+  valorSelectContrato(event: Event): void {
+
+    const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
+    this.contrato = selectElement.value == 'Contrato' ? '' : selectElement.value;
+     
+  }
+
   valorSelectA(event: Event): void {
 
     const selectElement = event.target as HTMLSelectElement; // Asegura que es un elemento <select>
-    this.anio = selectElement.value == 'Año' ? '' : selectElement.value;
+    this.periodo = selectElement.value == 'Periodo' ? '' : selectElement.value;
      
   }
 
@@ -180,14 +188,13 @@ export class PanelReportes {
   consultar(tipo: string){
      this.datosColaborador = [];
 
-    this.api.consultaReporteSolicitud(this.depto, this.anio, this.mes, this.consultaForm.value, tipo, this.user[0].emp_reldep).subscribe(
+    this.api.consultaControlFiltro(this.depto, this.contrato, this.periodo, this.signo, this.consultaForm.value).subscribe(
       (response) => {
         const data =  response;
         this.solicitudes = data;
         this.solicitudes = this.solicitudes.map((ele: any)=>{
           // ele.fecha_apartir = this.convertirFecha(ele.fecha_apartir);
           // ele.fecha_hasta = this.convertirFecha(ele.fecha_hasta);
-          // console.log(ele.fecha_apartir,ele.fecha_hasta);
           ele.fecha_apartir = this.formatearFecha(ele.fecha_apartir);
           ele.fecha_hasta = this.formatearFecha(ele.fecha_hasta);
           return ele;
@@ -679,3 +686,4 @@ export class PanelReportes {
   }
 
 }
+

@@ -219,7 +219,23 @@ mat-datepicker{
   color: #dc3545;
 }
 
-/* ************************************************************************************** */
+.fechas-container {
+  display: flex;       /* Alineación horizontal */
+  flex-wrap: wrap;     /* Permite saltar de línea si hay muchas fechas */
+  gap: 8px;            /* Espacio entre cada fecha */
+  margin-top: 5px;
+}
 
+.fecha-item {
+  background-color: #e0e0e0;
+  padding: 4px 12px;
+  border-radius: 16px; /* Forma de cápsula */
+  font-size: 14px;
+  color: #333;
+  border: 1px solid #ccc;
+  white-space: nowrap; /* Evita que la fecha se parta en dos líneas */
+}
+
+/* ************************************************************************************** */
 
 /* ************************************************************************************** */

@@ -218,8 +218,24 @@ input.activ:checked::before {
   }
 
   .ausentes{
-    height: 49vh;
+    height: 48vh;
     background-color: whitesmoke;
+  }
+
+  /* Asegura que el encabezado de "Ausentes" se quede arriba */
+  .table-title.sticky-top {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background-color: white; /* Evita que el contenido de la tabla se vea por detrás */
+  }
+
+  /* Si también quieres que los encabezados (#, Nombre, etc.) se queden fijos justo debajo */
+  .sticky-top-labels th {
+      position: sticky;
+      top: 40px; /* Ajusta este valor según el alto de la fila "Ausentes" */
+      z-index: 9;
+      background-color: #f8f9fa; /* Color de fondo para que no sea transparente */
   }
 
 .row-contenedor-foto{
@@ -300,7 +316,7 @@ input.activ:checked::before {
 
 .form-dia{
     width: 80vh; 
-    height: 50vh;
+    height: 87vh;
     background-color: #fff;
     border: 1px solid gainsboro;
     border-radius: 5px;

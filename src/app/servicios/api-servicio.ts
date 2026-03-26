@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 })
 
 export class ApiServicio {
-  // private apiUrl = 'http://localhost:3001'; // Backend Local
-  private apiUrl = 'http://199.5.83.248:3001'; // Backend Servidor
+  private apiUrl = 'http://localhost:3001'; // Backend Local
+  // private apiUrl = 'http://199.5.83.248:3001'; // Backend Servidor
 
   constructor(private http: HttpClient) {}
 
@@ -72,9 +72,9 @@ export class ApiServicio {
     return this.http.post<any>(`${this.apiUrl}/colaboradoresHistorial`, {clave});
   }
 
-  generarInhabil(item: any): Observable<any> {
+  generarInhabil(item: any, objetos: any): Observable<any> {
     // console.log("Entra");
-    return this.http.post<any>(`${this.apiUrl}/generar-inhabil`, item);
+    return this.http.post<any>(`${this.apiUrl}/generar-inhabil`, {item, objetos});
   }
 
   accionTodas(claves: any, accion: number): Observable<any> {
@@ -105,6 +105,16 @@ export class ApiServicio {
   enviarCorreos(senal: string): Observable<any> {
     // console.log("Entra");
     return this.http.post<any>(`${this.apiUrl}/enviar-correos`, senal);
+  }
+
+  consultarControl(): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/consultar-control-vacaciones`,{});
+  }
+
+  consultaControlFiltro(departamento: string, contrato: string, periodo: string, signo: string, criterio: any): Observable<any> {
+    // console.log("Entra");
+    return this.http.post<any>(`${this.apiUrl}/control-vacaciones-filtro`, {departamento, contrato, periodo, signo, criterio});
   }
 
 }

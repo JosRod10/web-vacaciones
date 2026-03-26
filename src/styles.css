@@ -24,3 +24,17 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-
   text-decoration: line-through; /* Por ejemplo, tachar la fecha */
 }
 
+/* *********************************** */
+/* Asegúrate de usar este selector largo para ganar a los estilos de Material */
+.custom-selected-date.mat-calendar-body-cell .mat-calendar-body-cell-content {
+    background-color: #3f51b5 !important; /* Tu color */
+    color: white !important;
+    border-radius: 100% !important;
+}
+
+/* Si quieres que al pasar el mouse siga viéndose el color */
+.custom-selected-date.mat-calendar-body-cell:hover .mat-calendar-body-cell-content {
+    background-color: #2c387e !important;
+}
+
+/* *********************************+ */

@@ -1,0 +1,130 @@
+<div class="fade-in-slow mt-1">
+    <div class="container-fluid contenedor shadow p-2">
+        <div class="container-fluid box">
+            <div class="row mb-1">
+                <div class="col-lg-12 col-md-12 col-sm-12"><h3 style="color: rgb(64, 62, 62);">Control de Vacaciones</h3></div>
+            </div>
+            <div>
+                <div  [formGroup]="consultaForm">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-12">
+                            <select (change)="valorSelectDep($event)" class="form-select" aria-label="Default select example">
+                                <option selected>Selecciona departamento</option>
+                                <option value="ALMACEN">ALMACEN</option>
+                                <option value="CERAMICA">CERAMICA</option>
+                                <option value="COMPRAS">COMPRAS</option>
+                                <option value="CONTABILIDAD">CONTABILIDAD</option>
+                                <option value="CONTROL DE CALIDAD">CONTROL DE CALIDAD</option>
+                                <option value="CONTROL DE PRODUCCION">CONTROL DE PRODUCCION</option>
+                                <option value="CREDITO Y COBRANZAS">CREDITO Y COBRANZAS</option>
+                                <option value="DESARROLLO DE ABRASIVOS">DESARROLLO DE ABRASIVOS</option>
+                                <option value="EMBARQUES Y EMPAQUES">EMBARQUES Y EMPAQUES</option>
+                                <option value="ESPECIALIDADES REFRACTARIAS">ESPECIALIDADES REFRACTARIAS</option>
+                                <option value="GERENCIA EJECUTIVOS">GERENCIA EJECUTIVOS</option>
+                                <option value="HORNOS">HORNOS</option>
+                                <option value="HORNEROS">HORNEROS</option>
+                                <option value="ING.NVO.PROYECTOS">ING.NVO.PROYECTOS</option>
+                                <option value="ING.NVO.PROYECTOS REFRACTARIOS">ING.NVO.PROYECTOS REFRACTARIOS</option>
+                                <option value="MANTENIMIENTO">MANTENIMIENTO</option>
+                                <option value="OFICINA CDMX">OFICINA CDMX</option>
+                                <option value="OFICINA GUADALAJARA">OFICINA GUADALAJARA</option>
+                                <option value="OFICINA MONTERREY">OFICINA MONTERREY</option>
+                                <option value="OFICINA PUEBLA">OFICINA PUEBLA</option>
+                                <option value="OFICINA QUERETARO">OFICINA QUERETARO</option>
+                                <option value="PUNTAS MONTADAS">PUNTAS MONTADAS</option>
+                                <option value="REFRACTARIOS">REFRACTARIOS</option>
+                                <option value="RELACIONES INDUSTRIALES">RELACIONES INDUSTRIALES</option>
+                                <option value="SHELLACK">SHELLACK</option>
+                                <option value="SISTEMAS DE INFORMACION">SISTEMAS DE INFORMACION</option>
+                                <option value="TECNICO">TECNICO</option>
+                                <option value="TERMINADO">TERMINADO</option>
+                                <option value="VENTAS REFRACTARIOS">VENTAS REFRACTARIOS</option>
+                                <option value="VENTAS TOLUCA">VENTAS TOLUCA</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-1 col-sm-12">
+                            <select (change)="valorSelectContrato($event)" class="form-select" aria-label="Default select example">
+                                <option selected>Contrato</option>
+                                <option value="Permanente">Permanente</option>
+                                <option value="Eventual">Eventual</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-1 col-sm-12">
+                            <select (change)="valorSelectA($event)" class="form-select" aria-label="Default select example">
+                                <option selected>Periodo</option>
+                                <option value="2023-2024">2023-2024</option>
+                                <option value="2024-2025">2024-2025</option>
+                                <option value="2025-2026">2025-2026</option>
+                                <option value="2026-2027">2026-2027</option>
+                                <option value="2027-2028">2027-2028</option>
+                                <option value="2028-2029">2028-2029</option>
+                                <option value="2029-2030">2029-2030</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-1 col-sm-12">
+                            <select (change)="valorSelectSaldo($event)" class="form-select" aria-label="Default select example">
+                                <option selected>Saldo</option>
+                                <option value="Positivo">+</option>
+                                <option value="Negativo">-</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-8 col-sm-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+                                <input (keydown)="onKeydown($event)" type="text" class="form-control" formControlName="criterio" placeholder="Consultar" aria-label="Username" aria-describedby="basic-addon1">
+                                <button class="btn btn-secondary" (click)="consultar(user[0].emp_tipo)">Consultar</button>
+                            </div>
+                        </div>
+                    </div>        
+                </div>
+            </div>
+            <!-- <div class="overflow-auto" style="max-height: 77vh;"> -->
+                <div class="table-responsive overflow-auto" style="max-height: 83vh;">     
+                    <table class="table table-light table-hover">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Clave</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Departamento</th>
+                            <th scope="col">Contrato</th>
+                            <th scope="col">F. ingreso</th>
+                            <th scope="col">Periodo</th>
+                            <th scope="col">Años</th>
+                            <th scope="col">Vac.</th>
+                            <th scope="col">Sab.</th>
+                            <th scope="col">V. disf</th>
+                            <th scope="col-2">V.tom</th>
+                            <th scope="col">V.disp</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr (click)="datos(solicitud)" *ngFor="let solicitud of solicitudes; let i = index">
+                            <th scope="row">{{i+1}}</th>
+                            <td style="font-size: small;">{{solicitud.Clave}}</td>
+                            <td style="font-size: small;">{{solicitud.Nombre}}</td>
+                            <td style="font-size: small;">{{solicitud.Departamento}}</td>
+                            <!-- <td style="font-size: small; width: 30px;"><span class="badge rounded-pill bg-secondary">{{solicitud.tipo_solicitud}}</span></td> -->
+                            <td style="font-size: small;">{{solicitud.Contrato}}</td>
+                            <td style="font-size: small;">{{this.formatearFecha(solicitud.Fecha_ingreso)}}</td>
+                            <td style="font-size: small;">{{solicitud.Periodo}}</td>
+                            <td style="font-size: small;">{{solicitud['Años']}}</td>
+                            <td style="font-size: small;">{{solicitud.Vacciones}}</td>
+                            <td style="font-size: small;">{{solicitud.Sabados}}</td>
+                            <td style="font-size: small;">{{solicitud.Dias_a_disfrutar}}</td>
+                            <td style="font-size: small;">{{solicitud.Vacaciones_tomadas}}</td>
+                            <td style="font-size: small;">{{solicitud.Saldo}}</td>
+                        
+                            <!-- <td style="font-size: small;">{{solicitud.motivo}}</td> -->
+                            <!-- <td>{{solicitud.status}}</td> -->
+                            <!-- <td style="font-size: small;"><span class="badge rounded-pill bg-light" style="color: #000;">{{solicitud.status}}</span></td> -->
+                            <!-- <td><span class="badge rounded-pill bg-warning">{{solicitud.status}}</span></td> -->
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div> 
+                <!-- </div> -->
+        </div>
+    </div>
+</div>

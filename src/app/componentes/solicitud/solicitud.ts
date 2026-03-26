@@ -19,6 +19,10 @@ import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 import { NgClass } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 
+import { MatDatepicker } from '@angular/material/datepicker';
+import { MatCalendar } from '@angular/material/datepicker';
+
+
 @Component({
   selector: 'app-form',
   standalone: true,
@@ -29,6 +33,10 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrl: './solicitud.css'
 })
 export class Form {
+  
+  @ViewChild('inicioPicker') picker!: MatDatepicker<Date>;
+  selectedDates: Date[] = [];
+  fechasOrdenadas: any[] = [];
 
   fechasDeshabilitadas: Date[] = [
     new Date(2025, 10, 1), // 1 de Noviembre de 2025
@@ -67,22 +75,22 @@ export class Form {
   };
 
   // Función para aplicar clases CSS a las fechas
-  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
-    if (view === 'month') {
-      const date = cellDate || new Date();
-      const isDisabled = this.fechasDeshabilitadas.some(disabledDate =>
-        date.getFullYear() === disabledDate.getFullYear() &&
-        date.getMonth() === disabledDate.getMonth() &&
-        date.getDate() === disabledDate.getDate()
-      );
+  // dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
+  //   if (view === 'month') {
+  //     const date = cellDate || new Date();
+  //     const isDisabled = this.fechasDeshabilitadas.some(disabledDate =>
+  //       date.getFullYear() === disabledDate.getFullYear() &&
+  //       date.getMonth() === disabledDate.getMonth() &&
+  //       date.getDate() === disabledDate.getDate()
+  //     );
 
-      // Aplica la clase 'fecha-deshabilitada' si está deshabilitada
-      return {
-        'fecha-deshabilitada': isDisabled
-      };
-    }
-    return {};
-  };
+  //     // Aplica la clase 'fecha-deshabilitada' si está deshabilitada
+  //     return {
+  //       'fecha-deshabilitada': isDisabled
+  //     };
+  //   }
+  //   return {};
+  // };
 
   @ViewChild('alerToast') alerToast!: ElementRef;
 
@@ -90,7 +98,9 @@ export class Form {
   selectOption: string = '';
   alertSuccess: boolean = false;
   alertDanger: boolean = false;
+  alertInfo: boolean = false;
   user: any;
+  usuarioConSaldo: any;
   userFor: any;
   items: any;
   solicitudForm: FormGroup;
@@ -230,7 +240,7 @@ export class Form {
     // this.user = this.user[this.user.length - 1];
     // console.log('Ultimo elemento',this.user);
     // this.userFor = this.user;
-    this.user = this.user.reverse();
+    // this.user = this.user.reverse();
     // this.user = this.user.slice().reverse();
     if(this.user[0].emp_tipo == 'S'){
      this.cargarColaboradores(this.user[0].emp_cve, this.user[0].emp_tipo, this.user[0].emp_reldep, this.user[0].Descripcion);
@@ -243,6 +253,11 @@ export class Form {
      this.consultarHistorialColaboradores(this.user[0].Clave);
     }
 
+    if(this.user[0].emp_tipo == 'JI' && this.user[0].Clave == '300050'){
+     this.cargarColaboradores('300050', 'S', 'GLR', this.user[0].Descripcion);
+     this.consultarHistorialColaboradores(this.user[0].Clave);
+    }
+
     if(this.user[0].emp_tipo == 'JI' && this.user[0].emp_cve == '300043'){
      this.cargarColaboradores('300043', 'S', 'SCMG', this.user[0].Descripcion);
      this.consultarHistorialColaboradores(this.user[0].Clave);
@@ -252,7 +267,27 @@ export class Form {
      this.cargarColaboradores('200267', 'S', 'GLR', this.user[0].Descripcion);
      this.consultarHistorialColaboradores(this.user[0].Clave);
     }
+
+    if(this.user[0].emp_tipo == 'JI' && this.user[0].emp_cve == '200005'){
+     this.cargarColaboradores('200005', 'S', 'JJBP', this.user[0].Descripcion);
+     this.consultarHistorialColaboradores(this.user[0].Clave);
+    }
+
+    if(this.user[0].emp_tipo == 'JI' && this.user[0].emp_cve == '300284'){
+     this.cargarColaboradores('300284', 'S', 'FJTR', this.user[0].Descripcion);
+     this.consultarHistorialColaboradores(this.user[0].Clave);
+    }
     // ****************************************************************************************+
+    if(this.user[0].emp_tipo == 'JI' && this.user[0].emp_cve == '300300'){
+     this.cargarColaboradores('300300', 'RIA', 'TJRH', this.user[0].Descripcion);
+     this.consultarHistorialColaboradores(this.user[0].Clave);
+    }
+
+    if(this.user[0].emp_tipo == 'JI' && this.user[0].emp_cve == '0300233'){
+     this.cargarColaboradores('300233', 'RIA', 'MCV', this.user[0].Descripcion);
+     this.consultarHistorialColaboradores(this.user[0].Clave);
+    }
+    // *******************************************************************************************
     if(this.user[0].emp_tipo == 'RIA'){
      this.cargarColaboradores(this.user[0].emp_cve, this.user[0].emp_tipo, this.user[0].emp_reldep, this.user[0].Descripcion);
           this.consultarHistorialColaboradores(this.user[0].Clave);
@@ -263,15 +298,31 @@ export class Form {
      this.consultarHistorial(this.user[0].Clave);
     }
 
+    if(this.user[0].emp_tipo == 'JI'){
+     this.consultarHistorial(this.user[0].Clave);
+    }
+
   
     this.fecha = this.obtenerFechaDeHoy();
-    this.fecha_hoy = this.fecha.substring(0,15);
-    this.ano_hoy = this.fecha.substring(21,23);
+    this.fecha_hoy = this.fecha.substring(0,11);
+    this.ano_hoy = this.fecha.substring(17,19);
     this.periodo_anterior = parseInt(this.fecha.substring(17,21)) - 1;
     this.fechaAlta = this.formatoFecha(this.user[0].emp_fechin);
     this.fecha_ingreso = this.obtenerFechaAlta(this.user[0].emp_fechin);
     this.cumplidos = this.user[0].Años;
-    this.dias_diponibles = this.user[0].Saldo;
+
+    // Buscamos el primer usuario que tenga saldo disponible
+    this.usuarioConSaldo = this.user.reverse().find((u: any) => u.Saldo > 0);
+
+    if (this.usuarioConSaldo) {
+      // Aquí realizas la lógica con el usuario encontrado
+      // console.log("Usando saldo de:", this.usuarioConSaldo);
+      this.dias_diponibles = this.usuarioConSaldo.Saldo;
+    } else {
+      // console.log("Todos los usuarios tienen saldo cero.");
+    }
+
+    // this.dias_diponibles = this.user[0].Saldo;
 
     // if(this.user[0].Saldo && this.user[0].Saldo > 0 && !this.user[1].Saldo && !this.user[2]?.Saldo){
     //   this.dias_diponibles = this.user[0].Saldo;
@@ -283,7 +334,6 @@ export class Form {
     //   this.dias_diponibles = this.user[2].Saldo;
     // }
 
-    
     if(this.user[0].Dias_a_disfrutar == '' || this.user[0].Dias_a_disfrutar == null){
       this.user[0].Dias_a_disfrutar = '0';
     }
@@ -455,6 +505,17 @@ export class Form {
 
   isInvalid(field: string): boolean {
     const control = this.solicitudForm.get(field);
+      // Si estamos en "fechaApartir", solo es inválido si NO hay fechas en nuestro arreglo
+      
+    if (field === 'cDias') {
+          const isTouchedOrDirty = !!(control?.touched || control?.dirty);
+          return isTouchedOrDirty && this.selectedDates.length === 0;
+    }
+    if (field === 'fechaApartir') {
+          const isTouchedOrDirty = !!(control?.touched || control?.dirty);
+          return isTouchedOrDirty && this.selectedDates.length === 0;
+    }
+
     return !!(control && control.invalid && control.touched);
   }
 
@@ -490,8 +551,15 @@ export class Form {
         }
 
       }
+
+      if(this.alertInfo){
+        this.alertInfo = false;
+        window.location.reload();
+      }
+
       if(this.alertDanger){
         this.alertDanger = false;
+        window.location.reload();
       }
     }, 4000); // 4000 milisegundos = 4 segundos
 
@@ -540,31 +608,52 @@ export class Form {
      
   // }
 
+  ordenarYFormatearFechas(fechas: Date[]): string[] {
+  return fechas
+    // 1. Ordenar cronológicamente (de menor a mayor)
+    .sort((a, b) => a.getTime() - b.getTime())
+    // 2. Transformar a formato "YYYY-MM-DD"
+    .map(fecha => {
+      const anio = fecha.getFullYear();
+      // getMonth() es 0-indexado, sumamos 1 y rellenamos con '0' a la izquierda
+      const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+      const dia = fecha.getDate().toString().padStart(2, '0');
+      
+      return `${anio}-${mes}-${dia}`;
+    });
+}
+
+
   enviar(){
     this.spinerBandera = !this.spinerBandera;
+    const fechasConcatenar: string = this.fechasOrdenadas.join(", ");
     this.solicitudForm.value.fecha = this.solicitudForm.value.fecha + ' del 20' + this.solicitudForm.value.año;
     this.solicitudForm.value.firma = this.solicitudForm.value.firma.toString();
 
-    this.solicitudForm.value.fecha = this.fecha_hoy + ' del 20' + this.ano_hoy;
-    this.solicitudForm.value.nombre = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.nombre_co : this.user[0].emp_tipo == 'S'? this.nombre_co : this.user[0].emp_tipo == 'RIA'? this.nombre_co : this.user[0].emp_nom;
-    this.solicitudForm.value.fechaIngreso = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.fecha_co_ingreso  : this.user[0].emp_tipo == 'S'? this.fecha_co_ingreso : this.user[0].emp_tipo == 'RIA'? this.fecha_co_ingreso : this.fechaAlta;
+    // this.solicitudForm.value.fecha = this.fecha_hoy + ' del 20' + this.ano_hoy;
+    this.solicitudForm.value.fecha = this.fecha;
+    this.solicitudForm.value.nombre = (this.user[0].emp_cve == '300050' || this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043' || this.user[0].emp_cve == '300300' || this.user[0].emp_cve == '0300233' || this.user[0].emp_cve == '200005' || this.user[0].emp_cve == '300284') ? this.nombre_co : this.user[0].emp_tipo == 'S'? this.nombre_co : this.user[0].emp_tipo == 'RIA'? this.nombre_co : this.user[0].emp_nom;
+    this.solicitudForm.value.fechaIngreso = (this.user[0].emp_cve == '300050' || this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043' || this.user[0].emp_cve == '300300' || this.user[0].emp_cve == '0300233' || this.user[0].emp_cve == '200005' || this.user[0].emp_cve == '300284') ? this.fecha_co_ingreso  : this.user[0].emp_tipo == 'S'? this.fecha_co_ingreso : this.user[0].emp_tipo == 'RIA'? this.fecha_co_ingreso : this.fechaAlta;
     this.solicitudForm.value.añosCumplidos = this.cumplidos;
     // this.solicitudForm.value.noTarjeta = this.user[0].emp_cve;
-    this.solicitudForm.value.noTarjeta = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.no_tarjeta_co : this.user[0].emp_tipo == 'S'? this.no_tarjeta_co :this.user[0].emp_tipo == 'RIA'? this.colaborador[0].emp_cve : this.user[0].emp_cve;
-    this.solicitudForm.value.depto = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.dep_co : this.user[0].emp_tipo == 'S'? this.dep_co : this.user[0].emp_tipo == 'RIA'? this.dep_co : this.user[0].Departamento;
+    this.solicitudForm.value.noTarjeta = (this.user[0].emp_cve == '300050' || this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043' || this.user[0].emp_cve == '300300' || this.user[0].emp_cve == '0300233' || this.user[0].emp_cve == '200005' || this.user[0].emp_cve == '300284') ? this.no_tarjeta_co : this.user[0].emp_tipo == 'S'? this.no_tarjeta_co :this.user[0].emp_tipo == 'RIA'? this.colaborador[0].emp_cve : this.user[0].emp_cve;
+    this.solicitudForm.value.depto = (this.user[0].emp_cve == '300050' || this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043' || this.user[0].emp_cve == '300300' || this.user[0].emp_cve == '0300233' || this.user[0].emp_cve == '200005' || this.user[0].emp_cve == '300284') ? this.dep_co : this.user[0].emp_tipo == 'S'? this.dep_co : this.user[0].emp_tipo == 'RIA'? this.dep_co : this.user[0].Departamento;
     this.solicitudForm.value.cCostos = this.user[0].dep_id;
-    this.solicitudForm.value.fechaApartir = this.converetirFecha(this.solicitudForm.value.fechaApartir);
-    this.solicitudForm.value.fechaHasta = this.converetirFecha(this.solicitudForm.value.fechaHasta);
-    this.solicitudForm.value.clave = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.no_tarjeta_co : this.user[0].emp_tipo == 'S'? this.no_tarjeta_co : this.user[0].emp_tipo == 'RIA'? this.colaborador[0].emp_cve : this.user[0].Clave;
+    // this.solicitudForm.value.fechaApartir = this.converetirFecha(this.solicitudForm.value.fechaApartir);
+    // this.solicitudForm.value.fechaHasta = this.converetirFecha(this.solicitudForm.value.fechaHasta);
+    this.solicitudForm.value.fechaApartir = this.fechasOrdenadas[0];
+    this.solicitudForm.value.fechaHasta = this.fechasOrdenadas.length == 1 ? this.fechasOrdenadas[0] : this.fechasOrdenadas.length > 1 ? this.fechasOrdenadas[this.fechasOrdenadas.length - 1] : this.fechasOrdenadas[0];
+    this.solicitudForm.value.clave = (this.user[0].emp_cve == '300050' || this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043' || this.user[0].emp_cve == '300300' || this.user[0].emp_cve == '0300233' || this.user[0].emp_cve == '200005' || this.user[0].emp_cve == '300284') ? this.no_tarjeta_co : this.user[0].emp_tipo == 'S'? this.no_tarjeta_co : this.user[0].emp_tipo == 'RIA'? this.colaborador[0].emp_cve : this.user[0].Clave;
 
-    this.solicitudForm.value.motivo = this.solicitudForm.value.motivo;
+    this.solicitudForm.value.motivo = this.solicitudForm.value.motivo + ' ( Fechas: '+fechasConcatenar+' )';
     this.solicitudForm.value.tipo_solicitud = this.opcionselect;
 
-    this.solicitudForm.value.Periodo = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.colaborador[0].Periodo : this.user[0].emp_tipo == 'S'? this.colaborador[0].Periodo : this.user[0].emp_tipo == 'RIA'? this.colaborador[0].Periodo : this.user[0].Periodo;
-    this.solicitudForm.value.Genera = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.user[0].emp_cve : this.user[0].emp_tipo == 'S'? this.user[0].emp_cve : this.user[0].emp_cve;
+    this.solicitudForm.value.Periodo = (this.user[0].emp_cve == '300050' || this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043' || this.user[0].emp_cve == '300300' || this.user[0].emp_cve == '0300233' || this.user[0].emp_cve == '200005' || this.user[0].emp_cve == '300284') ? this.colaborador[0].Periodo : this.user[0].emp_tipo == 'S'? this.colaborador[0].Periodo : this.user[0].emp_tipo == 'RIA'? this.colaborador[0].Periodo : this.usuarioConSaldo ? this.usuarioConSaldo.Periodo : this.user[0].Periodo;
+    this.solicitudForm.value.Genera = (this.user[0].emp_cve == '300050' || this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043' || this.user[0].emp_cve == '300300' || this.user[0].emp_cve == '0300233' || this.user[0].emp_cve == '200005' || this.user[0].emp_cve == '300284') ? this.user[0].emp_cve : this.user[0].emp_tipo == 'S'? this.user[0].emp_cve : this.user[0].emp_cve;
     
-    this.solicitudForm.value.Jefe = (this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043') ? this.colaborador[0].emp_reldep : this.user[0].emp_tipo == 'S'? this.colaborador[0].emp_reldep : this.user[0].emp_reldep;
-
+    this.solicitudForm.value.Jefe = (this.user[0].emp_cve == '300050' || this.user[0].emp_cve == '300175' || this.user[0].emp_cve == '200267' || this.user[0].emp_cve == '300043' || this.user[0].emp_cve == '300300' || this.user[0].emp_cve == '0300233' || this.user[0].emp_cve == '200005' || this.user[0].emp_cve == '300284') ? this.colaborador[0].emp_reldep : this.user[0].emp_tipo == 'S'? this.colaborador[0].emp_reldep : this.user[0].emp_reldep;
+    
+    this.solicitudForm.value.cDias = this.fechasOrdenadas.length.toString();
 
     this.api.form(this.solicitudForm.value).subscribe(
       (response) => {
@@ -572,14 +661,24 @@ export class Form {
             this.spinerBandera = !this.spinerBandera;
             this.vaciarFormulario();
             this.alertSuccess = !this.alertSuccess;
+            this.alertInfo = false;
             this.alertDanger = false;
             this.cerrarAlerta();
 
+          }
+          if(response == false){
+            this.spinerBandera = !this.spinerBandera;
+            this.vaciarFormulario();
+            this.alertInfo = !this.alertInfo;
+            this.alertSuccess = false;
+            this.alertDanger = false;
+            this.cerrarAlerta();
           }
          },
          (error) => {
           this.alertDanger = !this.alertDanger;
           this.alertSuccess = false;
+          this.alertInfo = false;
           this.cerrarAlerta();
            console.error('Error al obtener datos:', error);
          }
@@ -672,12 +771,12 @@ export class Form {
     solicitud.isRotated = !solicitud.isRotated;
   }
 
-  recuperarHistorial(periodo: string){
+  recuperarHistorial(periodo: string, clave: number){
     // console.log(periodo);
-    const solicitudesGuardadas = this.user[0].emp_tipo == 'C'? localStorage.getItem('misSolicitudes') : localStorage.getItem('solicitudesColaboradores');
+    const solicitudesGuardadas = this.user[0].emp_tipo == 'C'? localStorage.getItem('misSolicitudes') : this.user[0].emp_tipo == 'JI'? localStorage.getItem('misSolicitudes') : localStorage.getItem('solicitudesColaboradores');
     const solicitudes: any[] = solicitudesGuardadas ? JSON.parse(solicitudesGuardadas) : [];
     // console.log(solicitudes);
-    this.solicitudesUsuario = solicitudes.filter((ele: any) =>ele.periodo === periodo);
+    this.solicitudesUsuario = solicitudes.filter((ele: any) =>ele.periodo === periodo && ele.clave === clave.toString());
     // console.log(this.solicitudesUsuario);
   }
 
@@ -814,7 +913,7 @@ export class Form {
 
   adelantarCancelar(){
     this.adelantar = !this.adelantar;
-    this.solicitudForm.get('cDias')?.setValue('');
+    // this.solicitudForm.get('cDias')?.setValue('');
   }
 
   // Método que se ejecuta con cada cambio en el input
@@ -829,5 +928,117 @@ export class Form {
 
   // ****************************************************************************************************************
 
+  onDateSelected(event: Date | null): void {
+    if (event) {
+      const date = event;
+      const index = this.selectedDates.findIndex(d => d.toDateString() === date.toDateString());
+      if (index > -1) {
+        this.selectedDates.splice(index, 1); // Deselecciona la fecha
+      } else {
+        this.selectedDates.push(date); // Selecciona la fecha
+      }
+      // Opcional: ordenar las fechas
+      this.selectedDates.sort((a, b) => a.getTime() - b.getTime());
+    }
+  }
+
+    // Método para formatear y unir las fechas
+  get formattedDates(): string {
+    if (this.selectedDates && this.selectedDates.length > 0) {
+      // Asegúrate de que los elementos sean objetos Date válidos antes de llamar a toDateString()
+      return this.selectedDates.map(d => d.toDateString()).join(', ');
+    }
+    return 'No hay fechas seleccionadas'; // Mensaje predeterminado si no hay fechas
+  }
   // ****************************************************************************************************************
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// onDateChange(event: any): void {
+//     const date = event.value;
+//     if (!date) return;
+
+//     const index = this.selectedDates.findIndex(d => d.getTime() === date.getTime());
+//     if (index >= 0) {
+//       this.selectedDates.splice(index, 1);
+//     } else {
+//       this.selectedDates.push(date);
+//       console.log(this.selectedDates);
+//       this.fechasOrdenadas = this.ordenarYFormatearFechas(this.selectedDates);
+//       console.log(this.fechasOrdenadas);
+//     }
+
+//     // 1. Cambiamos la referencia para que Angular detecte el cambio
+//     this.selectedDates = [...this.selectedDates];
+
+//     // 2. Limpiamos el input para permitir volver a clicar la misma fecha
+//     this.solicitudForm.get('fechaApartir')?.setValue(null, { emitEvent: false });
+
+//     // 3. TRUCO DE RE-RENDERIZADO INMEDIATO:
+//     // Accedemos al componente interno 'calendarInstance' del picker
+//     const calendarInstance = (this.picker as any)._componentRef?.instance._calendar;
+//     if (calendarInstance) {
+//       calendarInstance.updateTodaysDate(); 
+//     }
+
+//     // Mantener abierto el picker
+//     setTimeout(() => this.picker.open());
+//   }
+
+onDateChange(event: any): void {
+  const date = event.value;
+  if (!date) return;
+
+  // Normalizamos la fecha a medianoche para una comparación exacta
+  const selectedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  
+  const index = this.selectedDates.findIndex(d => 
+    d.getTime() === selectedDate.getTime()
+  );
+
+  if (index >= 0) {
+    // ELIMINAR: Si ya estaba en el arreglo, la quitamos
+    this.selectedDates.splice(index, 1);
+    // console.log(this.selectedDates);
+    this.fechasOrdenadas = this.ordenarYFormatearFechas(this.selectedDates);
+    // console.log(this.fechasOrdenadas);
+  } else {
+    // AGREGAR: Si no estaba, la incluimos
+    this.selectedDates.push(selectedDate);
+    // console.log(this.selectedDates);
+    this.fechasOrdenadas = this.ordenarYFormatearFechas(this.selectedDates);
+    // console.log(this.fechasOrdenadas);
+  }
+
+  // 1. Forzar cambio de referencia para que Angular detecte cambios
+  this.selectedDates = [...this.selectedDates];
+
+  // 2. Limpiar el input para permitir volver a seleccionar la misma fecha inmediatamente
+  this.solicitudForm.get('fechaApartir')?.setValue(null, { emitEvent: false });
+
+  // 3. REFRESCO VISUAL INMEDIATO:
+  // Accedemos a la instancia del calendario dentro del picker para forzar el repintado
+  const calendarInstance = (this.picker as any)._componentRef?.instance._calendar;
+  if (calendarInstance) {
+    calendarInstance.updateTodaysDate(); // Esto vuelve a ejecutar dateClass y quita/pone el CSS
+  }
+
+  // Mantener el panel abierto
+  setTimeout(() => this.picker.open());
+}
+
+
+  // Tu función combinada de antes
+  dateClass = (cellDate: Date) => {
+    const isSelected = this.selectedDates.some(d => d.getTime() === cellDate.getTime());
+    const isDisabled = this.fechasDeshabilitadas.some(d => d.getTime() === cellDate.getTime());
+
+    return {
+      'custom-selected-date': isSelected,
+      'fecha-deshabilitada': isDisabled
+    };
+  };
+
+  // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 }

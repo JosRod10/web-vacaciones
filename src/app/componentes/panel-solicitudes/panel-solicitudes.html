@@ -273,9 +273,10 @@
                         <li class="menu-lista" (click)="cambiarDash()"><i class="bi bi-app-indicator"></i> Dashbord</li>
                         <!-- <li class="menu-lista" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-todas'"><i class="bi bi-pencil-square"></i> Firmar Todas</li> -->
                         <li class="menu-lista" (click)="cambiarReporte()"><i class="bi bi-file-earmark-spreadsheet"></i> Reportes</li>
+                        <li class="menu-lista" *ngIf="this.user[0].Clave == 300300 || this.user[0].emp_cve == '300233'" (click)="cambiarControl()"><i class="bi bi-ui-checks"></i> Control Vac.</li>
                         <!-- <li *ngIf="this.user[0].emp_tipo == 'JI' && (this.user[0].emp_reldep != 'KAR' || this.user[0].emp_reldep != 'JCJ' || this.user[0].emp_reldep != 'BHTC')" class="menu-lista" (click)="cambiarSolicitud()"><i class="bi bi-file-text"></i> Solicitud</li> -->
-                        <li *ngIf="this.user[0].emp_tipo == 'JI' && (this.user[0].emp_reldep != 'KAR' && this.user[0].emp_reldep != 'JCJ' && this.user[0].emp_reldep != 'BHTC' && this.user[0].emp_reldep != 'JAAC')" class="menu-lista" (click)="cambiarSolicitud()"><i class="bi bi-file-text"></i> Solicitud</li>
-                        <li *ngIf="this.user[0].emp_tipo == 'JI' && (this.user[0].emp_reldep == 'KAR' || this.user[0].emp_reldep == 'JCJ' || this.user[0].emp_reldep == 'BHTC')" class="menu-lista" (click)="crearSolicitud()"><i class="bi bi-file-text"></i>G. Solicitud</li>
+                        <li *ngIf="this.user[0].emp_tipo == 'JI' && (this.user[0].emp_cve != '300050' && this.user[0].emp_reldep != 'KAR' && this.user[0].emp_reldep != 'JCJ' && this.user[0].emp_reldep != 'BHTC' && this.user[0].emp_reldep != 'JAAC' && this.user[0].emp_cve != '200005' && this.user[0].emp_reldep != 'FJTR')" class="menu-lista" (click)="cambiarSolicitud()"><i class="bi bi-file-text"></i> Solicitud</li>
+                        <li *ngIf="this.user[0].emp_tipo == 'JI' && (this.user[0].emp_cve == '300050' || this.user[0].emp_reldep == 'KAR' || this.user[0].emp_reldep == 'JCJ' || this.user[0].emp_reldep == 'BHTC' || this.user[0].emp_cve == '200005' || this.user[0].emp_reldep == 'FJTR')" class="menu-lista" (click)="crearSolicitud()"><i class="bi bi-file-text"></i>G. Solicitud</li>
                         <li *ngIf="this.user[0].emp_tipo == 'RI'" (click)="cambiarDia()" class="menu-lista"><i class="bi bi-calendar-check"></i> Día Inhábil</li>
                         <li class="menu-lista" (click)="abrirAlerta()"><i class="bi bi-door-closed"></i> Cerrar Sesión</li>
                         <!-- <li class="menu-lista"><i class="bi bi-bell-fill"></i> notification</li>
@@ -446,13 +447,14 @@
                 </div>
             </div>
             <div class="row ausentes">
-                <div class="overflow-auto" style="max-height: 41vh;">      
-                    <table class="table  table-hover">
+                <div class="overflow-auto" style="max-height: 50vh;">      
+                    <table class="table table-hover">
                         <thead>
-                            <tr class="table-title">
-                            Ausentes:
+                            <tr class="table-title sticky-top">
+                            <!-- Ausentes: -->
+                            <th colspan="5" class="bg-white">Ausentes:</th>
                             </tr>
-                            <tr>
+                            <tr class="sticky-top-labels">
                             <th scope="col">#</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Dias</th>
@@ -478,6 +480,10 @@
             <app-panel-reportes></app-panel-reportes>
         </div>
 
+        <div class="col-lg-10" *ngIf="banderaControl == true">
+            <app-panel-control-vac></app-panel-control-vac>
+        </div>
+
         <div class="col-lg-10" *ngIf="banderaSolicitud == true">
             <app-form></app-form>
         </div>
@@ -493,7 +499,57 @@
                     <form [formGroup]="solicitudForm">
                         <div class="form-dia">
                             <div class="form-dia-enc"><h4>Generar día inhábil</h4></div>
-                            <div class="input-group mb-1">
+
+                            <!-- <div class="input-group mb-1">
+                                <select class="form-select" aria-label="Default select example">
+                                    <option value="" selected disabled>Selecciona al personal...</option>
+                                    <option value="Todos">Todos</option>
+                                    @for (colab of colaboradores; track colab.emp_cve) {
+                                        <option [value]="colab.Clave">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="checkDefault">
+                                            </div>
+                                        [{{ colab.Clave }}] {{ colab.Nombre }} {{ colab.Periodo }} 
+                                        <span class="badge badge-success">{{ colab.Saldo }}</span>
+                                        </option>
+                                    }
+                                </select>
+                            </div> -->
+
+                            <!-- Contador dinámico -->
+                            <div class="mb-2">
+                            <span class="badge bg-success">Seleccionados: {{ contador }}</span>
+                            </div>
+
+                            <div class="card p-2" style="max-height: 300px; overflow-y: auto;">
+                                <!-- Opción Seleccionar Todos -->
+                                <div class="form-check border-bottom mb-2 pb-2">
+                                    <input class="form-check-input" type="checkbox" id="checkTodos" 
+                                        (change)="seleccionarTodos($event)"
+                                        [checked]="contador === colaboradores.length && contador > 0">
+                                    <label class="form-check-label fw-bold" for="checkTodos">Seleccionar Todos</label>
+                                </div>
+
+                                <!-- Lista de Colaboradores -->
+                                @for (colab of colaboradores; track colab.Clave + colab.Periodo) {
+                                    <div class="form-check d-flex align-items-center mb-1">
+                                        <input class="form-check-input me-2" type="checkbox" 
+                                            [id]="'check-' + colab.Clave + colab.Periodo"
+                                            [checked]="isSeleccionado(colab.Clave, colab.Periodo)"
+                                            (change)="toggleSeleccion(colab, $event)">
+                                        
+                                        <label class="form-check-label w-100" [for]="'check-' + colab.Clave + colab.Periodo">
+                                            <span class="text-muted">[{{ colab.Clave }}]</span> {{ colab.Nombre }}&nbsp;&nbsp;&nbsp; {{ colab.Periodo }}
+                                            <span class="badge bg-success float-end">{{ colab.Saldo }}</span>
+                                        </label>
+                                    </div>
+                                } @empty {
+                                    <p class="text-muted">No hay personal disponible</p>
+                                }
+                            </div>
+
+
+                            <!-- <div class="input-group mb-1">
                                 <span class="input-group-text" id="basic-addon1">Por&nbsp;
                                     <label *ngIf="isInvalid('cDias')"  style="color: red; font-size: small;">( Campo obligatorio* )</label>
                                 </span>
@@ -517,7 +573,39 @@
                                 <input class="form-control" matInput [matDatepicker]="finPicker" [matDatepickerFilter]="filtroFecha" formControlName="fechaHasta"/>
                                 <span><mat-datepicker-toggle matSuffix [for]="finPicker"></mat-datepicker-toggle></span>
                                 <mat-datepicker #finPicker [dateClass]="dateClass" panelClass="calendario"></mat-datepicker>                        
-                                <!-- <span class="input-group-text">inclusive</span> -->
+                                
+                            </div> -->
+
+                            <div class="input-group mb-1">
+                                <span class="input-group-text" id="basic-addon1" [class.alert-class]="isInvalid('cDias')">Por&nbsp;</span>
+                                <input [readonly]="true" type="text" class="form-control" formControlName="cDias" placeholder="0" aria-label="Username" [value]="this.fechasOrdenadas.length">
+                                <span class="input-group-text" [class.alert-class]="isInvalid('fechaApartir')">Selecciona tu(s) fecha(s):&nbsp;</span>                      
+                                <input 
+                                style="display: none;" 
+                                class="form-control" 
+                                matInput 
+                                [matDatepicker]="inicioPicker" 
+                                [matDatepickerFilter]="filtroFecha" 
+                                formControlName="fechaApartir"
+                                (dateChange)="onDateChange($event)"
+                                placeholder="Seleccione múltiples fechas"
+                                />
+
+                                <span [class.alert-class]="isInvalid('fechaApartir')">
+                                <mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle>
+                                </span>
+
+                                <mat-datepicker 
+                                touchUi
+                                #inicioPicker 
+                                [dateClass]="dateClass" 
+                                panelClass="calendario">
+                                </mat-datepicker><br>
+                            </div>
+                            <div class="fechas-container mb-1">
+                                <span *ngFor="let fecha of selectedDates" class="fecha-item">
+                                    {{ fecha | date:'dd/MM/yyyy' }}
+                                </span>
                             </div>
 
                             <div class="input-group mb-1">
@@ -526,11 +614,13 @@
                                 </span>
                                 <textarea class="form-control" aria-label="With textarea" formControlName="motivo"></textarea>
                             </div>
+
                             <div *ngIf="spinerBandera == false" class="d-grid gap-2 mt-3">
-                                <button class="btn btn-success" *ngIf="this.solicitudForm.value.fechaApartir != '' && this.solicitudForm.value.fechaHasta != '' && this.solicitudForm.value.cDias != '' && this.solicitudForm.value.motivo != ''" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-generar'">Generar</button>
-                                <button class="btn btn-success" disabled *ngIf="this.solicitudForm.value.fechaApartir == '' || this.solicitudForm.value.fechaHasta == '' || this.solicitudForm.value.cDias == '' || this.solicitudForm.value.motivo == ''">Generar</button>
+                                <button class="btn btn-success" *ngIf="this.seleccionados.length > 0 && this.solicitudForm.value.motivo != ''" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-generar'">Generar</button>
+                                <button class="btn btn-success" disabled *ngIf="this.seleccionados.length == 0 || this.solicitudForm.value.motivo == ''">Generar</button>
                                 <button class="btn btn-secondary" (click)="vaciarFormulario()">Borrar</button>
                             </div>
+
                             <div *ngIf="spinerBandera" class="d-flex justify-content-center content-spiner">
                                 <span class="loader-generar"></span>
                             </div>
